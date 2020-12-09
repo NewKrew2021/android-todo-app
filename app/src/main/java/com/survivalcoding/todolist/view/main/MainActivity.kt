@@ -48,37 +48,51 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putInt(STATE_LAST_ID, viewModel.id.get())
+        outState.putParcelableArrayList(STATE_LIST, ArrayList(viewModel.items))
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        viewModel.id.set(savedInstanceState.getInt(STATE_LAST_ID))
+        savedInstanceState.getParcelableArrayList<Todo>(STATE_LIST)?.let {
+            viewModel.items = it
+        }
+        updateUi()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == RESULT_OK) {
             when (requestCode) {
                 ADD_REQUEST_CODE -> {
-                    data?.let {
-                        val todo = it.getSerializableExtra(TODO) as Todo
-                        viewModel.addTodo(todo)
+                    data?.getParcelableExtra<Todo>(TODO)?.let {
+                        viewModel.addTodo(it)
                         updateUi()
                     }
                 }
                 EDIT_REQUEST_CODE -> {
-                    data?.let {
-                        val todo = it.getSerializableExtra(TODO) as Todo
-                        viewModel.updateTodo(todo)
+                    data?.getParcelableExtra<Todo>(TODO)?.let {
+                        viewModel.updateTodo(it)
                         updateUi()
                     }
                 }
             }
         } else if (resultCode == RESULT_DELETE) {
-            data?.let {
-                val deleteTodo = it.getSerializableExtra(TODO) as Todo
-                viewModel.removeTodo(deleteTodo)
+            data?.getParcelableExtra<Todo>(TODO)?.let {
+                viewModel.removeTodo(it)
                 updateUi()
             }
         }
     }
 
     private fun updateUi() {
-        todoAdapter.submitList(viewModel.items)
+        todoAdapter.submitList(viewModel.items.toList())
     }
 
     companion object {
@@ -86,5 +100,7 @@ class MainActivity : AppCompatActivity() {
         const val EDIT_REQUEST_CODE = 200
         const val RESULT_DELETE = 300
         const val TODO = "todo"
+        const val STATE_LIST = "todoList"
+        const val STATE_LAST_ID = "id"
     }
 }

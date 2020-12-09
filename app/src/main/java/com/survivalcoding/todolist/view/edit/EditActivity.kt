@@ -24,9 +24,9 @@ class EditActivity : AppCompatActivity() {
 
         binding.addButton.text = "수정"
 
-        intent?.let {
-            todo = it.getSerializableExtra(MainActivity.TODO) as Todo
-            binding.todoText.setText(todo.todo)
+        intent?.getParcelableExtra<Todo>(MainActivity.TODO)?.let {
+            todo = it
+            binding.todoText.setText(it.todo)
         }
 
         binding.addButton.setOnClickListener {
