@@ -34,4 +34,5 @@ class TodoViewModel {
     fun removeTodo(item: Todo) {
         _items.remove(item)
     }
+
 }

@@ -2,7 +2,10 @@ package com.survivalcoding.todolist.view.edit
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.ActivityAddBinding
 import com.survivalcoding.todolist.view.main.MainActivity
 import com.survivalcoding.todolist.view.main.model.Todo
@@ -38,5 +41,24 @@ class EditActivity : AppCompatActivity() {
                 finish()
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.edit, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.action_delete -> {
+                val intent = Intent().apply {
+                    putExtra(MainActivity.TODO, todo)
+                }
+                setResult(MainActivity.RESULT_DELETE, intent)
+                finish()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

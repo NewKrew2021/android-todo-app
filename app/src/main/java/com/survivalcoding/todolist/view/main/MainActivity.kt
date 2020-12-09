@@ -68,6 +68,12 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+        } else if (resultCode == RESULT_DELETE) {
+            data?.let {
+                val deleteTodo = it.getSerializableExtra(TODO) as Todo
+                viewModel.removeTodo(deleteTodo)
+                updateUi()
+            }
         }
     }
 
@@ -78,6 +84,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val ADD_REQUEST_CODE = 100
         const val EDIT_REQUEST_CODE = 200
+        const val RESULT_DELETE = 300
         const val TODO = "todo"
     }
 }
