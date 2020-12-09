@@ -5,7 +5,7 @@ import com.survivalcoding.todolist.view.main.model.Todo
 
 object TodoDiffCallback : DiffUtil.ItemCallback<Todo>() {
     override fun areItemsTheSame(oldItem: Todo, newItem: Todo): Boolean {
-        return oldItem == newItem
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: Todo, newItem: Todo): Boolean {

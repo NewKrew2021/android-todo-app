@@ -3,6 +3,7 @@ package com.survivalcoding.todolist.view.main
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import com.survivalcoding.todolist.view.add.AddActivity
@@ -10,12 +11,19 @@ import com.survivalcoding.todolist.view.edit.EditActivity
 import com.survivalcoding.todolist.view.main.adapter.TodoRecyclerAdapter
 import com.survivalcoding.todolist.view.main.model.Todo
 
-var global_id = 0
-
 class MainActivity : AppCompatActivity() {
-    private val items = mutableListOf<Todo>()
+    private val viewModel = TodoViewModel()
 
     private lateinit var binding: ActivityMainBinding
+
+    private val todoAdapter by lazy {
+        TodoRecyclerAdapter {
+            val intent = Intent(this, EditActivity::class.java).apply {
+                putExtra(TODO, it)
+            }
+            startActivityForResult(intent, EDIT_REQUEST_CODE)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,18 +31,14 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        val adapter = TodoRecyclerAdapter {
-            val intent = Intent(this, EditActivity::class.java).apply {
-                putExtra(TODO, it)
-            }
-            startActivityForResult(intent, EDIT_REQUEST_CODE)
-        }.apply {
-            submitList(items)
-        }
-
-        binding.memoRecyclerView.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            this.adapter = adapter
+        with(binding.memoRecyclerView) {
+            addItemDecoration(
+                DividerItemDecoration(
+                    this@MainActivity,
+                    LinearLayoutManager.VERTICAL
+                )
+            )
+            adapter = todoAdapter
         }
 
         binding.addButton.setOnClickListener {
@@ -52,30 +56,23 @@ class MainActivity : AppCompatActivity() {
                 ADD_REQUEST_CODE -> {
                     data?.let {
                         val todo = it.getSerializableExtra(TODO) as Todo
-                        items.add(todo)
-                        binding.memoRecyclerView.adapter?.notifyDataSetChanged()
+                        viewModel.addTodo(todo)
+                        updateUi()
                     }
                 }
                 EDIT_REQUEST_CODE -> {
                     data?.let {
                         val todo = it.getSerializableExtra(TODO) as Todo
-                        val changeData = items.map { e ->
-                            if (e.id == todo.id) {
-                                todo
-                            } else {
-                                e
-                            }
-                        }
-
-                        items.apply {
-                            clear()
-                            addAll(changeData)
-                        }
-                        binding.memoRecyclerView.adapter?.notifyDataSetChanged()
+                        viewModel.updateTodo(todo)
+                        updateUi()
                     }
                 }
             }
         }
+    }
+
+    private fun updateUi() {
+        todoAdapter.submitList(viewModel.items)
     }
 
     companion object {

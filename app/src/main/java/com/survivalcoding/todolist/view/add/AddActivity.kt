@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.survivalcoding.todolist.databinding.ActivityAddBinding
 import com.survivalcoding.todolist.view.main.MainActivity
-import com.survivalcoding.todolist.view.main.global_id
 import com.survivalcoding.todolist.view.main.model.Todo
 import java.util.*
 
@@ -22,7 +21,7 @@ class AddActivity : AppCompatActivity() {
             if (binding.todoText.text.isNotEmpty()) {
                 val intent = Intent().apply {
                     val todo = binding.todoText.text.toString()
-                    putExtra(MainActivity.TODO, Todo(todo, Date().time, id = global_id++))
+                    putExtra(MainActivity.TODO, Todo(todo, Date().time))
                 }
                 setResult(RESULT_OK, intent)
                 finish()

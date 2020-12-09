@@ -28,7 +28,7 @@ class TodoRecyclerAdapter(private val clickListener: (todo: Todo) -> Unit) :
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
         val todo = getItem(position)
 
-        val dateFormat = SimpleDateFormat("yyyy. MM. dd a hh:mm", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("yyyy. MM. dd a hh:mm:ss", Locale.getDefault())
 
         holder.binding.todoText.text = todo.todo
         holder.binding.timeText.text = dateFormat.format(todo.datetime)
