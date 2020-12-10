@@ -9,10 +9,11 @@ import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import com.survivalcoding.todolist.view.add.AddActivity
 import com.survivalcoding.todolist.view.edit.EditActivity
 import com.survivalcoding.todolist.view.main.adapter.TodoRecyclerAdapter
+import com.survivalcoding.todolist.view.main.data.TodoRepository
 import com.survivalcoding.todolist.view.main.model.Todo
 
 class MainActivity : AppCompatActivity() {
-    private val viewModel = TodoViewModel()
+    private val viewModel = TodoRepository()
 
     private lateinit var binding: ActivityMainBinding
 

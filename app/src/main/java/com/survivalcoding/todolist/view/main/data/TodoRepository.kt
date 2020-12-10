@@ -1,11 +1,13 @@
-package com.survivalcoding.todolist.view.main
+package com.survivalcoding.todolist.view.main.data
 
 import com.survivalcoding.todolist.view.main.model.Todo
 import java.util.concurrent.atomic.AtomicInteger
 
-class TodoViewModel {
+class TodoRepository {
     var id = AtomicInteger(0)
     var items = mutableListOf<Todo>()
+
+    fun getOrderedItems() = items.sortedByDescending { it.datetime }
 
     fun addTodo(item: Todo) {
         item.id = id.getAndIncrement()
