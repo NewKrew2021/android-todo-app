@@ -1,4 +1,4 @@
-package com.survivalcoding.todolist.view.main.data
+package com.survivalcoding.todolist.data
 
 import com.survivalcoding.todolist.view.main.model.Todo
 import java.util.concurrent.atomic.AtomicInteger
