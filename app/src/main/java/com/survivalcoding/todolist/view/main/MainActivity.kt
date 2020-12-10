@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateUi() {
-        todoAdapter.submitList(viewModel.items.toList())
+        todoAdapter.submitList(viewModel.getOrderedItems())
     }
 
     companion object {
