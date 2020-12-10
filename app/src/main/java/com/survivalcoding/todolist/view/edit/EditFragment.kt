@@ -1,6 +1,5 @@
 package com.survivalcoding.todolist.view.edit
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -12,31 +11,15 @@ import com.survivalcoding.todolist.view.main.model.Todo
 import java.util.*
 
 class EditFragment(private val repository: TodoRepository) : Fragment() {
-    interface OnTodoEditListener {
-        fun onTodoEdited()
-    }
-
     private var _binding: FragmentAddBinding? = null
 
     private val binding get() = _binding!!
-
-    private var todoEditListener: OnTodoEditListener? = null
 
     lateinit var todo: Todo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        todoEditListener = context as OnTodoEditListener
-    }
-
-    override fun onDetach() {
-        todoEditListener = null
-        super.onDetach()
     }
 
     override fun onCreateView(
@@ -85,7 +68,6 @@ class EditFragment(private val repository: TodoRepository) : Fragment() {
 
     private fun finish() {
         parentFragmentManager.popBackStack()
-        todoEditListener?.onTodoEdited()
     }
 
     override fun onDestroyView() {

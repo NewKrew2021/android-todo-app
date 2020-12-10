@@ -1,6 +1,5 @@
 package com.survivalcoding.todolist.view.add
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,25 +11,9 @@ import com.survivalcoding.todolist.view.main.model.Todo
 import java.util.*
 
 class AddFragment(private val repository: TodoRepository) : Fragment() {
-    interface OnTodoAddListener {
-        fun onTodoAdded()
-    }
-
     private var _binding: FragmentAddBinding? = null
 
     private val binding get() = _binding!!
-
-    private var todoAddListener: OnTodoAddListener? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        todoAddListener = context as OnTodoAddListener
-    }
-
-    override fun onDetach() {
-        todoAddListener = null
-        super.onDetach()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,7 +33,6 @@ class AddFragment(private val repository: TodoRepository) : Fragment() {
                 repository.addTodo(Todo(todo, Date().time))
 
                 parentFragmentManager.popBackStack()
-                todoAddListener?.onTodoAdded()
             }
         }
     }

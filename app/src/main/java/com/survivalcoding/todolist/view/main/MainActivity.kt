@@ -8,12 +8,8 @@ import com.survivalcoding.todolist.App
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import com.survivalcoding.todolist.factory.MyFragmentFactory
-import com.survivalcoding.todolist.view.add.AddFragment
-import com.survivalcoding.todolist.view.edit.EditFragment
 
-class MainActivity : AppCompatActivity(),
-    AddFragment.OnTodoAddListener,
-    EditFragment.OnTodoEditListener {
+class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val todoRepository by lazy { (application as App).todoRepository }
@@ -38,22 +34,5 @@ class MainActivity : AppCompatActivity(),
         const val TODO = "todo"
         const val STATE_LIST = "todoList"
         const val STATE_LAST_ID = "id"
-    }
-
-    override fun onTodoAdded() {
-        updateUi()
-    }
-
-    private fun updateUi() {
-        supportFragmentManager.commit {
-            supportFragmentManager.findFragmentByTag("main")?.let { mainFragment ->
-                detach(mainFragment)
-                attach(mainFragment)
-            }
-        }
-    }
-
-    override fun onTodoEdited() {
-        updateUi()
     }
 }
