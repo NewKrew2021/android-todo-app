@@ -3,18 +3,18 @@ package com.survivalcoding.todolist.data
 import com.survivalcoding.todolist.view.main.model.Todo
 import java.util.concurrent.atomic.AtomicInteger
 
-class TodoRepository {
+class TodoRepository : DefaultTodoRepository {
     var id = AtomicInteger(0)
     var items = mutableListOf<Todo>()
 
-    fun getOrderedItems() = items.sortedByDescending { it.datetime }
+    override fun getOrderedItems() = items.sortedByDescending { it.datetime }
 
-    fun addTodo(item: Todo) {
+    override fun addTodo(item: Todo) {
         item.id = id.getAndIncrement()
         items.add(item)
     }
 
-    fun updateTodo(item: Todo) {
+    override fun updateTodo(item: Todo) {
         val changeData = items.map { e ->
             if (e.id == item.id) {
                 item
@@ -29,7 +29,7 @@ class TodoRepository {
         }
     }
 
-    fun removeTodo(item: Todo) {
+    override fun removeTodo(item: Todo) {
         items.remove(item)
     }
 

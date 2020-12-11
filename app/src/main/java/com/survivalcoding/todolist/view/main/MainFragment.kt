@@ -11,14 +11,13 @@ import androidx.fragment.app.replace
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.todolist.R
-import com.survivalcoding.todolist.data.TodoRepository
+import com.survivalcoding.todolist.data.DefaultTodoRepository
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
 import com.survivalcoding.todolist.view.add.AddFragment
 import com.survivalcoding.todolist.view.edit.EditFragment
 import com.survivalcoding.todolist.view.main.adapter.TodoRecyclerAdapter
-import com.survivalcoding.todolist.view.main.model.Todo
 
-class MainFragment(private val repository: TodoRepository) : Fragment() {
+class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
 
     private var _binding: FragmentMainBinding? = null
 
@@ -74,24 +73,24 @@ class MainFragment(private val repository: TodoRepository) : Fragment() {
         todoAdapter.submitList(repository.getOrderedItems())
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        outState.putInt(MainActivity.STATE_LAST_ID, repository.id.get())
-        outState.putParcelableArrayList(MainActivity.STATE_LIST, ArrayList(repository.items))
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-
-        savedInstanceState?.let {
-            repository.id.set(savedInstanceState.getInt(MainActivity.STATE_LAST_ID))
-            savedInstanceState.getParcelableArrayList<Todo>(MainActivity.STATE_LIST)?.let {
-                repository.items = it
-            }
-            updateUi()
-        }
-    }
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//
+//        outState.putInt(MainActivity.STATE_LAST_ID, repository.id.get())
+//        outState.putParcelableArrayList(MainActivity.STATE_LIST, ArrayList(repository.items))
+//    }
+//
+//    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+//        super.onViewStateRestored(savedInstanceState)
+//
+//        savedInstanceState?.let {
+//            repository.id.set(savedInstanceState.getInt(MainActivity.STATE_LAST_ID))
+//            savedInstanceState.getParcelableArrayList<Todo>(MainActivity.STATE_LIST)?.let {
+//                repository.items = it
+//            }
+//            updateUi()
+//        }
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

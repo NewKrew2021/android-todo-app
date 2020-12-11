@@ -2,12 +2,12 @@ package com.survivalcoding.todolist.factory
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
-import com.survivalcoding.todolist.data.TodoRepository
+import com.survivalcoding.todolist.data.DefaultTodoRepository
 import com.survivalcoding.todolist.view.add.AddFragment
 import com.survivalcoding.todolist.view.edit.EditFragment
 import com.survivalcoding.todolist.view.main.MainFragment
 
-class MyFragmentFactory(private val repository: TodoRepository) : FragmentFactory() {
+class MyFragmentFactory(private val repository: DefaultTodoRepository) : FragmentFactory() {
 
     override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
         return when (loadFragmentClass(classLoader, className)) {

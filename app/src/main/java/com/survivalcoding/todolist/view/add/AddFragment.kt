@@ -5,12 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.survivalcoding.todolist.data.TodoRepository
+import com.survivalcoding.todolist.data.DefaultTodoRepository
 import com.survivalcoding.todolist.databinding.FragmentAddBinding
 import com.survivalcoding.todolist.view.main.model.Todo
 import java.util.*
 
-class AddFragment(private val repository: TodoRepository) : Fragment() {
+class AddFragment(private val repository: DefaultTodoRepository) : Fragment() {
     private var _binding: FragmentAddBinding? = null
 
     private val binding get() = _binding!!

@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import com.survivalcoding.todolist.R
-import com.survivalcoding.todolist.data.TodoRepository
+import com.survivalcoding.todolist.data.DefaultTodoRepository
 import com.survivalcoding.todolist.databinding.FragmentAddBinding
 import com.survivalcoding.todolist.view.main.MainActivity
 import com.survivalcoding.todolist.view.main.model.Todo
 import java.util.*
 
-class EditFragment(private val repository: TodoRepository) : Fragment() {
+class EditFragment(private val repository: DefaultTodoRepository) : Fragment() {
     private var _binding: FragmentAddBinding? = null
 
     private val binding get() = _binding!!
