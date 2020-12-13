@@ -10,14 +10,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TodoList">
-        <activity
-            android:name=".view.edit.EditActivity"
-            android:label="수정"
-            android:parentActivityName=".view.main.MainActivity" />
-        <activity
-            android:name=".view.add.AddActivity"
-            android:label="Add new thing"
-            android:parentActivityName=".view.main.MainActivity" />
         <activity android:name=".view.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,6 +17,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:name=".provider.TodoProvider"
+            android:authorities="com.survivalcoding.todolist.provider"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>
