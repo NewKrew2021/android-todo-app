@@ -41,7 +41,9 @@ class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
-        requireActivity().title = "할일 목록"
+        container?.let {
+            requireActivity().title = it.resources.getString(R.string.todo_list)
+        }
         return binding.root
     }
 
@@ -73,7 +75,7 @@ class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
         todoAdapter.submitList(repository.getOrderedItems())
     }
 
-//    override fun onSaveInstanceState(outState: Bundle) {
+//    override fun onSaveInsstanceState(outState: Bundle) {
 //        super.onSaveInstanceState(outState)
 //
 //        outState.putInt(MainActivity.STATE_LAST_ID, repository.id.get())

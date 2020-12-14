@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">TodoList</string>
+
+    <string name="todo_list">할일 목록 - memory</string>
+</resources>
