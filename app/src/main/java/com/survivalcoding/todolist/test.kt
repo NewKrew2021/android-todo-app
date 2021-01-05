@@ -13,7 +13,7 @@ val transactions = listOf(
         Transaction(Trader("Alan", "Cambridge"), 2012, 950)
 )
 
-
+ㅇ//
 fun main()
 {
 
