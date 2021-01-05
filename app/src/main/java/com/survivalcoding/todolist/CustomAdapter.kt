@@ -1,6 +1,5 @@
 package com.survivalcoding.todolist
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +18,6 @@ class CustomAdapter() : BaseAdapter() {
             { if (it.mark) 0 else 1 },
             { -it.time }
         )).toMutableList()
-        Log.d("aaa", items.toString())
         notifyDataSetChanged()
     }
 
