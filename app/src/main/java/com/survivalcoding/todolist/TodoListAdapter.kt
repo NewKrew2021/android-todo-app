@@ -35,6 +35,7 @@ class TodoListAdapter(private var list: MutableList<TodoItem>) : BaseAdapter() {
 
     fun addNewTodo(item: TodoItem) {
         list.add(item)
+        notifyDataSetChanged()
     }
 
     private fun setOnClickListener(holder: TodoViewHolder, position: Int) {
