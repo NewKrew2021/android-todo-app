@@ -1,3 +1,3 @@
 package com.survivalcoding.todolist
 
-data class TodoItem(val isChecked: Boolean, val todoTitle: String)
+data class TodoItem(var isChecked: Boolean, var todoTitle: String)

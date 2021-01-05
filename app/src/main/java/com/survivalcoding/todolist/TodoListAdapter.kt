@@ -29,10 +29,22 @@ class TodoListAdapter(private var list: MutableList<TodoItem>) : BaseAdapter() {
         }
         holder.checkBox.isChecked = list[position].isChecked
         holder.todoTitle.text = list[position].todoTitle
+        setOnClickListener(holder, position)
         return view
     }
 
     fun addNewTodo(item: TodoItem) {
         list.add(item)
+    }
+
+    private fun setOnClickListener(holder: TodoViewHolder, position: Int) {
+        holder.checkBox.setOnClickListener {
+            list[position].isChecked = holder.checkBox.isChecked
+        }
+
+        holder.todoTitle.setOnClickListener {
+            list[position].isChecked = !holder.checkBox.isChecked
+            holder.checkBox.isChecked = !holder.checkBox.isChecked
+        }
     }
 }
