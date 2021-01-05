@@ -14,43 +14,49 @@ val transactions = listOf(
     Transaction(Trader("Alan", "Cambridge"), 2012, 950),
 )
 
-fun prob1(){
-    transactions.filter{it.year==2011}
-        .sortedBy{it.value}
-        .forEach{println(it)}
+fun prob1() {
+    transactions.filter { it.year == 2011 }
+        .sortedBy { it.value }
+        .forEach { println(it) }
 }
-fun prob2(){
-    transactions.map{it.trader.city}
-        .distinct()
-        .forEach{println(it)}
-}
-fun prob3(){
-    transactions.filter{it.trader.city == "Cambridge"}
-        .map{it.trader.name}
-        .distinct()
-        .sortedBy{it}
-        .forEach{println(it)}
-}
-fun prob4(){
-    transactions.map{it.trader.name}
-        .distinct()
-        .sortedBy{it}
-        .forEach{println(it)}
-}
-fun prob5(){
-    println(transactions.any{it.trader.city=="Milan"})
-}
-fun prob6(){
-    transactions.filter{it.trader.city=="Cambridge"}
-        .forEach{println(it.value)}
-}
-fun prob7(){
-    print(transactions.maxByOrNull{it.value}!!.value)
-}
-fun prob8(){
-    print(transactions.minByOrNull{it.value}!!.value)
-}
-fun main() {
-    prob1()
 
+fun prob2() {
+    transactions.map { it.trader.city }
+        .distinct()
+        .forEach { println(it) }
+}
+
+fun prob3() {
+    transactions.filter { it.trader.city == "Cambridge" }
+        .map { it.trader.name }
+        .distinct()
+        .sortedBy { it }
+        .forEach { println(it) }
+}
+
+fun prob4() {
+    transactions.map { it.trader.name }
+        .distinct()
+        .sortedBy { it }
+        .forEach { println(it) }
+}
+
+fun prob5() {
+    println(transactions.any { it.trader.city == "Milan" })
+}
+
+fun prob6() {
+    transactions.filter { it.trader.city == "Cambridge" }
+        .forEach { println(it.value) }
+}
+
+fun prob7() {
+    print(transactions.maxByOrNull { it.value }?.value ?: "값이 없습니다.")
+}
+
+fun prob8() {
+    print(transactions.minByOrNull { it.value }?.value ?: "값이 없습니다.")
+}
+
+fun main() {
 }
