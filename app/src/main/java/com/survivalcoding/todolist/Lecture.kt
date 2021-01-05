@@ -65,7 +65,7 @@ class Lecture : AppCompatActivity() {
 data class Weather(val image: String, val city: String, val temp: String)
 
 // View holder class 생성 >> 해당 클래스에 레이아웃 요소들의 값을이 저장된다.
-class WeatherViewHolder() {
+class WeatherViewHolder {
     lateinit var weatherInfo: ImageView
     lateinit var cityText: TextView
     lateinit var tempText: TextView
