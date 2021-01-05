@@ -10,7 +10,7 @@ val transactions = listOf(
         Transaction(Trader("Raoul", "Cambridge"), 2011, 400),
         Transaction(Trader("Mario", "Milan"), 2012, 710),
         Transaction(Trader("Mario", "Milan"), 2012, 700),
-        Transaction(Trader("Alan", "Cambridge"), 2012, 950)
+        Transaction(Trader("Alan", "Cambridge"), 2012, 950),
 )
 
 
@@ -27,3 +27,4 @@ fun main()
     println("Answer 8 : ${transactions.map{it.value}.min()}")
 ////
 }
+
