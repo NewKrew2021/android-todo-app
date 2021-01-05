@@ -13,7 +13,7 @@ val transactions = listOf(
         Transaction(Trader("Alan", "Cambridge"), 2012, 950)
 )
 
-ㅇ//
+
 fun main()
 {
 
@@ -25,5 +25,5 @@ fun main()
     println("Answer 6 : ${transactions.filter{it.trader.city=="Cambridge"}.map{it.value}}")
     println("Answer 7 : ${transactions.map{it.value}.max()}")
     println("Answer 8 : ${transactions.map{it.value}.min()}")
-
+////
 }
