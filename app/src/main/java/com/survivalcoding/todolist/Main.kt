@@ -17,4 +17,6 @@ fun main() {
     // 1
     transactions.filter { it.trader.name.startsWith("A") }
             .forEach { println(it) }
+
+    // 2
 }
