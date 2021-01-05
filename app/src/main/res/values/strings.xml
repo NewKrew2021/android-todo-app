@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Todo List</string>
+    <string name="register_todo">등록</string>
 </resources>
