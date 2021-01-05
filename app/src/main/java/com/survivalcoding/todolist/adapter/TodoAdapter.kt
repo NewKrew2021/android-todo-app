@@ -4,8 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.CheckBox
-import android.widget.TextView
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.model.Todo
 
@@ -15,12 +13,12 @@ class TodoAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View
-        val holder: ViewHolder
+        val holder: TodoViewHolder
 
         if (convertView == null) {
             view = LayoutInflater.from(parent!!.context).inflate(R.layout.item_todo, parent, false)
 
-            holder = ViewHolder().apply {
+            holder = TodoViewHolder().apply {
                 cbComplete = view.findViewById(R.id.cb_complete_todo)
                 tvTime = view.findViewById(R.id.tv_time_todo)
                 tvTitle = view.findViewById(R.id.tv_title_todo)
@@ -28,7 +26,7 @@ class TodoAdapter(
 
         } else {
             view = convertView
-            holder = view.tag as ViewHolder
+            holder = view.tag as TodoViewHolder
         }
 
         val currentTodo = getItem(position)
@@ -49,9 +47,4 @@ class TodoAdapter(
 
     override fun getCount() = todoList.size
 
-    inner class ViewHolder {
-        lateinit var cbComplete: CheckBox
-        lateinit var tvTime: TextView
-        lateinit var tvTitle: TextView
-    }
 }
