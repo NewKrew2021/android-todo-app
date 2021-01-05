@@ -13,7 +13,7 @@ val transactions = listOf(
         Transaction(Trader("Alan", "Cambridge"), 2012, 950),
 )
 
-fun main(){
+fun main() {
 // 1. 2011년에 일어난 모든 트랜잭션을 찾아 값을 value 기준으로 오름차순으로 정리하시오
     transactions.filter { it.year == 2011 }
             .sortedBy { it.value }
@@ -39,7 +39,7 @@ fun main(){
 // 5. 밀라노에 거래자가 있는가?
     transactions.map { it.trader.city }
             .contains("Milan")
-            .let { if(it) println("5번 : 있다") else ("5번 : 없다") }
+            .let { if (it) println("5번 : 있다") else ("5번 : 없다") }
 
 // 6. 케임브리지에 근무하는 거래자의 모든 트랙잭션값을 출력하시오
     println("6번 : ${transactions.filter { it.trader.city == "Cambridge" }}")
