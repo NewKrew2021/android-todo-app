@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.CheckBox
-import android.widget.TextView
 import com.survivalcoding.todolist.R
 
 class TodoListAdapter(
@@ -16,16 +14,26 @@ class TodoListAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
 
-        val view =
-            convertView ?: LayoutInflater.from(context).inflate(R.layout.item_todo, parent, false)
+        val view: View
+        val holder: TodoViewHolder
 
-        val title = view.findViewById<TextView>(R.id.title)
-        val checkBox = view.findViewById<CheckBox>(R.id.checkbox)
+        if (convertView == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.item_todo, parent, false)
+
+            holder = TodoViewHolder()
+            holder.title = view.findViewById(R.id.title)
+            holder.checkBox = view.findViewById(R.id.checkbox)
+
+            view.tag = holder
+        } else {
+            view = convertView
+            holder = view.tag as TodoViewHolder
+        }
 
         val todoItem = getItem(position)
 
-        title.text = todoItem.title
-        checkBox.isChecked = todoItem.checked
+        holder.title.text = todoItem.title
+        holder.checkBox.isChecked = todoItem.checked
 
         return view
     }
