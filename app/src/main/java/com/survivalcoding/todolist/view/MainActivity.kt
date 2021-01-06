@@ -7,7 +7,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.survivalcoding.todolist.R
-import com.survivalcoding.todolist.adapter.TodoListViewAdapter
+import com.survivalcoding.todolist.adapter.TodoRecyclerViewAdapter
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import java.util.*
 
@@ -27,9 +27,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        val todoListViewAdapter = TodoListViewAdapter()
+        val todoRecyclerViewAdapter = TodoRecyclerViewAdapter()
+        binding.recyclerView.adapter = todoRecyclerViewAdapter
         var markBool = false
-        binding.listView.adapter = todoListViewAdapter
         binding.markBox.setOnClickListener {
             markBool = !markBool
             if (markBool) binding.markBox.setImageResource(R.drawable.ic_baseline_star_24)
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
             if (binding.editTodo.text.isEmpty()) {
                 Toast.makeText(this, "입력해주세요.", Toast.LENGTH_SHORT).show()
             } else {
-                todoListViewAdapter.addItem(
+                todoRecyclerViewAdapter.addItem(
                     TodoData(
                         binding.editTodo.text.toString(),
                         Calendar.getInstance().timeInMillis,
@@ -64,6 +64,5 @@ class MainActivity : AppCompatActivity() {
             if (event.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER) clickAction()
             true
         }
-
     }
 }
