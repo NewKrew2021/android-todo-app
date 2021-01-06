@@ -1,11 +1,6 @@
 package com.survivalcoding.todolist
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.TextView
-
+/*
 class MyAdapter : BaseAdapter() {
 
     companion object {
@@ -47,3 +42,4 @@ class MyAdapter : BaseAdapter() {
 
 
 }
+*/
