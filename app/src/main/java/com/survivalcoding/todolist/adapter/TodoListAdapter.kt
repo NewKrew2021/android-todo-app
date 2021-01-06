@@ -3,61 +3,49 @@ package com.survivalcoding.todolist.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import com.survivalcoding.todolist.databinding.ToDoListBinding
+import android.widget.CheckBox
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.model.TodoItem
 
-class TodoListAdapter(private var list: MutableList<TodoItem>) : BaseAdapter() {
-    override fun getCount() = list.size
-
-    override fun getItem(position: Int) = list[position]
-
-    override fun getItemId(position: Int) = list[position].hashCode().toLong()
-
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view: View
-        val holder: TodoViewHolder
-
-        // 뷰홀더 패턴 적용
-        if (convertView == null) {
-            ToDoListBinding.inflate(LayoutInflater.from(parent?.context)).apply {
-                holder = TodoViewHolder(this)
-                view = root
-                view.tag = holder
-            }
-        } else {
-            view = convertView
-            holder = view.tag as TodoViewHolder
-        }
-        holder.bind(list[position])
-        holder.setOnClickListener(list[position])
-        return view
+class TodoListAdapter(private val list: MutableList<TodoItem>) :
+    RecyclerView.Adapter<TodoListAdapter.TodoViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.to_do_list, parent, false)
+        return TodoViewHolder(view)
     }
+
+    override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
+        holder.apply {
+            bind(list[position])
+            setOnClickListener(list[position])
+        }
+    }
+
+    override fun getItemCount() = list.size
 
     fun addNewTodo(item: TodoItem) {
         list.add(item)
         notifyDataSetChanged()
     }
 
-    class TodoViewHolder(private val binding: ToDoListBinding) {
-        fun bind(todoItem: TodoItem) {
-            todoItem.apply {
-                binding.checkBox.isChecked = isChecked
-                binding.toDoTitle.text = todoTitle
-            }
+    class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val checkBox = itemView.findViewById<CheckBox>(R.id.check_box)
+        private val title = itemView.findViewById<TextView>(R.id.to_do_title)
+
+        fun bind(item: TodoItem) {
+            checkBox.isChecked = item.isChecked
+            title.text = item.todoTitle
         }
 
-        fun setOnClickListener(todoItem: TodoItem) {
-            binding.apply {
-                checkBox.setOnClickListener {
-                    todoItem.isChecked = checkBox.isChecked
-                }
-                toDoTitle.setOnClickListener {
-                    checkBox.isChecked.apply {
-                        todoItem.isChecked = !this
-                        checkBox.isChecked = !this
-                    }
-                }
+        fun setOnClickListener(item: TodoItem) {
+            checkBox.setOnClickListener {
+                item.isChecked = checkBox.isChecked
+            }
+            title.setOnClickListener {
+                item.isChecked = !checkBox.isChecked
             }
         }
     }
