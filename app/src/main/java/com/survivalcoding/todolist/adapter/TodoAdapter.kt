@@ -23,27 +23,23 @@ class TodoAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position])
-        holder.binding.apply {
-            buttonEdit.setOnClickListener {
-                // TODO : todo 제목 수정 구현
-            }
-
-            buttonDelete.setOnClickListener {
-                items.removeAt(position)
-                notifyItemRemoved(position)
-                notifyItemRangeChanged(position, items.size - position)
-
-                Toast.makeText(context, "${textViewTitle.text} 삭제되었습니다.", Toast.LENGTH_SHORT).show()
-            }
-        }
+        holder.bind(items[position], position, ::remove)
     }
 
     override fun getItemCount(): Int = items.size
 
-    class ViewHolder(val binding: ItemTodoListBinding) : RecyclerView.ViewHolder(binding.root) {
+    private fun remove(position: Int, title: String) {
+        items.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, items.size - position)
 
-        fun bind(todo: Todo) {
+        Toast.makeText(context, "$title 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+    }
+
+    class ViewHolder(private val binding: ItemTodoListBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(todo: Todo, position: Int, remove: (_position: Int, text: String) -> Unit) {
             binding.apply {
                 textViewTitle.text = todo.title
                 textViewTimes.text = todo.times
@@ -55,16 +51,24 @@ class TodoAdapter(
                     todo.isDone = checkBox.isChecked
                 }
 
-                buttonMenus.setOnClickListener {
-                    todo.isOption = true
-                    updateButtonsVisibility(todo.isOption)
-                }
-
                 layoutItem.setOnClickListener {
                     if (todo.isOption) {
                         todo.isOption = false
                         updateButtonsVisibility(todo.isOption)
                     }
+                }
+
+                buttonMenus.setOnClickListener {
+                    todo.isOption = true
+                    updateButtonsVisibility(todo.isOption)
+                }
+
+                buttonEdit.setOnClickListener {
+                    // TODO : todo 제목 수정 구현
+                }
+
+                buttonDelete.setOnClickListener {
+                    remove.invoke(position, textViewTitle.text.toString())
                 }
             }
         }
