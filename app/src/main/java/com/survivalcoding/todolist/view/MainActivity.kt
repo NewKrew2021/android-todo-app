@@ -1,11 +1,12 @@
 package com.survivalcoding.todolist.view
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.survivalcoding.todolist.adapter.TodoAdapter
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import com.survivalcoding.todolist.model.Todo
-import com.survivalcoding.todolist.util.DateUtils
+import com.survivalcoding.todolist.util.dateToString
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -19,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val adapter = TodoAdapter(this, items)
+        val adapter = TodoAdapter(items, ::showToastMessage)
 
         binding.apply {
             recyclerView.adapter = adapter
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity() {
                         index = 0,
                         element = Todo(
                             editTextTitle.text.toString(),
-                            DateUtils.dateToString(Calendar.getInstance().time)
+                            dateToString(Calendar.getInstance().time)
                         )
                     )
                     adapter.notifyItemInserted(0)
@@ -40,5 +41,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun showToastMessage(message: String) {
+        Toast.makeText(this, "$message 삭제되었습니다.", Toast.LENGTH_SHORT).show()
     }
 }

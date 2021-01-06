@@ -1,24 +1,22 @@
 package com.survivalcoding.todolist.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.todolist.databinding.ItemTodoListBinding
 import com.survivalcoding.todolist.model.Todo
-import com.survivalcoding.todolist.util.DateUtils
+import com.survivalcoding.todolist.util.stringToDate
 
 // TODO : isDone, Times 에 따른 정렬 구현
-
 class TodoAdapter(
-    private val context: Context,
     private val items: MutableList<Todo>,
+    private val showToastMessage: (String) -> Unit,
 ) : RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemTodoListBinding.inflate(LayoutInflater.from(context), parent, false)
+        val binding =
+            ItemTodoListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return ViewHolder(binding)
     }
@@ -34,14 +32,14 @@ class TodoAdapter(
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, items.size - position)
 
-        Toast.makeText(context, "$title 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+        showToastMessage(title)
     }
 
     // 아직 완료하지 않은 일들만 시간 순으로 내림차순 정렬
     private fun sort() {
         items.sortWith(
             compareBy {
-                if (!it.isDone) -DateUtils.stringToDate(it.times).time
+                if (!it.isDone) -stringToDate(it.times).time
                 else Long.MAX_VALUE
             }
         )
@@ -51,7 +49,7 @@ class TodoAdapter(
     class ViewHolder(private val binding: ItemTodoListBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(todo: Todo, position: Int, remove: (_position: Int, text: String) -> Unit, sort: () -> Unit) {
+        fun bind(todo: Todo, position: Int, remove: (Int, String) -> Unit, sort: () -> Unit) {
             binding.apply {
                 textViewTitle.text = todo.title
                 textViewTimes.text = todo.times
@@ -81,7 +79,7 @@ class TodoAdapter(
                 }
 
                 buttonDelete.setOnClickListener {
-                    remove.invoke(position, textViewTitle.text.toString())
+                    remove(position, textViewTitle.text.toString())
                 }
             }
         }
