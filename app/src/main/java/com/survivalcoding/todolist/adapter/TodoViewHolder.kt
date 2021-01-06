@@ -1,9 +1,22 @@
 package com.survivalcoding.todolist.adapter
 
-import android.widget.CheckBox
-import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.survivalcoding.todolist.databinding.ItemTodoBinding
 
-class TodoViewHolder {
-    lateinit var title: TextView
-    lateinit var checkBox: CheckBox
+class TodoViewHolder(
+    private val binding: ItemTodoBinding
+) : RecyclerView.ViewHolder(binding.root) {
+
+    fun bind(item: TodoItem, sort: () -> Unit) {
+        binding.apply {
+            title.text = item.title
+            checkbox.isChecked = item.checked
+
+            checkbox.setOnClickListener {
+                item.checked = item.checked xor true
+                sort()
+            }
+        }
+    }
+
 }

@@ -2,52 +2,35 @@ package com.survivalcoding.todolist.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import com.survivalcoding.todolist.R
+import androidx.recyclerview.widget.RecyclerView
+import com.survivalcoding.todolist.databinding.ItemTodoBinding
 
 class TodoListAdapter(
-    private val context: Context,
-    private val list: MutableList<TodoItem>
-) : BaseAdapter() {
+    private val context: Context
+) : RecyclerView.Adapter<TodoViewHolder>() {
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+    private val list = mutableListOf<TodoItem>()
 
-        val view: View
-        val holder: TodoViewHolder
-
-        if (convertView == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.item_todo, parent, false)
-
-            holder = TodoViewHolder()
-            holder.title = view.findViewById(R.id.title)
-            holder.checkBox = view.findViewById(R.id.checkbox)
-
-            view.tag = holder
-        } else {
-            view = convertView
-            holder = view.tag as TodoViewHolder
-        }
-
-        val todoItem = getItem(position)
-
-        holder.title.text = todoItem.title
-        holder.checkBox.isChecked = todoItem.checked
-
-        return view
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
+        val binding = ItemTodoBinding.inflate(LayoutInflater.from(context), parent, false)
+        return TodoViewHolder(binding)
     }
 
-    override fun getItem(position: Int): TodoItem {
-        return list[position]
+    override fun getItemCount(): Int = list.size
+
+    override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
+        holder.bind(list[position], ::sortItems)
     }
-
-    override fun getItemId(position: Int): Long = position.toLong()
-
-    override fun getCount() = list.size
 
     fun addItem(item: TodoItem) {
-        list.add(item)
+        list.add(0, item)
+        notifyItemInserted(0)
+        notifyItemRangeChanged(0, list.size)
+    }
+
+    private fun sortItems() {
+        list.sortWith(compareBy({ it.checked }, { -it.timeStamp }))
         notifyDataSetChanged()
     }
 }

@@ -4,25 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="@color/light_grey"
+    tools:context=".ui.main.MainActivity">
 
-    <ListView
-        android:id="@+id/list"
+    <EditText
+        android:id="@+id/input"
         android:layout_width="@dimen/match_constraint"
-        android:layout_height="@dimen/match_constraint"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="@dimen/input_height"
+        android:layout_marginHorizontal="@dimen/margin_small"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/view_round"
+        app:layout_constraintBottom_toTopOf="@id/list"
+        app:layout_constraintEnd_toStartOf="@id/add"
+        app:layout_constraintHorizontal_weight="10"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <Button
         android:id="@+id/add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
-        android:src="@drawable/ic_baseline_add_24"
+        android:layout_width="@dimen/match_constraint"
+        android:layout_height="@dimen/match_constraint"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:background="@drawable/view_round"
+        android:text="@string/add"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="3"
+        app:layout_constraintStart_toEndOf="@id/input"
+        app:layout_constraintTop_toTopOf="@id/input" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="@dimen/match_constraint"
+        android:layout_height="@dimen/match_constraint"
+        android:layout_marginHorizontal="@dimen/margin_small"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/input" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
