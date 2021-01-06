@@ -1,9 +1,11 @@
 package com.survivalcoding.todolist.adapter
 
-import android.widget.CheckBox
-import android.widget.TextView
+import com.survivalcoding.todolist.databinding.ItemTodoBinding
 
-class TodoViewHolder {
-    lateinit var title: TextView
-    lateinit var checkBox: CheckBox
+class TodoViewHolder(val binding: ItemTodoBinding) {
+
+    fun bind(item: TodoItem) {
+        binding.title.text = item.title
+        binding.checkbox.isChecked = item.checked
+    }
 }

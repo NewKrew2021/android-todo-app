@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import com.survivalcoding.todolist.R
+import com.survivalcoding.todolist.databinding.ItemTodoBinding
 
 class TodoListAdapter(
     private val context: Context,
@@ -18,11 +18,10 @@ class TodoListAdapter(
         val holder: TodoViewHolder
 
         if (convertView == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.item_todo, parent, false)
+            val binding = ItemTodoBinding.inflate(LayoutInflater.from(context), parent, false)
+            view = binding.root
 
-            holder = TodoViewHolder()
-            holder.title = view.findViewById(R.id.title)
-            holder.checkBox = view.findViewById(R.id.checkbox)
+            holder = TodoViewHolder(binding)
 
             view.tag = holder
         } else {
@@ -30,10 +29,7 @@ class TodoListAdapter(
             holder = view.tag as TodoViewHolder
         }
 
-        val todoItem = getItem(position)
-
-        holder.title.text = todoItem.title
-        holder.checkBox.isChecked = todoItem.checked
+        holder.bind(getItem(position))
 
         return view
     }

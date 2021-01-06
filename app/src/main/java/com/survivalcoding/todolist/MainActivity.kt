@@ -1,30 +1,27 @@
 package com.survivalcoding.todolist
 
 import android.os.Bundle
-import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.survivalcoding.todolist.adapter.TodoItem
 import com.survivalcoding.todolist.adapter.TodoListAdapter
+import com.survivalcoding.todolist.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var addButton: FloatingActionButton
     lateinit var adapter: TodoListAdapter
-    lateinit var todoList: ListView
+    lateinit var binding: ActivityMainBinding
 
     private val sampleData = mutableListOf<TodoItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        addButton = findViewById(R.id.add)
-        addButton.setOnClickListener {
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.add.setOnClickListener {
             addItem()
         }
-
-        todoList = findViewById(R.id.list)
 
         (1..5).forEach {
             sampleData.add(TodoItem(it.toString(), false))
@@ -32,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         adapter = TodoListAdapter(this, sampleData)
 
-        todoList.adapter = adapter
+        binding.list.adapter = this.adapter
     }
 
     private fun addItem() {
