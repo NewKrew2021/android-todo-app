@@ -1,20 +1,23 @@
 package com.survivalcoding.todolist
 
 import android.os.Bundle
-import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.survivalcoding.todolist.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        val todoListView = findViewById<ListView>(R.id.todoListView)
+        val binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
         val todoListAdapter = TodoListAdapter()
-        todoListView.adapter = todoListAdapter
+        binding.todoListView.adapter = todoListAdapter
 
-        todoListView.setOnItemClickListener { parent, view, position, id -> Toast.makeText(this, "$position item click", Toast.LENGTH_SHORT).show() }
+        binding.todoListView.setOnItemClickListener { _, _, position, _ -> Toast.makeText(this, "$position item click", Toast.LENGTH_SHORT).show() }
+
     }
+
 }

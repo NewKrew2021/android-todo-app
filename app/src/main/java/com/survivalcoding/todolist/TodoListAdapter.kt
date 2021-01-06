@@ -1,10 +1,11 @@
 package com.survivalcoding.todolist
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.TextView
+import com.survivalcoding.todolist.databinding.TodoItemBinding
 
 data class TodoItem(val title: String, val date: String)
 class TodoListAdapter : BaseAdapter() {
@@ -16,23 +17,16 @@ class TodoListAdapter : BaseAdapter() {
             TodoItem("5순위", "d-34"),
     )
 
+    @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view: View
-        if (convertView == null) {
-            view = LayoutInflater.from(parent!!.context)
-                    .inflate(R.layout.todo_item, parent, false)
-        } else {
-            view = convertView
-        }
-
-        val title = view.findViewById<TextView>(R.id.title)
-        val dDay = view.findViewById<TextView>(R.id.dDay)
         val currentItem = getItem(position) as TodoItem
+        val binding = TodoItemBinding.inflate(LayoutInflater.from(parent!!.context), parent, false)
 
-        title.text = currentItem.title
-        dDay.text = currentItem.date
-
-        return view
+        binding.apply {
+            title.text = currentItem.title
+            dDay.text = currentItem.date
+        }
+        return binding.root
     }
 
     override fun getItem(position: Int): Any = items[position]
