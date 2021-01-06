@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.survivalcoding.todolist.adapter.TodoAdapter
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import com.survivalcoding.todolist.model.Todo
+import com.survivalcoding.todolist.util.DateUtils
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -26,13 +27,15 @@ class MainActivity : AppCompatActivity() {
             buttonAdd.setOnClickListener {
                 if (editTextTitle.text.trim().isNotEmpty()) {
                     items.add(
-                        Todo(
+                        index = 0,
+                        element = Todo(
                             editTextTitle.text.toString(),
-                            Calendar.getInstance().time.toString()
+                            DateUtils.dateToString(Calendar.getInstance().time)
                         )
                     )
-                    adapter.notifyItemInserted(items.size)
+                    adapter.notifyItemInserted(0)
 
+                    recyclerView.smoothScrollToPosition(0)
                     editTextTitle.text.clear()
                 }
             }
