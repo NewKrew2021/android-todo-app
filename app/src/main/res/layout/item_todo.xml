@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <CheckBox
+    <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/cb_complete_todo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,11 +17,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_title_todo"
+        android:id="@+id/tv_contents_todo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_16"
-        android:text="@string/tv_title_todo"
+        android:text="@string/tv_contents_todo"
         android:textColor="#000000"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -37,5 +37,5 @@
         android:text="@string/tv_time_todo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/cb_complete_todo"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title_todo" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_contents_todo" />
 </androidx.constraintlayout.widget.ConstraintLayout>
