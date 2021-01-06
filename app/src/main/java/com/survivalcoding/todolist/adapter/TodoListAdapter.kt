@@ -1,11 +1,9 @@
 package com.survivalcoding.todolist.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.survivalcoding.todolist.R
+import com.survivalcoding.todolist.databinding.TodoItemBinding
 import com.survivalcoding.todolist.model.TodoItem
 
 
@@ -19,21 +17,21 @@ class TodoListAdapter : RecyclerView.Adapter<TodoListAdapter.TodoListViewHolder>
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoListViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.todo_item, parent, false)
-        return TodoListViewHolder(view)
+        val binding = TodoItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return TodoListViewHolder(binding)
     }
 
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: TodoListViewHolder, position: Int) {
         val currentItem = items[position]
-        holder.title.text = currentItem.title
-        holder.dDay.text = currentItem.date
+        holder.binding.apply {
+            title.text = currentItem.title
+            dDay.text = currentItem.date
+        }
     }
 
-    class TodoListViewHolder(todoItemView: View) : RecyclerView.ViewHolder(todoItemView) {
-        val title = todoItemView.findViewById<TextView>(R.id.title)
-        val dDay = todoItemView.findViewById<TextView>(R.id.dDay)
+    class TodoListViewHolder(val binding: TodoItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
     }
 }
