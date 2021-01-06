@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.todolist.databinding.ItemTodoListBinding
 import com.survivalcoding.todolist.model.Todo
+import com.survivalcoding.todolist.util.DateUtils
 
 // TODO : isDone, Times 에 따른 정렬 구현
 
@@ -23,7 +24,7 @@ class TodoAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position], position, ::remove)
+        holder.bind(items[position], position, ::remove, ::sort)
     }
 
     override fun getItemCount(): Int = items.size
@@ -36,10 +37,20 @@ class TodoAdapter(
         Toast.makeText(context, "$title 삭제되었습니다.", Toast.LENGTH_SHORT).show()
     }
 
+    private fun sort() {
+        items.sortWith(
+            compareBy (
+                { it.isDone },  // 완료 시 하단
+                { -DateUtils.stringToDate(it.times).time }, // time milliseconds 의 내림차순
+            )
+        )
+        notifyDataSetChanged()
+    }
+
     class ViewHolder(private val binding: ItemTodoListBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(todo: Todo, position: Int, remove: (_position: Int, text: String) -> Unit) {
+        fun bind(todo: Todo, position: Int, remove: (_position: Int, text: String) -> Unit, sort: () -> Unit) {
             binding.apply {
                 textViewTitle.text = todo.title
                 textViewTimes.text = todo.times
@@ -49,6 +60,7 @@ class TodoAdapter(
 
                 checkBox.setOnClickListener {
                     todo.isDone = checkBox.isChecked
+                    sort()
                 }
 
                 layoutItem.setOnClickListener {
