@@ -6,14 +6,17 @@
     android:layout_height="match_parent">
 
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/todoList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="100dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/item_todo" />
 
     <Button
         android:id="@+id/addTodo"
@@ -21,9 +24,19 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        android:text="할 일 추가"
+        android:text="추가"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
+    <EditText
+        android:id="@+id/todoString"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginBottom="16dp"
+        android:hint="추가할 일정을 입력해 주세요"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/addTodo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

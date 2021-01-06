@@ -1,39 +1,45 @@
 package com.survivalcoding.todolist.todo.view
 
 import android.os.Bundle
-import android.widget.*
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.survivalcoding.todolist.R
+import com.survivalcoding.todolist.databinding.ActivityMainBinding
+import com.survivalcoding.todolist.todo.adapter.RecyclerViewAdapter
 import com.survivalcoding.todolist.todo.adapter.Todos
-import com.survivalcoding.todolist.todo.adapter.TodosAdapter
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        val todoList = findViewById<ListView>(R.id.todoList)
-        val editTitle = findViewById<ImageView>(R.id.editTitle)
-        val isDone = findViewById<RadioButton>(R.id.isDoneButton)
+        val todoListBinding = ActivityMainBinding.inflate(layoutInflater)
+        val view = todoListBinding.root
 
-        var data = listOf(
-                Todos(false, "Todo1"),
-                Todos(false, "Todo1"),
-                Todos(false, "Todo1"),
-                Todos(false, "Todo1"),
-                Todos(false, "Todo1"),
+        setContentView(view)
+
+        var data = mutableListOf<Todos>(
+            Todos(false, "Todo1"),
+            Todos(false, "Todo1"),
+            Todos(false, "Todo1"),
+            Todos(false, "Todo1"),
+            Todos(false, "Todo1"),
+            Todos(false, "Todo1"),
+            Todos(false, "Todo1"),
+            Todos(false, "Todo1"),
         )
 
-        val todoAdapter = TodosAdapter(data)
-        todoList.adapter = todoAdapter
+        val todoAdapter = RecyclerViewAdapter(data)
+        todoListBinding.todoList.adapter = todoAdapter
 
-        todoList.setOnItemClickListener { parent, view, position, id ->
-            Toast.makeText(this, "$position 선택", Toast.LENGTH_SHORT).show()
+        // 좀 더 좋은 코드를 봤던것 같은데....
+        todoListBinding.addTodo.setOnClickListener { view ->
+            val todoText: String = todoListBinding.todoString.text.toString()
+            if (todoText == "") {
+                Toast.makeText(this, "값을 입력해 주세요", Toast.LENGTH_SHORT).show()
+            } else {
+                data.add(Todos(false, todoText))
+                Toast.makeText(this, "추가되었습니다.", Toast.LENGTH_SHORT).show()
+            }
         }
-        
-        val addTodo = findViewById<Button>(R.id.addTodo)
-        addTodo.setOnClickListener { view ->
-            Toast.makeText(this, "할일 추가", Toast.LENGTH_SHORT).show()
-        }
+
     }
 }

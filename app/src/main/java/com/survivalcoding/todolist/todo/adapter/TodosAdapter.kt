@@ -1,45 +1,35 @@
 package com.survivalcoding.todolist.todo.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.ImageView
-import android.widget.RadioButton
-import android.widget.TextView
-import com.survivalcoding.todolist.R
+import androidx.recyclerview.widget.RecyclerView
+import com.survivalcoding.todolist.databinding.ItemTodoBinding
 
-class TodosAdapter constructor(private val todos: List<Todos>) : BaseAdapter() {
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view: View
-        val holder: TodoViewHolder
+data class Todos(val isDone: Boolean, val Title: String)
 
-        if (convertView == null) {
-            view = LayoutInflater.from(parent!!.context).inflate(R.layout.item_todo, parent, false)
-            holder = TodoViewHolder()
-            holder.isDone = view.findViewById<RadioButton>(R.id.isDoneButton)
-            holder.titleText = view.findViewById<TextView>(R.id.title)
-            holder.editTitle = view.findViewById<ImageView>(R.id.editTitle)
-            view.tag = holder
-        } else {
-            view = convertView
-            holder = view.tag as TodoViewHolder
-        }
+class RecyclerViewAdapter(private val data: List<Todos>) :
+    RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
-        val currentTodo = getItem(position)
+    lateinit var todoBinding: ItemTodoBinding
 
-        holder.isDone.isChecked = currentTodo.isDone
-        holder.titleText.text = currentTodo.Title
+    class ViewHolder(binding: ItemTodoBinding) : RecyclerView.ViewHolder(binding.root) {
+//        val isDoneButton: RadioButton = view.findViewById(R.id.is_done_button)
+//        val todoText: TextView = view.findViewById(R.id.todo_text)
+//        val deleteButton: Button = view.findViewById(R.id.delete_button)
 
-        return view
     }
 
-    override fun getItem(position: Int) = todos[position]
-
-    override fun getItemId(position: Int): Long {
-        return 0
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
+        todoBinding = ItemTodoBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
+        return ViewHolder(todoBinding)
     }
 
-    override fun getCount() = todos.size
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+        val settingValue = data[position]
 
+        todoBinding.todoText.text = settingValue.Title
+        todoBinding.isDoneButton.isChecked = settingValue.isDone
+    }
+
+    override fun getItemCount() = data.size
 }
