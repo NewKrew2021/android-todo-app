@@ -1,60 +1,36 @@
 package com.survivalcoding.todolist.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.CheckBox
-import android.widget.TextView
-import com.survivalcoding.todolist.R
-import com.survivalcoding.todolist.model.Todo
+import androidx.recyclerview.widget.RecyclerView
+import com.survivalcoding.todolist.databinding.ItemTodoBinding
+import com.survivalcoding.todolist.model.TodoItem
 
-class TodoAdapter(
-        private val todoList: MutableList<Todo>,
-) : BaseAdapter() {
+class TodoAdapter(private val todoList: MutableList<TodoItem> ) : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view: View
-        val holder: TodoViewHolder
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
+        val inflater: LayoutInflater = LayoutInflater.from(parent.context)
+        val binding: ItemTodoBinding = ItemTodoBinding.inflate(inflater, parent, false)
+        return TodoViewHolder(binding)
+    }
 
-        if (convertView == null) {
-            view = LayoutInflater.from(parent!!.context).inflate(R.layout.item_todo, parent, false)
+    override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
+        holder.bindView(todoList[position])
+    }
 
-            holder = TodoViewHolder().apply {
-                cbComplete = view.findViewById(R.id.cb_complete_todo)
-                tvTime = view.findViewById(R.id.tv_time_todo)
-                tvTitle = view.findViewById(R.id.tv_title_todo)
+    override fun getItemCount() = todoList.size
+
+    fun addTodoItem(todoItem: TodoItem) = todoList.add(todoItem)
+
+    class TodoViewHolder(private val binding: ItemTodoBinding) : RecyclerView.ViewHolder(binding.root){
+        fun bindView(todoItem: TodoItem){
+            binding.apply {
+                cbCompleteTodo.isChecked = todoItem.complete
+                tvTimeTodo.text = todoItem.time
+                tvTitleTodo.text = todoItem.title
             }
-
-        } else {
-            view = convertView
-            holder = view.tag as TodoViewHolder
         }
 
-        val currentTodo = getItem(position)
-
-        // 값 설정
-        holder.apply {
-            cbComplete.isChecked = currentTodo.complete
-            tvTime.text = currentTodo.time
-            tvTitle.text = currentTodo.title
-        }
-
-
-        return view
     }
-
-    override fun getItem(position: Int) = todoList[position]
-
-    override fun getItemId(position: Int): Long = 0
-
-    override fun getCount() = todoList.size
-
-    class TodoViewHolder {
-        lateinit var cbComplete: CheckBox
-        lateinit var tvTime: TextView
-        lateinit var tvTitle: TextView
-    }
-
-
 }
+

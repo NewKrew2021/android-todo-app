@@ -1,6 +1,6 @@
 package com.survivalcoding.todolist.model
 
-data class Todo(
+data class TodoItem(
         val time: String,
         val title: String,
         val complete: Boolean,

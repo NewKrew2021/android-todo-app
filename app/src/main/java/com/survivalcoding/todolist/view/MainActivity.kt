@@ -1,36 +1,46 @@
 package com.survivalcoding.todolist.view
 
 import android.os.Bundle
-import android.view.View
-import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.adapter.TodoAdapter
-import com.survivalcoding.todolist.model.Todo
+import com.survivalcoding.todolist.databinding.ActivityMainBinding
+import com.survivalcoding.todolist.model.TodoItem
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        init()
+        initStartView()
+        eventProcess()
+        afterStartView()
+
     }
 
-    private fun init() {
+    private fun initStartView() {
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
+    }
+
+    private fun afterStartView() {
         val todoList = mutableListOf(
-                Todo("2020년 1월5일 17시47분", "첫 번째 할일", false),
-                Todo("2020년 1월6일 13시32분", "두 번째 할일", false),
-                Todo("2020년 1월7일 14시23분", "세 번째 할일", false),
+            TodoItem("2020년 1월5일 17시47분", "첫 번째 할일", false),
+            TodoItem("2020년 1월6일 13시32분", "두 번째 할일", false),
+            TodoItem("2020년 1월7일 14시23분", "세 번째 할일", false),
         )
 
-        val lvTodo = findViewById<ListView>(R.id.lv_todo_main)
         val todoAdapter = TodoAdapter(todoList)
-        lvTodo.adapter = todoAdapter
+        binding.rvTodoMain.adapter = todoAdapter
     }
 
-    fun addTodo(v: View) {
-        Toast.makeText(this, "to do 추가!", Toast.LENGTH_SHORT).show()
+    private fun eventProcess() {
+        binding.btnAddMain.setOnClickListener {
+            Toast.makeText(applicationContext, "hi", Toast.LENGTH_SHORT).show()
+        }
     }
 }
