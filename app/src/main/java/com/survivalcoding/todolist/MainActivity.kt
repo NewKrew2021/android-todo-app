@@ -24,17 +24,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val listView = findViewById<ListView>(R.id.list_view)
         val customAdapter = CustomAdapter()
-        var mark_bool = false
+        var markBool = false
         listView.adapter = customAdapter
         val markBox = findViewById<ImageView>(R.id.mark_box)
         markBox.setOnClickListener {
-            mark_bool = !mark_bool
-            if (mark_bool) markBox.setImageResource(R.drawable.ic_baseline_star_24)
+            markBool = !markBool
+            if (markBool) markBox.setImageResource(R.drawable.ic_baseline_star_24)
             else markBox.setImageResource(R.drawable.ic_baseline_star_outline_24)
         }
         val addButton = findViewById<ImageView>(R.id.button_add)
         val editTodo = findViewById<EditText>(R.id.edit_todo)
         fun clickAction() {
+            //To-Do 항목 추가
             if (editTodo.text.isEmpty()) {
                 Toast.makeText(this, "입력해주세요.", Toast.LENGTH_SHORT).show()
             } else {
@@ -42,12 +43,14 @@ class MainActivity : AppCompatActivity() {
                     TodoData(
                         editTodo.text.toString(),
                         Calendar.getInstance().timeInMillis,
-                        mark = mark_bool
+                        mark = markBool
                     )
                 )
                 editTodo.text.clear()
                 markBox.setImageResource(R.drawable.ic_baseline_star_outline_24)
-                mark_bool = false
+                markBool = false
+
+                //키보드 비활성화
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
             }
@@ -56,6 +59,7 @@ class MainActivity : AppCompatActivity() {
             clickAction()
         }
         editTodo.setOnEditorActionListener { _, _, event ->
+            //엔터키 입력시 자동으로 추가
             if (event.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER) clickAction()
             true
         }
