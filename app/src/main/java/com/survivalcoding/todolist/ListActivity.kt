@@ -1,18 +1,30 @@
 package com.survivalcoding.todolist
 
 import android.os.Bundle
-import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.survivalcoding.todolist.databinding.ActivityListBinding
 
 class ListActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityListBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_list)
+        binding = ActivityListBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        val listView1 = findViewById<ListView>(R.id.listView1)
+        val adapter = MyAdapterRecycler()
 
+        binding.RecyclerView.layoutManager = LinearLayoutManager(this)
 
-        listView1.adapter = MyAdapter()
+        binding.button2.setOnClickListener {
+
+            adapter.data.add(0, binding.editText.text.toString())
+            binding.RecyclerView.adapter = adapter
+        }
+
 
     }
 }
