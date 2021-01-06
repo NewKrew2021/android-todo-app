@@ -4,7 +4,7 @@ import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.ListItemBinding
 import com.survivalcoding.todolist.view.TodoData
 
-class TodoListHolder(val binding: ListItemBinding) {
+class TodoListViewHolder(val binding: ListItemBinding) {
     fun bind(item: TodoData, sortFunction: () -> Unit) {
         binding.checkBox.setOnClickListener {
             // To-Do 항목 완료
