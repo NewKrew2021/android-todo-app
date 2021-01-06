@@ -1,4 +1,4 @@
-package com.survivalcoding.todolist
+package com.survivalcoding.todolist.todo.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +7,7 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.TextView
+import com.survivalcoding.todolist.R
 
 class TodosAdapter constructor(private val todos: List<Todos>) : BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {

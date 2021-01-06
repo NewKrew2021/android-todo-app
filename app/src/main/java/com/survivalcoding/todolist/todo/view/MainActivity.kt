@@ -1,8 +1,11 @@
-package com.survivalcoding.todolist
+package com.survivalcoding.todolist.todo.view
 
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.survivalcoding.todolist.R
+import com.survivalcoding.todolist.todo.adapter.Todos
+import com.survivalcoding.todolist.todo.adapter.TodosAdapter
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -9,8 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TodoList">
-        <activity android:name=".Lecture" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".lecture.Lecture" />
+        <activity android:name=".todo.view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

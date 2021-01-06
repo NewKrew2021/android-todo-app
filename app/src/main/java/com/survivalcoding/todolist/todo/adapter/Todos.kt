@@ -1,4 +1,4 @@
-package com.survivalcoding.todolist
+package com.survivalcoding.todolist.todo.adapter
 
 import android.widget.ImageView
 import android.widget.RadioButton

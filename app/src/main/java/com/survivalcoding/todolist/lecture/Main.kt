@@ -1,4 +1,4 @@
-package com.survivalcoding.todolist
+package com.survivalcoding.todolist.lecture
 
 data class Trader(val name: String, val city: String)
 data class Transaction(val trader: Trader, val year: Int, val value: Int)
@@ -20,7 +20,6 @@ val transactions = listOf(
 // 6. 케임브리지에 근무하는 거래자의 모든 트랙잭션값을 출력하시오
 // 7. 전체 트랜잭션 중 최댓값을 얼마인가?
 // 8. 전체 트랜잭션 중 최솟값은 얼마인가?
-
 
 fun main() {
     JanFifth()
