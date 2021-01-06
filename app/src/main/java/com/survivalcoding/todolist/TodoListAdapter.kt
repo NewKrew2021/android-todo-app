@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.CheckBox
+import android.widget.TextView
 
 class TodoListAdapter(private var list: MutableList<TodoItem>) : BaseAdapter() {
     override fun getCount() = list.size
@@ -47,5 +49,10 @@ class TodoListAdapter(private var list: MutableList<TodoItem>) : BaseAdapter() {
             list[position].isChecked = !holder.checkBox.isChecked
             holder.checkBox.isChecked = !holder.checkBox.isChecked
         }
+    }
+
+    class TodoViewHolder {
+        lateinit var checkBox: CheckBox
+        lateinit var todoTitle: TextView
     }
 }
