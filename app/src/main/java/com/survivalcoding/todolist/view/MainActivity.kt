@@ -1,4 +1,4 @@
-package com.survivalcoding.todolist
+package com.survivalcoding.todolist.view
 
 import android.content.Context
 import android.os.Bundle
@@ -9,6 +9,8 @@ import android.widget.ImageView
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.survivalcoding.todolist.R
+import com.survivalcoding.todolist.adapter.CustomAdapter
 import java.util.*
 
 data class TodoData(

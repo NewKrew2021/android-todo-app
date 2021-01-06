@@ -1,4 +1,4 @@
-package com.survivalcoding.todolist
+package com.survivalcoding.todolist.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,10 +7,12 @@ import android.widget.BaseAdapter
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
+import com.survivalcoding.todolist.R
+import com.survivalcoding.todolist.view.TodoData
 
 class CustomAdapter() : BaseAdapter() {
 
-    var items = mutableListOf<TodoData>()
+    private var items = mutableListOf<TodoData>()
 
     private fun sortItem() {
         //To-Do 아이템 sorting (완료 -> 즐겨찾기 -> 시간 순으로)
