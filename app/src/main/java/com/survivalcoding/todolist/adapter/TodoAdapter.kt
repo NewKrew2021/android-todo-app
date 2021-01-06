@@ -37,12 +37,13 @@ class TodoAdapter(
         Toast.makeText(context, "$title 삭제되었습니다.", Toast.LENGTH_SHORT).show()
     }
 
+    // 아직 완료하지 않은 일들만 시간 순으로 내림차순 정렬
     private fun sort() {
         items.sortWith(
-            compareBy (
-                { it.isDone },  // 완료 시 하단
-                { -DateUtils.stringToDate(it.times).time }, // time milliseconds 의 내림차순
-            )
+            compareBy {
+                if (!it.isDone) -DateUtils.stringToDate(it.times).time
+                else Long.MAX_VALUE
+            }
         )
         notifyDataSetChanged()
     }
