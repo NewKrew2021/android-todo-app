@@ -15,12 +15,14 @@ data class TodoData(
     var text: String,
     var time: Long,
     var check: Boolean = false,
-    var mark: Boolean = false
+    var mark: Boolean = false,
+    var pid: Int = 0,
 )
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    var pid = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +46,8 @@ class MainActivity : AppCompatActivity() {
                     TodoData(
                         binding.editTodo.text.toString(),
                         Calendar.getInstance().timeInMillis,
-                        mark = markBool
+                        mark = markBool,
+                        pid = pid++,
                     )
                 )
                 binding.editTodo.text.clear()
