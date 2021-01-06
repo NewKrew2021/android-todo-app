@@ -31,7 +31,7 @@ class Lecture : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, data)
 
         // 3. View - View에 어댑터 연결
-        val listView = findViewById<ListView>(R.id.list_view)   // 왜 ListView가 제네릭처럼 들어가는거지...? >> findViewById가 반환형으로 제네릭을 필요로 한다.
+        val listView = findViewById<ListView>(R.id.listView)   // 왜 ListView가 제네릭처럼 들어가는거지...? >> findViewById가 반환형으로 제네릭을 필요로 한다.
         listView.adapter = adapter // listView.setAdapter(adapter)
 
         // 클릭 이벤트 추가
