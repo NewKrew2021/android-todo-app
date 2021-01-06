@@ -4,10 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.CheckBox
-import android.widget.ImageView
-import android.widget.TextView
-import com.survivalcoding.todolist.R
+import com.survivalcoding.todolist.databinding.ListItemBinding
 import com.survivalcoding.todolist.view.TodoData
 
 class CustomAdapter() : BaseAdapter() {
@@ -44,32 +41,35 @@ class CustomAdapter() : BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View
+        val holder: TodoListHolder
         if (convertView == null) {
-            view = LayoutInflater.from(parent!!.context)
-                .inflate(R.layout.list_item, parent, false)
+            val binding =
+                ListItemBinding.inflate(LayoutInflater.from(parent!!.context), parent, false)
+            view = binding.root
+            holder = TodoListHolder(binding)
+            view.tag = holder
         } else {
             view = convertView
-        }
-        val checkBox = view.findViewById<CheckBox>(R.id.checkbox)
-        checkBox.setOnClickListener {
-            // To-Do 항목 완료
-            items[position].check = !items[position].check
-            sortItem()
-        }
-        val markBox = view.findViewById<ImageView>(R.id.mark_box)
-        markBox.setOnClickListener {
-            // To-Do 항목 즐겨찾기
-            items[position].mark = !items[position].mark
-            if (items[position].mark) markBox.setImageResource(R.drawable.ic_baseline_star_24)
-            else markBox.setImageResource(R.drawable.ic_baseline_star_outline_24)
-            sortItem()
+            holder = view.tag as TodoListHolder
         }
         val item = getItem(position)
-        val todoText = view.findViewById<TextView>(R.id.text_todo)
-        todoText.text = item.text
-        if (item.mark) markBox.setImageResource(R.drawable.ic_baseline_star_24)
-        else markBox.setImageResource(R.drawable.ic_baseline_star_outline_24)
-        checkBox.isChecked = item.check
+//        holder.binding.checkBox.setOnClickListener {
+//            // To-Do 항목 완료
+//            item.check = !item.check
+//            sortItem()
+//        }
+//        holder.binding.markBox.setOnClickListener {
+//            // To-Do 항목 즐겨찾기
+//            item.mark = !item.mark
+//            if (item.mark) holder.binding.markBox.setImageResource(R.drawable.ic_baseline_star_24)
+//            else holder.binding.markBox.setImageResource(R.drawable.ic_baseline_star_outline_24)
+//            sortItem()
+//        }
+//        holder.binding.textTodo.text = item.text
+//        if (item.mark) holder.binding.markBox.setImageResource(R.drawable.ic_baseline_star_24)
+//        else holder.binding.markBox.setImageResource(R.drawable.ic_baseline_star_outline_24)
+//        holder.binding.checkBox.isChecked = item.check
+        holder.bind(item, ::sortItem)
         return view
 
     }

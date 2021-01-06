@@ -7,7 +7,7 @@
     android:background="#6A22BDAE"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    tools:context=".MainActivity">
+    tools:context=".view.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_add"
