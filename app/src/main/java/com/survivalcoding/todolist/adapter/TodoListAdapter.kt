@@ -1,4 +1,4 @@
-package com.survivalcoding.todolist
+package com.survivalcoding.todolist.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -6,8 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.survivalcoding.todolist.databinding.TodoItemBinding
+import com.survivalcoding.todolist.model.TodoItem
 
-data class TodoItem(val title: String, val date: String)
+
 class TodoListAdapter : BaseAdapter() {
     private val items = listOf<TodoItem>(
             TodoItem("1순위", "d-20"),
