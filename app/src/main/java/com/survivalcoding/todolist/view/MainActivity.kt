@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         val adapter = TodoAdapter(this, items)
 
         binding.apply {
-            listView.adapter = adapter
+            recyclerView.adapter = adapter
 
             buttonAdd.setOnClickListener {
                 if (editTextTitle.text.trim().isNotEmpty()) {
@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
                             Calendar.getInstance().time.toString()
                         )
                     )
-                    adapter.notifyDataSetChanged()
+                    adapter.notifyItemInserted(items.size)
 
                     editTextTitle.text.clear()
                 }
