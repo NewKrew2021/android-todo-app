@@ -1,15 +1,15 @@
 package com.survivalcoding.todolist.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import com.survivalcoding.todolist.databinding.TodoItemBinding
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.model.TodoItem
 
 
-class TodoListAdapter : BaseAdapter() {
+class TodoListAdapter : RecyclerView.Adapter<TodoListAdapter.TodoListViewHolder>() {
     private val items = listOf<TodoItem>(
             TodoItem("1순위", "d-20"),
             TodoItem("2순위", "d-30"),
@@ -18,24 +18,23 @@ class TodoListAdapter : BaseAdapter() {
             TodoItem("5순위", "d-34"),
     )
 
-    @SuppressLint("ViewHolder")
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val currentItem = getItem(position) as TodoItem
-        val binding = TodoItemBinding.inflate(LayoutInflater.from(parent!!.context), parent, false)
-
-        binding.apply {
-            title.text = currentItem.title
-            dDay.text = currentItem.date
-        }
-        return binding.root
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoListViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.todo_item, parent, false)
+        return TodoListViewHolder(view)
     }
 
-    override fun getItem(position: Int): Any = items[position]
+    override fun getItemCount(): Int = items.size
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
+    override fun onBindViewHolder(holder: TodoListViewHolder, position: Int) {
+        val currentItem = items[position]
+        holder.title.text = currentItem.title
+        holder.dDay.text = currentItem.date
     }
 
-    override fun getCount(): Int = items.size
+    class TodoListViewHolder(todoItemView: View) : RecyclerView.ViewHolder(todoItemView) {
+        val title = todoItemView.findViewById<TextView>(R.id.title)
+        val dDay = todoItemView.findViewById<TextView>(R.id.dDay)
 
+    }
 }
+
