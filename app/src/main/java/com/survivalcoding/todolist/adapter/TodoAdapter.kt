@@ -4,108 +4,94 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import androidx.constraintlayout.widget.ConstraintLayout
-import com.survivalcoding.todolist.R
+import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
+import com.survivalcoding.todolist.databinding.ItemTodoListBinding
+import com.survivalcoding.todolist.model.Todo
+import com.survivalcoding.todolist.util.DateUtils
 
 // TODO : isDone, Times 에 따른 정렬 구현
-data class Todo (
-    var title: String,
-    var times: String,
-    var isDone: Boolean = false,
-    var isOption: Boolean = false,  // true : 수정 삭제 Visible, false : 수정 삭제 Invisible
-)
 
 class TodoAdapter(
     private val context: Context,
     private val items: MutableList<Todo>,
-) : BaseAdapter() {
+) : RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
 
-    class TodoViewHolder {
-        lateinit var layout: ConstraintLayout
-        lateinit var textTitle: TextView
-        lateinit var textTimes: TextView
-        lateinit var checkBox: CheckBox
-        lateinit var btnMenus: ImageButton
-        lateinit var btnEdit: ImageButton
-        lateinit var btnDelete: ImageButton
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = ItemTodoListBinding.inflate(LayoutInflater.from(context), parent, false)
 
-        fun bind(todo: Todo) {
-            textTitle.text = todo.title
-            textTimes.text = todo.times
-            checkBox.isChecked = todo.isDone
+        return ViewHolder(binding)
+    }
 
-            updateButtonsVisibility(todo.isOption)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(items[position], position, ::remove, ::sort)
+    }
 
-            checkBox.setOnClickListener {
-                todo.isDone = checkBox.isChecked
+    override fun getItemCount(): Int = items.size
+
+    private fun remove(position: Int, title: String) {
+        items.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, items.size - position)
+
+        Toast.makeText(context, "$title 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+    }
+
+    // 아직 완료하지 않은 일들만 시간 순으로 내림차순 정렬
+    private fun sort() {
+        items.sortWith(
+            compareBy {
+                if (!it.isDone) -DateUtils.stringToDate(it.times).time
+                else Long.MAX_VALUE
             }
+        )
+        notifyDataSetChanged()
+    }
 
-            btnMenus.setOnClickListener {
-                todo.isOption = true
+    class ViewHolder(private val binding: ItemTodoListBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(todo: Todo, position: Int, remove: (_position: Int, text: String) -> Unit, sort: () -> Unit) {
+            binding.apply {
+                textViewTitle.text = todo.title
+                textViewTimes.text = todo.times
+                checkBox.isChecked = todo.isDone
+
                 updateButtonsVisibility(todo.isOption)
-            }
 
-            layout.setOnClickListener {
-                if (todo.isOption) {
-                    todo.isOption = false
+                checkBox.setOnClickListener {
+                    todo.isDone = checkBox.isChecked
+                    sort()
+                }
+
+                layoutItem.setOnClickListener {
+                    if (todo.isOption) {
+                        todo.isOption = false
+                        updateButtonsVisibility(todo.isOption)
+                    }
+                }
+
+                buttonMenus.setOnClickListener {
+                    todo.isOption = true
                     updateButtonsVisibility(todo.isOption)
+                }
+
+                buttonEdit.setOnClickListener {
+                    // TODO : todo 제목 수정 구현
+                }
+
+                buttonDelete.setOnClickListener {
+                    remove.invoke(position, textViewTitle.text.toString())
                 }
             }
         }
 
         private fun updateButtonsVisibility(isOption: Boolean) {
-            btnMenus.visibility = if (isOption) View.INVISIBLE else View.VISIBLE
-            btnEdit.visibility = if (isOption) View.VISIBLE else View.INVISIBLE
-            btnDelete.visibility = if (isOption) View.VISIBLE else View.INVISIBLE
+            binding.apply {
+                buttonMenus.visibility = if (isOption) View.INVISIBLE else View.VISIBLE
+                buttonEdit.visibility = if (isOption) View.VISIBLE else View.INVISIBLE
+                buttonDelete.visibility = if (isOption) View.VISIBLE else View.INVISIBLE
+            }
         }
     }
-
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view: View
-        val holder: TodoViewHolder
-
-        if (convertView == null) {
-            view = LayoutInflater.from(context)
-                .inflate(R.layout.item_todo_list, parent, false)
-
-            holder = TodoViewHolder()
-            holder.apply {
-                layout = view.findViewById(R.id.layout_item)
-                textTitle = view.findViewById(R.id.textView_title)
-                textTimes = view.findViewById(R.id.textView_times)
-                checkBox = view.findViewById(R.id.checkBox)
-                btnMenus = view.findViewById(R.id.button_menus)
-                btnEdit = view.findViewById(R.id.button_edit)
-                btnDelete = view.findViewById(R.id.button_delete)
-            }
-
-            view.tag = holder
-        } else {
-            view = convertView
-            holder = (view.tag) as TodoViewHolder
-        }
-
-        holder.bind(getItem(position))
-        holder.apply {
-            btnEdit.setOnClickListener {
-                // TODO : todo 제목 수정 구현
-            }
-
-            btnDelete.setOnClickListener {
-                items.removeAt(position)
-                notifyDataSetChanged()
-
-                Toast.makeText(context, "${textTitle.text} 삭제되었습니다.", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        return view
-    }
-
-    override fun getItem(position: Int): Todo = items[position]
-
-    override fun getItemId(position: Int): Long = 0L
-
-    override fun getCount(): Int = items.size
 }
