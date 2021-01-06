@@ -27,12 +27,14 @@ class TodoAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    private fun remove(position: Int, title: String) {
+    private fun remove(position: Int) {
+        val item = items[position]
+
         items.removeAt(position)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, items.size - position)
 
-        showToastMessage(title)
+        showToastMessage(item.title)
     }
 
     // 아직 완료하지 않은 일들만 시간 순으로 내림차순 정렬
@@ -49,7 +51,7 @@ class TodoAdapter(
     class ViewHolder(private val binding: ItemTodoListBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(todo: Todo, position: Int, remove: (Int, String) -> Unit, sort: () -> Unit) {
+        fun bind(todo: Todo, position: Int, remove: (Int) -> Unit, sort: () -> Unit) {
             binding.apply {
                 textViewTitle.text = todo.title
                 textViewTimes.text = todo.times
@@ -79,7 +81,7 @@ class TodoAdapter(
                 }
 
                 buttonDelete.setOnClickListener {
-                    remove(position, textViewTitle.text.toString())
+                    remove(position)
                 }
             }
         }
