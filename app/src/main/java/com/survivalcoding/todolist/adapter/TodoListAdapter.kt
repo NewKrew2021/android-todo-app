@@ -4,9 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.CheckBox
-import android.widget.TextView
-import com.survivalcoding.todolist.R
+import com.survivalcoding.todolist.databinding.ToDoListBinding
 import com.survivalcoding.todolist.model.TodoItem
 
 class TodoListAdapter(private var list: MutableList<TodoItem>) : BaseAdapter() {
@@ -22,18 +20,17 @@ class TodoListAdapter(private var list: MutableList<TodoItem>) : BaseAdapter() {
 
         // 뷰홀더 패턴 적용
         if (convertView == null) {
-            holder = TodoViewHolder()
-            view = LayoutInflater.from(parent?.context).inflate(R.layout.to_do_list, parent, false)
-            holder.checkBox = view.findViewById(R.id.check_box)
-            holder.todoTitle = view.findViewById(R.id.to_do_title)
-            view.tag = holder
+            ToDoListBinding.inflate(LayoutInflater.from(parent?.context)).apply {
+                holder = TodoViewHolder(this)
+                view = root
+                view.tag = holder
+            }
         } else {
             view = convertView
             holder = view.tag as TodoViewHolder
         }
-        holder.checkBox.isChecked = list[position].isChecked
-        holder.todoTitle.text = list[position].todoTitle
-        setOnClickListener(holder, position)
+        holder.bind(list[position])
+        holder.setOnClickListener(list[position])
         return view
     }
 
@@ -42,19 +39,26 @@ class TodoListAdapter(private var list: MutableList<TodoItem>) : BaseAdapter() {
         notifyDataSetChanged()
     }
 
-    private fun setOnClickListener(holder: TodoViewHolder, position: Int) {
-        holder.checkBox.setOnClickListener {
-            list[position].isChecked = holder.checkBox.isChecked
+    class TodoViewHolder(private val binding: ToDoListBinding) {
+        fun bind(todoItem: TodoItem) {
+            todoItem.apply {
+                binding.checkBox.isChecked = isChecked
+                binding.toDoTitle.text = todoTitle
+            }
         }
 
-        holder.todoTitle.setOnClickListener {
-            list[position].isChecked = !holder.checkBox.isChecked
-            holder.checkBox.isChecked = !holder.checkBox.isChecked
+        fun setOnClickListener(todoItem: TodoItem) {
+            binding.apply {
+                checkBox.setOnClickListener {
+                    todoItem.isChecked = checkBox.isChecked
+                }
+                toDoTitle.setOnClickListener {
+                    checkBox.isChecked.apply {
+                        todoItem.isChecked = !this
+                        checkBox.isChecked = !this
+                    }
+                }
+            }
         }
-    }
-
-    class TodoViewHolder {
-        lateinit var checkBox: CheckBox
-        lateinit var todoTitle: TextView
     }
 }
