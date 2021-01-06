@@ -1,10 +1,10 @@
-package com.survivalcoding.todolist
+package com.survivalcoding.todolist.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.survivalcoding.todolist.adapter.Todo
 import com.survivalcoding.todolist.adapter.TodoAdapter
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
+import com.survivalcoding.todolist.model.Todo
 import java.util.*
 
 class MainActivity : AppCompatActivity() {

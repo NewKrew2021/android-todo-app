@@ -7,14 +7,9 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.survivalcoding.todolist.R
+import com.survivalcoding.todolist.model.Todo
 
 // TODO : isDone, Times 에 따른 정렬 구현
-data class Todo (
-    var title: String,
-    var times: String,
-    var isDone: Boolean = false,
-    var isOption: Boolean = false,  // true : 수정 삭제 Visible, false : 수정 삭제 Invisible
-)
 
 class TodoAdapter(
     private val context: Context,
