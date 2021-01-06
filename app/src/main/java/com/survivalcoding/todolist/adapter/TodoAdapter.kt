@@ -29,7 +29,7 @@ class TodoAdapter(private val todoList: MutableList<TodoItem>) :
             binding.apply {
                 cbCompleteTodo.isChecked = todoItem.complete
                 tvTimeTodo.text = todoItem.time
-                tvTitleTodo.text = todoItem.title
+                tvContentsTodo.text = todoItem.contents
             }
         }
 
