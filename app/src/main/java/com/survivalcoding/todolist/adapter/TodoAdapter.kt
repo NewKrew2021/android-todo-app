@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.CheckBox
+import android.widget.TextView
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.model.Todo
 
@@ -38,6 +40,7 @@ class TodoAdapter(
             tvTitle.text = currentTodo.title
         }
 
+
         return view
     }
 
@@ -46,5 +49,12 @@ class TodoAdapter(
     override fun getItemId(position: Int): Long = 0
 
     override fun getCount() = todoList.size
+
+    class TodoViewHolder {
+        lateinit var cbComplete: CheckBox
+        lateinit var tvTime: TextView
+        lateinit var tvTitle: TextView
+    }
+
 
 }
