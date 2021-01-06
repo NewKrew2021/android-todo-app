@@ -7,7 +7,7 @@
     tools:context=".view.MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_todo_main"
+        android:id="@+id/rv_todolist_main"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="@dimen/spacing_8"

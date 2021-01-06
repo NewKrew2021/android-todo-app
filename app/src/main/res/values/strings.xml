@@ -7,4 +7,11 @@
     <!-- item_todo -->
     <string name="tv_title_todo">dummy data dummy data dummy data</string>
     <string name="tv_time_todo">2020년 1월 5일 17시 36분</string>
+
+    <!-- activity_add_todo -->
+    <string name="btn_save_add_todo">저장하기</string>
+    <string name="btn_cancel_add_todo">취소하기</string>
+    <string name="edt_title_hint_add_todo">제목을 입력하세요</string>
+    <string name="edt_contents_hint_add_todo">내용을 입력하세요</string>
+
 </resources>

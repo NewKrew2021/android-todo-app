@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.todolist.databinding.ItemTodoBinding
 import com.survivalcoding.todolist.model.TodoItem
 
-class TodoAdapter(private val todoList: MutableList<TodoItem> ) : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
+class TodoAdapter(private val todoList: MutableList<TodoItem>) :
+    RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         val inflater: LayoutInflater = LayoutInflater.from(parent.context)
@@ -22,8 +23,9 @@ class TodoAdapter(private val todoList: MutableList<TodoItem> ) : RecyclerView.A
 
     fun addTodoItem(todoItem: TodoItem) = todoList.add(todoItem)
 
-    class TodoViewHolder(private val binding: ItemTodoBinding) : RecyclerView.ViewHolder(binding.root){
-        fun bindView(todoItem: TodoItem){
+    class TodoViewHolder(private val binding: ItemTodoBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bindView(todoItem: TodoItem) {
             binding.apply {
                 cbCompleteTodo.isChecked = todoItem.complete
                 tvTimeTodo.text = todoItem.time
