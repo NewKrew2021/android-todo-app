@@ -1,10 +1,13 @@
-package com.survivalcoding.todolist
+package com.survivalcoding.todolist.view
 
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
+import com.survivalcoding.todolist.R
+import com.survivalcoding.todolist.adapter.TodoListAdapter
+import com.survivalcoding.todolist.model.TodoItem
 
 class MainActivity : AppCompatActivity() {
     private lateinit var todoEditText: EditText

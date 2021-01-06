@@ -1,4 +1,4 @@
-package com.survivalcoding.todolist
+package com.survivalcoding.todolist.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.CheckBox
 import android.widget.TextView
+import com.survivalcoding.todolist.R
+import com.survivalcoding.todolist.model.TodoItem
 
 class TodoListAdapter(private var list: MutableList<TodoItem>) : BaseAdapter() {
     override fun getCount() = list.size
