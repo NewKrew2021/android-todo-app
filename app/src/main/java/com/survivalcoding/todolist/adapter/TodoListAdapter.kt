@@ -7,7 +7,9 @@ import com.survivalcoding.todolist.databinding.ItemTodoBinding
 
 class TodoListAdapter : RecyclerView.Adapter<TodoViewHolder>() {
 
-    private val list = mutableListOf<TodoItem>()
+    private val _list = mutableListOf<TodoItem>()
+    val list: List<TodoItem>
+        get() = _list
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         val binding = ItemTodoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -23,13 +25,19 @@ class TodoListAdapter : RecyclerView.Adapter<TodoViewHolder>() {
     }
 
     fun addItem(item: TodoItem) {
-        list.add(0, item)
+        _list.add(0, item)
         notifyItemInserted(0)
         notifyItemRangeChanged(0, list.size)
     }
 
+    fun resetItems(items: MutableList<TodoItem>) {
+        _list.clear()
+        _list.addAll(items)
+        notifyDataSetChanged()
+    }
+
     private fun sortItems() {
-        list.sortWith(compareBy({ it.checked }, { -it.timeStamp }))
+        _list.sortWith(compareBy({ it.checked }, { -it.timeStamp }))
         notifyDataSetChanged()
     }
 }

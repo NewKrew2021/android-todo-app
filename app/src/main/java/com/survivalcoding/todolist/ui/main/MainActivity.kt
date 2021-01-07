@@ -31,6 +31,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putParcelableArrayList(SAVED_LIST_KEY, adapter.list as ArrayList<TodoItem>)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        savedInstanceState.getParcelableArrayList<TodoItem>(SAVED_LIST_KEY)?.let {
+            adapter.resetItems(it)
+        }
+    }
+
     private fun addItem() {
 
         if (binding.input.text.toString().isNotEmpty()) {
@@ -52,6 +66,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val ITEM_VERTICAL_INTERVAL = 12
         private const val NO_CONTENT_MESSAGE = "내용을 입력해주세요."
+        private const val SAVED_LIST_KEY = "SAVED_LIST_KEY"
     }
 
 }
