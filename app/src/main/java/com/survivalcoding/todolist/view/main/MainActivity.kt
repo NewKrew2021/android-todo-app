@@ -17,6 +17,7 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var adapter: TodoRecyclerViewAdapter
     var pid = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,8 +25,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        val todoRecyclerViewAdapter = TodoRecyclerViewAdapter()
-        binding.recyclerView.adapter = todoRecyclerViewAdapter
+        adapter = TodoRecyclerViewAdapter()
+        binding.recyclerView.adapter = adapter
         var isMarked = false
         binding.markBox.setOnClickListener {
             isMarked = !isMarked
@@ -35,9 +36,9 @@ class MainActivity : AppCompatActivity() {
         fun clickAction() {
             //To-Do 항목 추가
             if (binding.editTodo.text.isEmpty()) {
-                Toast.makeText(this, "입력해주세요.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, ALERT_RENAME, Toast.LENGTH_SHORT).show()
             } else {
-                todoRecyclerViewAdapter.addItem(
+                adapter.addItem(
                     TodoData(
                         binding.editTodo.text.toString(),
                         Calendar.getInstance().timeInMillis,
@@ -63,5 +64,22 @@ class MainActivity : AppCompatActivity() {
             else event.let { if (event.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER) clickAction() } //키보드에서의 엔터키
             true
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelableArrayList(DATA_SAVE, adapter.items as ArrayList<TodoData>)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        val savedData = savedInstanceState.getParcelableArrayList<TodoData>(DATA_SAVE)
+        savedData?.let { adapter.addAllItems(savedData.toList()) }
+    }
+
+    companion object {
+        private const val DATA_SAVE = "todo"
+        private const val ALERT_RENAME = "내용을 입력해주세요."
+        private val TAG by lazy { MainActivity::class.java.simpleName }
     }
 }
