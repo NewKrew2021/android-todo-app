@@ -5,7 +5,7 @@
     <string name="btn_add_main">Add a to do..</string>
 
     <!-- item_todo -->
-    <string name="tv_contents_todo">dummy data dummy data dummy data</string>
+    <string name="tv_contents_todo">dummy data dummy data</string>
     <string name="tv_time_todo">2020년 1월 5일 17시 36분</string>
 
     <!-- activity_add_todo -->
