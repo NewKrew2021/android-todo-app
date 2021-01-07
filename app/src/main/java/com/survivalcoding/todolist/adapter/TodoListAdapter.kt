@@ -8,20 +8,17 @@ import com.survivalcoding.todolist.model.TodoItem
 
 class TodoListAdapter(private val list: MutableList<TodoItem>) :
     RecyclerView.Adapter<TodoListAdapter.TodoViewHolder>() {
+    private lateinit var binding: ToDoListBinding
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
-        return TodoViewHolder(
-            ToDoListBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-        )
+        binding = ToDoListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return TodoViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
         holder.apply {
             bind(list[position])
-            setOnClickListener(list[position])
+            setOnClickListener(position)
         }
     }
 
@@ -29,7 +26,30 @@ class TodoListAdapter(private val list: MutableList<TodoItem>) :
 
     fun addNewTodo(item: TodoItem) {
         list.add(item)
-        notifyDataSetChanged()
+        notifyItemInserted(list.size)
+    }
+
+    private fun removeTodo(position: Int) {
+        list.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, list.size)
+    }
+
+    private fun setOnClickListener(position: Int) {
+        binding.apply {
+            checkBox.setOnClickListener {
+                list[position].isChecked = checkBox.isChecked
+            }
+            toDoTitle.setOnClickListener {
+                checkBox.isChecked.apply {
+                    list[position].isChecked = !this
+                    checkBox.isChecked = !this
+                }
+            }
+            removeButton.setOnClickListener {
+                removeTodo(position)
+            }
+        }
     }
 
     class TodoViewHolder(private val binding: ToDoListBinding) :
@@ -38,20 +58,6 @@ class TodoListAdapter(private val list: MutableList<TodoItem>) :
             binding.apply {
                 checkBox.isChecked = todoItem.isChecked
                 toDoTitle.text = todoItem.todoTitle
-            }
-        }
-
-        fun setOnClickListener(todoItem: TodoItem) {
-            binding.apply {
-                checkBox.setOnClickListener {
-                    todoItem.isChecked = checkBox.isChecked
-                }
-                toDoTitle.setOnClickListener {
-                    checkBox.isChecked.apply {
-                        todoItem.isChecked = !this
-                        checkBox.isChecked = !this
-                    }
-                }
             }
         }
     }
