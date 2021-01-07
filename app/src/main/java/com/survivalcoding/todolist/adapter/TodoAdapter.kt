@@ -24,18 +24,17 @@ class TodoAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(
             items[position],
-            position,
-            { _position -> remove(_position) },
+            { _item -> remove(_item) },
             { sort() },
         )
     }
 
     override fun getItemCount(): Int = items.size
 
-    private fun remove(position: Int) {
-        val item = items[position]
+    private fun remove(item: Todo) {
+        val position = items.indexOf(item)
 
-        items.removeAt(position)
+        items.remove(item)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, items.size - position)
 
@@ -56,7 +55,7 @@ class TodoAdapter(
     class ViewHolder(private val binding: ItemTodoListBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(todo: Todo, position: Int, remove: (Int) -> Unit, sort: () -> Unit) {
+        fun bind(todo: Todo, remove: (Todo) -> Unit, sort: () -> Unit) {
             binding.apply {
                 textViewTitle.text = todo.title
                 textViewTimes.text = todo.times
@@ -86,7 +85,7 @@ class TodoAdapter(
                 }
 
                 buttonDelete.setOnClickListener {
-                    remove(position)
+                    remove(todo)
                 }
             }
         }
