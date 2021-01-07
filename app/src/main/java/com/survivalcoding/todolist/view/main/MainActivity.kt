@@ -69,16 +69,19 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelableArrayList(DATA_SAVE, adapter.items as ArrayList<TodoData>)
+        outState.putInt(PID_SAVE, pid)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         val savedData = savedInstanceState.getParcelableArrayList<TodoData>(DATA_SAVE)
         savedData?.let { adapter.addAllItems(savedData.toList()) }
+        pid = savedInstanceState.getInt(PID_SAVE)
     }
 
     companion object {
         private const val DATA_SAVE = "todo"
+        private const val PID_SAVE = "pid"
         private const val ALERT_RENAME = "내용을 입력해주세요."
         private val TAG by lazy { MainActivity::class.java.simpleName }
     }

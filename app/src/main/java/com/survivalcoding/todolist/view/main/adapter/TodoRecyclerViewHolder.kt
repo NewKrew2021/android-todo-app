@@ -10,7 +10,7 @@ import java.util.*
 
 class TodoRecyclerViewHolder(view: View, val binding: ListItemBinding) :
     RecyclerView.ViewHolder(view) {
-    fun bind(item: TodoData, sortFunction: (Int) -> Unit) {
+    fun bind(item: TodoData, sortFunction: (Int) -> Unit, delFuntion: (TodoData) -> Unit) {
         binding.checkBox.setOnClickListener {
             // To-Do 항목 완료
             item.isChecked = !item.isChecked
@@ -23,6 +23,7 @@ class TodoRecyclerViewHolder(view: View, val binding: ListItemBinding) :
             else binding.markBox.setImageResource(R.drawable.ic_baseline_star_outline_24)
             sortFunction.invoke(item.pid)
         }
+        binding.deleteButton.setOnClickListener { delFuntion.invoke(item) }
         binding.textTodo.text = item.text
         if (item.isMarked) binding.markBox.setImageResource(R.drawable.ic_baseline_star_24)
         else binding.markBox.setImageResource(R.drawable.ic_baseline_star_outline_24)

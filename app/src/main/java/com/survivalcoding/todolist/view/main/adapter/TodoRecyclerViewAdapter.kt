@@ -41,6 +41,12 @@ class TodoRecyclerViewAdapter() :
         notifyItemInserted(0)
     }
 
+    fun delItem(data: TodoData) {
+        val delPosition = _items.indexOf(data)
+        _items.remove(data)
+        notifyItemRemoved(delPosition)
+    }
+
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): TodoRecyclerViewHolder {
         val binding =
             ListItemBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
@@ -53,7 +59,7 @@ class TodoRecyclerViewAdapter() :
     override fun onBindViewHolder(viewHolder: TodoRecyclerViewHolder, position: Int) {
 
         val item = _items[position]
-        holder.bind(item, ::sortItem)
+        holder.bind(item, ::sortItem, ::delItem)
 
     }
 
