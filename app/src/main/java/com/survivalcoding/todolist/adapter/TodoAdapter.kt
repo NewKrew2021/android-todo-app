@@ -1,57 +1,75 @@
 package com.survivalcoding.todolist.adapter
 
-import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.todolist.databinding.ItemTodoListBinding
 import com.survivalcoding.todolist.model.Todo
-import com.survivalcoding.todolist.util.DateUtils
+import com.survivalcoding.todolist.util.stringToDate
+import com.survivalcoding.todolist.view.MainActivity
 
 // TODO : isDone, Times 에 따른 정렬 구현
-
 class TodoAdapter(
-    private val context: Context,
     private val items: MutableList<Todo>,
+    private val showToastMessage: (String) -> Unit,
+    private val startEditActivity: (Bundle) -> Unit,
 ) : RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemTodoListBinding.inflate(LayoutInflater.from(context), parent, false)
+        val binding =
+            ItemTodoListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position], position, ::remove, ::sort)
+        holder.bind(
+            items[position],
+            { item -> remove(item) },
+            { sort() },
+            { args -> startEditActivity(args) },
+        )
     }
 
     override fun getItemCount(): Int = items.size
 
-    private fun remove(position: Int, title: String) {
-        items.removeAt(position)
+    private fun remove(item: Todo) {
+        val position = items.indexOf(item)
+
+        items.remove(item)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, items.size - position)
 
-        Toast.makeText(context, "$title 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+        showToastMessage(item.title)
     }
 
     // 아직 완료하지 않은 일들만 시간 순으로 내림차순 정렬
     private fun sort() {
         items.sortWith(
             compareBy {
-                if (!it.isDone) -DateUtils.stringToDate(it.times).time
+                if (!it.isDone) -stringToDate(it.times).time
                 else Long.MAX_VALUE
             }
         )
         notifyDataSetChanged()
     }
 
+    fun modify(item: Todo, title: String, times: String) {
+        val position = items.indexOf(item)
+
+        items[position].apply {
+            this.title = title
+            this.times = times
+        }
+        sort()
+    }
+
     class ViewHolder(private val binding: ItemTodoListBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(todo: Todo, position: Int, remove: (_position: Int, text: String) -> Unit, sort: () -> Unit) {
+        fun bind(todo: Todo, remove: (Todo) -> Unit, sort: () -> Unit, startEditActivity: (Bundle) -> Unit) {
             binding.apply {
                 textViewTitle.text = todo.title
                 textViewTimes.text = todo.times
@@ -77,11 +95,14 @@ class TodoAdapter(
                 }
 
                 buttonEdit.setOnClickListener {
-                    // TODO : todo 제목 수정 구현
+                    val args = Bundle()
+                    args.putParcelable(MainActivity.TODO_ITEM_KEY, todo)
+
+                    startEditActivity(args)
                 }
 
                 buttonDelete.setOnClickListener {
-                    remove.invoke(position, textViewTitle.text.toString())
+                    remove(todo)
                 }
             }
         }

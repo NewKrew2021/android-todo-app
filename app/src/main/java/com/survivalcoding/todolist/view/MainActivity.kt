@@ -1,16 +1,22 @@
 package com.survivalcoding.todolist.view
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.survivalcoding.todolist.adapter.TodoAdapter
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
+import com.survivalcoding.todolist.extension.navigateForResult
 import com.survivalcoding.todolist.model.Todo
-import com.survivalcoding.todolist.util.DateUtils
+import com.survivalcoding.todolist.util.dateToString
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    private lateinit var adapter: TodoAdapter
 
     private val items = mutableListOf<Todo>()
 
@@ -19,7 +25,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val adapter = TodoAdapter(this, items)
+        adapter = TodoAdapter(
+            items,
+            { message: String -> showToastMessage(message) },
+            { args: Bundle -> navigateForResult(EditActivity::class, args, EDIT_ACTIVITY_REQ_CODE) },
+        )
 
         binding.apply {
             recyclerView.adapter = adapter
@@ -30,7 +40,7 @@ class MainActivity : AppCompatActivity() {
                         index = 0,
                         element = Todo(
                             editTextTitle.text.toString(),
-                            DateUtils.dateToString(Calendar.getInstance().time)
+                            dateToString(Calendar.getInstance().time)
                         )
                     )
                     adapter.notifyItemInserted(0)
@@ -40,5 +50,52 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                EDIT_ACTIVITY_REQ_CODE -> {
+                    data?.extras?.let {
+                        if (it[TODO_ITEM_KEY] != null && it[TODO_ITEM_TITLE_KEY] != null) {
+                            adapter.modify(
+                                it[TODO_ITEM_KEY] as Todo,
+                                it[TODO_ITEM_TITLE_KEY].toString(),
+                                dateToString(Calendar.getInstance().time),
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putParcelableArrayList(TODO_ITEM_STATE_KEY, items as ArrayList<out Todo>)
+
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        savedInstanceState.getParcelableArrayList<Todo>(TODO_ITEM_STATE_KEY)?.let {
+            items.clear()
+            items.addAll(it)
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun showToastMessage(message: String) {
+        Toast.makeText(this, "$message 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+    }
+
+    companion object {
+        const val TODO_ITEM_STATE_KEY = "TODO_ITEM_STATE_KEY"
+        const val TODO_ITEM_TITLE_KEY = "TODO_ITEM_TITLE_KEY"
+        const val TODO_ITEM_KEY = "TODO_ITEM_KEY"
+
+        const val EDIT_ACTIVITY_REQ_CODE = 100
     }
 }
