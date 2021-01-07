@@ -9,7 +9,13 @@ import com.survivalcoding.todolist.model.TodoItem
 class TodoListAdapter(private val list: MutableList<TodoItem>) :
     RecyclerView.Adapter<TodoListAdapter.TodoViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
-        return TodoViewHolder(ToDoListBinding.inflate(LayoutInflater.from(parent.context)))
+        return TodoViewHolder(
+            ToDoListBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
