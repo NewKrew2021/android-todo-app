@@ -8,13 +8,7 @@ import com.survivalcoding.todolist.model.TodoItem
 
 
 class TodoListAdapter : RecyclerView.Adapter<TodoListAdapter.TodoListViewHolder>() {
-    private val items = listOf<TodoItem>(
-            TodoItem("1순위", "d-20"),
-            TodoItem("2순위", "d-30"),
-            TodoItem("3순위", "d-32"),
-            TodoItem("4순위", "d-33"),
-            TodoItem("5순위", "d-34"),
-    )
+    private val items = mutableListOf<TodoItem>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoListViewHolder {
         val binding = TodoItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -28,8 +22,17 @@ class TodoListAdapter : RecyclerView.Adapter<TodoListAdapter.TodoListViewHolder>
         holder.binding.apply {
             title.text = currentItem.title
             dDay.text = currentItem.date
+            completeCheck.isChecked = currentItem.isComplete
+            completeCheck.setOnClickListener { currentItem.isComplete = completeCheck.isChecked }
         }
     }
+
+    fun addItem(todoItem: TodoItem) {
+        items.add(todoItem)
+        notifyDataSetChanged()
+    }
+
+    fun getItems(): MutableList<TodoItem> = items
 
     class TodoListViewHolder(val binding: TodoItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
