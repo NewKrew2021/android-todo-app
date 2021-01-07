@@ -10,7 +10,7 @@ class TodoListAdapter(
     private val context: Context
 ) : RecyclerView.Adapter<TodoViewHolder>() {
 
-    private val list = mutableListOf<TodoItem>()
+    val list = mutableListOf<TodoItem>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         val binding = ItemTodoBinding.inflate(LayoutInflater.from(context), parent, false)
