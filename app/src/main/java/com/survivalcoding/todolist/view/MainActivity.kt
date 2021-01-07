@@ -2,6 +2,8 @@ package com.survivalcoding.todolist.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.todolist.adapter.TodoListAdapter
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import com.survivalcoding.todolist.model.TodoItem
@@ -31,5 +33,11 @@ class MainActivity : AppCompatActivity() {
     private fun initializeView() {
         adapter = TodoListAdapter(mutableListOf())
         binding.toDoList.adapter = adapter
+        binding.toDoList.apply {
+            this.adapter = this@MainActivity.adapter
+            addItemDecoration(
+                DividerItemDecoration(this@MainActivity, LinearLayoutManager.VERTICAL)
+            )
+        }
     }
 }
