@@ -23,12 +23,12 @@ class TodoListAdapter(private val list: MutableList<TodoItem>) :
 
     fun sortByTime() {
         list.sortBy { it.timeStamp }
-        notifyDataSetChanged()
+        notifyItemRangeChanged(0, list.size)
     }
 
     fun sortByTitle() {
         list.sortBy { it.todoTitle }
-        notifyDataSetChanged()
+        notifyItemRangeChanged(0, list.size)
     }
 
     fun addNewTodo(item: TodoItem) {
@@ -39,7 +39,7 @@ class TodoListAdapter(private val list: MutableList<TodoItem>) :
     private fun removeTodo(position: Int) {
         list.removeAt(position)
         notifyItemRemoved(position)
-        notifyItemRangeChanged(position, list.size)
+        notifyItemRangeChanged(position, list.size - position - 1)
     }
 
     class TodoViewHolder(

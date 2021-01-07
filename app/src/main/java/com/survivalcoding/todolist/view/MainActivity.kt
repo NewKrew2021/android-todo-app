@@ -1,11 +1,8 @@
 package com.survivalcoding.todolist.view
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.adapter.TodoListAdapter
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
@@ -35,16 +32,10 @@ class MainActivity : AppCompatActivity() {
         }
         binding.sortButton.setOnClickListener {
             val sortOptions = resources.getStringArray(R.array.sort_options)
-            Log.d(
-                MainActivity::javaClass.name,
-                "setOnClickListener: ${binding.sortOptionSpinner.selectedItem} ${sortOptions[0]} ${sortOptions[1]}"
-            )
             if (binding.sortOptionSpinner.selectedItem.toString() == sortOptions[0]) {
-                Log.d(MainActivity::javaClass.name, "setOnClickListener: HI")
                 adapter.sortByTime()
             } else if (binding.sortOptionSpinner.selectedItem.toString() == sortOptions[1]) {
                 adapter.sortByTitle()
-                Log.d(MainActivity::javaClass.name, "setOnClickListener: Hello")
             }
         }
     }
@@ -53,12 +44,6 @@ class MainActivity : AppCompatActivity() {
         adapter = TodoListAdapter(mutableListOf())
         binding.toDoList.apply {
             this.adapter = this@MainActivity.adapter
-            addItemDecoration(
-                DividerItemDecoration(
-                    this@MainActivity,
-                    LinearLayoutManager.VERTICAL
-                )
-            )
         }
         // Spinner 생성
         ArrayAdapter.createFromResource(
