@@ -42,7 +42,7 @@ class ListActivity : AppCompatActivity() {
                     }
                     .show()
             }
-
+//
         binding.RecyclerView.adapter = adapter
         binding.RecyclerView.layoutManager = LinearLayoutManager(this)
         val dividerItemDecoration =
