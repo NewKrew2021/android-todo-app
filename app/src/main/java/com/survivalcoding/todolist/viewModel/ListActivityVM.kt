@@ -22,7 +22,7 @@ object ListActivityVM {
                 false
             )
         )
-        adapter.notifyDataSetChanged()
+        adapter.notifyItemInserted(0)
         binding.editText.setText("")
     }
 
@@ -47,8 +47,8 @@ object ListActivityVM {
         )
 
         adapter.data.removeAt(position + 1)
-        adapter.notifyItemRangeChanged(position, adapter.data.size)
-        adapter.notifyDataSetChanged()
+        adapter.notifyItemRangeChanged(0, adapter.data.size)
+        //adapter.notifyDataSetChanged()
     }
 
 
