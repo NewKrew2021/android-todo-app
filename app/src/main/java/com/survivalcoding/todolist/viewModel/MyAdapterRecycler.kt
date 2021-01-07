@@ -10,6 +10,18 @@ class MyAdapterRecycler(val itemClick: (MyAdapterRecycler, Int) -> Unit) :
 
     var data = mutableListOf<listItem>()
 
+
+    fun checkedRemove() {
+        var tmp = mutableListOf<Int>()
+        var i = 0
+        while (i <= data.size - 1) {
+            if (data[i].check == true) {
+                data.removeAt(i)
+            } else i += 1
+        }
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val itemBinding = ItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
@@ -27,8 +39,10 @@ class MyAdapterRecycler(val itemClick: (MyAdapterRecycler, Int) -> Unit) :
 
         holder.setData(data[position])
 
-        //Log.d("로그" ,"$position")
         holder.itemClickListener(position, this)
+
+        holder.checkBoxClickListener(data[position])
+
     }
 }
 
@@ -42,11 +56,19 @@ class Holder(
     fun setData(data: listItem) {
         binding.checkBox.text = data.toDo
         binding.textView.text = data.time
+        binding.checkBox.isChecked = false
     }
 
     fun itemClickListener(position: Int, adapter: MyAdapterRecycler) {
         binding.button.setOnClickListener {
             itemClick(adapter, position)
+        }
+    }
+
+    fun checkBoxClickListener(data: listItem) {
+        binding.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) data.check = true
+            else data.check = false
         }
     }
 }
