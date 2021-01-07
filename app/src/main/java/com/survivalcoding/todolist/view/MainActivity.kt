@@ -1,4 +1,4 @@
-package com.survivalcoding.todolist
+package com.survivalcoding.todolist.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -19,8 +19,8 @@ class MainActivity : AppCompatActivity() {
         binding.startButton.setOnClickListener {
 
             var intent = Intent(this, ListActivity::class.java)
-
             startActivity(intent)
         }
     }
 }
+
