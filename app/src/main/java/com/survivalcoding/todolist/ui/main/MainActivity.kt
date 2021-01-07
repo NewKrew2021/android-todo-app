@@ -23,10 +23,12 @@ class MainActivity : AppCompatActivity() {
             addItem()
         }
 
-        adapter = TodoListAdapter(this)
+        adapter = TodoListAdapter()
 
-        binding.list.adapter = this.adapter
-        binding.list.addItemDecoration(VerticalSpaceItemDecoration(ITEM_VERTICAL_INTERVAL))
+        binding.list.apply {
+            adapter = this@MainActivity.adapter
+            addItemDecoration(VerticalSpaceItemDecoration(ITEM_VERTICAL_INTERVAL))
+        }
     }
 
     private fun addItem() {
