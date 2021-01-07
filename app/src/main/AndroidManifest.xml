@@ -9,8 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TodoList">
-        <activity android:name=".lecture.ViewBinding" />
-        <activity android:name=".todo.view.MainActivity">
+        <activity android:name=".lecture.ViewBinding">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

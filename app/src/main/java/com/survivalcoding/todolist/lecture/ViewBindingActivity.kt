@@ -11,12 +11,11 @@ import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.ActivityLectureBinding
 import com.survivalcoding.todolist.databinding.ItemWeatherBinding
 
-private lateinit var binding: ActivityLectureBinding
-private lateinit var itemWeatherBinding: ItemWeatherBinding
-
 class ViewBinding : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
 
         val data = listOf<Weather>(
             Weather("흐림", "판교", "-10"),
@@ -32,9 +31,8 @@ class ViewBinding : AppCompatActivity() {
         )
 
 
-        binding = ActivityLectureBinding.inflate(layoutInflater)
+        val binding = ActivityLectureBinding.inflate(layoutInflater)
         val view = binding.root
-        itemWeatherBinding = ItemWeatherBinding.inflate(LayoutInflater.from(view.context), view, false)
         setContentView(view)
 
         binding.listView.adapter = CustomAdapter2(data)
@@ -44,16 +42,21 @@ class ViewBinding : AppCompatActivity() {
     }
 }
 
-data class Weather2(val image: String, val city: String, val temp: String)
-
 class CustomAdapter2(private val data: List<Weather>) : BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view = convertView ?: LayoutInflater.from(parent!!.context).inflate(R.layout.item_todo, parent, false)
+        val view: View
+        lateinit var itemWeatherBinding: ItemWeatherBinding
+        if (convertView == null) {
+            view = LayoutInflater.from(parent!!.context).inflate(R.layout.item_todo, parent, false)
+            itemWeatherBinding =
+                ItemWeatherBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        } else {
+            view = convertView
+            val currentWeather = getItem(position)
 
-        val currentWeather = getItem(position)
-
-        itemWeatherBinding.cityText.text = currentWeather.city
-        itemWeatherBinding.tempText.text = currentWeather.temp
+            itemWeatherBinding.cityText.text = currentWeather.city
+            itemWeatherBinding.tempText.text = currentWeather.temp
+        }
 
         return view
     }

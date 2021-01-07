@@ -12,12 +12,7 @@ class RecyclerViewAdapter(private val data: List<Todos>) :
 
     lateinit var todoBinding: ItemTodoBinding
 
-    class ViewHolder(binding: ItemTodoBinding) : RecyclerView.ViewHolder(binding.root) {
-//        val isDoneButton: RadioButton = view.findViewById(R.id.is_done_button)
-//        val todoText: TextView = view.findViewById(R.id.todo_text)
-//        val deleteButton: Button = view.findViewById(R.id.delete_button)
-
-    }
+    class ViewHolder(binding: ItemTodoBinding) : RecyclerView.ViewHolder(binding.root) { }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         todoBinding = ItemTodoBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
