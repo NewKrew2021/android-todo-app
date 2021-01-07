@@ -1,10 +1,13 @@
 package com.survivalcoding.todolist.view
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.survivalcoding.todolist.adapter.TodoAdapter
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
+import com.survivalcoding.todolist.extension.navigateForResult
 import com.survivalcoding.todolist.model.Todo
 import com.survivalcoding.todolist.util.dateToString
 import java.util.*
@@ -22,7 +25,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        adapter = TodoAdapter(items) { message: String -> showToastMessage(message) }
+        adapter = TodoAdapter(
+            items,
+            { message: String -> showToastMessage(message) },
+            { args: Bundle -> navigateForResult(EditActivity::class, args, EDIT_ACTIVITY_REQ_CODE) },
+        )
 
         binding.apply {
             recyclerView.adapter = adapter
@@ -43,6 +50,25 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                EDIT_ACTIVITY_REQ_CODE -> {
+                    data?.extras?.let {
+                        if (it[TODO_ITEM_KEY] != null && it[TODO_ITEM_TITLE_KEY] != null) {
+                            adapter.modify(
+                                it[TODO_ITEM_KEY] as Todo,
+                                it[TODO_ITEM_TITLE_KEY].toString(),
+                                dateToString(Calendar.getInstance().time),
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -67,5 +93,9 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val TODO_ITEM_STATE_KEY = "TODO_ITEM_STATE_KEY"
+        const val TODO_ITEM_TITLE_KEY = "TODO_ITEM_TITLE_KEY"
+        const val TODO_ITEM_KEY = "TODO_ITEM_KEY"
+
+        const val EDIT_ACTIVITY_REQ_CODE = 100
     }
 }
