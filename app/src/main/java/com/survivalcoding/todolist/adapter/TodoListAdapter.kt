@@ -21,6 +21,16 @@ class TodoListAdapter(private val list: MutableList<TodoItem>) :
 
     override fun getItemCount() = list.size
 
+    fun sortByTime() {
+        list.sortBy { it.timeStamp }
+        notifyDataSetChanged()
+    }
+
+    fun sortByTitle() {
+        list.sortBy { it.todoTitle }
+        notifyDataSetChanged()
+    }
+
     fun addNewTodo(item: TodoItem) {
         list.add(item)
         notifyItemInserted(list.size)
