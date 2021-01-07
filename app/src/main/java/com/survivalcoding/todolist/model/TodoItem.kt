@@ -1,3 +1,3 @@
 package com.survivalcoding.todolist.model
 
-data class TodoItem(val title: String, val date: String)
+data class TodoItem(val title: String, val date: String, var isComplete: Boolean)

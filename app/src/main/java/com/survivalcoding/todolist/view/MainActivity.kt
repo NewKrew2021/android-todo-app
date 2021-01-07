@@ -17,7 +17,10 @@ class MainActivity : AppCompatActivity() {
         val todoListAdapter = TodoListAdapter()
         binding.todoListView.adapter = todoListAdapter
 
-        binding.addFab.setOnClickListener { Toast.makeText(this, "Next Activity", Toast.LENGTH_SHORT).show() }
+        binding.addFab.setOnClickListener {
+            Toast.makeText(this, "Next Activity", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
 }
