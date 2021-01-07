@@ -18,12 +18,12 @@ object ListActivityVM {
             0,
             listItem(
                 binding.editText.text.toString(),
-                currentDate
+                currentDate,
+                false
             )
         )
-
-        adapter.notifyDataSetChanged()
-
+        adapter.notifyItemInserted(0)
+        adapter.notifyItemRangeChanged(0, adapter.data.size)
         binding.editText.setText("")
     }
 
@@ -42,14 +42,14 @@ object ListActivityVM {
             0,
             listItem(
                 tmpString,
-                currentDate
+                currentDate,
+                false
             )
         )
 
         adapter.data.removeAt(position + 1)
-
-        adapter.notifyDataSetChanged()
-
+        adapter.notifyItemRangeChanged(0, adapter.data.size)
+        //adapter.notifyDataSetChanged()
     }
 
 

@@ -4,4 +4,4 @@ import android.os.Parcelable
 
 
 @kotlinx.android.parcel.Parcelize
-data class listItem(var toDo: String, var time: String) : Parcelable
+data class listItem(var toDo: String, var time: String, var check: Boolean) : Parcelable
