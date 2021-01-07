@@ -33,13 +33,12 @@ class MainActivity : AppCompatActivity() {
         // 좀 더 좋은 코드를 봤던것 같은데....
         todoListBinding.addTodo.setOnClickListener { view ->
             val todoText: String = todoListBinding.todoString.text.toString()
-            if (todoText == "") {
+            if (todoText.trim().isEmpty()) {    // todoText == ""
                 Toast.makeText(this, "값을 입력해 주세요", Toast.LENGTH_SHORT).show()
             } else {
                 data.add(Todos(false, todoText))
                 Toast.makeText(this, "추가되었습니다.", Toast.LENGTH_SHORT).show()
             }
         }
-
     }
 }

@@ -31,7 +31,8 @@ class Lecture : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, data)
 
         // 3. View - View에 어댑터 연결
-        val listView = findViewById<ListView>(R.id.listView)   // 왜 ListView가 제네릭처럼 들어가는거지...? >> findViewById가 반환형으로 제네릭을 필요로 한다.
+        val listView: ListView =
+            findViewById(R.id.listView)   // 왜 ListView가 제네릭처럼 들어가는거지...? >> findViewById가 반환형으로 제네릭을 필요로 한다.
         listView.adapter = adapter // listView.setAdapter(adapter)
 
         // 클릭 이벤트 추가
@@ -43,16 +44,16 @@ class Lecture : AppCompatActivity() {
 
         // 1. data 준비
         val Data = listOf<Weather>(
-                Weather("흐림", "판교", "-10"),
-                Weather("흐림", "판교", "-10"),
-                Weather("흐림", "판교", "-10"),
-                Weather("흐림", "판교", "-10"),
-                Weather("흐림", "판교", "-10"),
-                Weather("흐림", "판교", "-10"),
-                Weather("흐림", "판교", "-10"),
-                Weather("흐림", "판교", "-10"),
-                Weather("흐림", "판교", "-10"),
-                Weather("흐림", "판교", "-10"),
+            Weather("흐림", "판교", "-10"),
+            Weather("흐림", "판교", "-10"),
+            Weather("흐림", "판교", "-10"),
+            Weather("흐림", "판교", "-10"),
+            Weather("흐림", "판교", "-10"),
+            Weather("흐림", "판교", "-10"),
+            Weather("흐림", "판교", "-10"),
+            Weather("흐림", "판교", "-10"),
+            Weather("흐림", "판교", "-10"),
+            Weather("흐림", "판교", "-10"),
         )
 
         // 2. 어댑터 준비
@@ -83,7 +84,8 @@ class CustomAdapter constructor(private val weather: List<Weather>) : BaseAdapte
 
         if (convertView == null) {
             // 레이아웃을 들고와서 View타입인 view변수에 저장한다.
-            view = LayoutInflater.from(parent!!.context).inflate(R.layout.item_weather, parent, false)
+            view =
+                LayoutInflater.from(parent!!.context).inflate(R.layout.item_weather, parent, false)
 
             // 뷰홀더 패턴 convertView == null일 때, 각각 레이아웃 요소들을 받는다.
             holder = WeatherViewHolder()
