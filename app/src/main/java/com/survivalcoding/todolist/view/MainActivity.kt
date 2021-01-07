@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.todolist.adapter.TodoListAdapter
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import com.survivalcoding.todolist.model.TodoItem
+import com.survivalcoding.todolist.util.getCurrentTime
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -24,7 +25,8 @@ class MainActivity : AppCompatActivity() {
     private fun setOnClickListener() {
         binding.registerButton.setOnClickListener {
             binding.toDoEditText.text.apply {
-                adapter.addNewTodo(TodoItem(false, toString()))
+                val time = getCurrentTime()
+                adapter.addNewTodo(TodoItem(false, toString(), time))
                 clear()
             }
         }

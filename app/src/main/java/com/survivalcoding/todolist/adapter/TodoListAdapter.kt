@@ -58,6 +58,7 @@ class TodoListAdapter(private val list: MutableList<TodoItem>) :
             binding.apply {
                 checkBox.isChecked = todoItem.isChecked
                 toDoTitle.text = todoItem.todoTitle
+                currentTime.text = todoItem.timeStamp
             }
         }
     }
