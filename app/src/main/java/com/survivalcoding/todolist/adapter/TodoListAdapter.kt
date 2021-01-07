@@ -12,14 +12,11 @@ class TodoListAdapter(private val list: MutableList<TodoItem>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         binding = ToDoListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return TodoViewHolder(binding)
+        return TodoViewHolder(binding, ::removeTodo)
     }
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
-        holder.apply {
-            bind(list[position])
-            setOnClickListener(position)
-        }
+        holder.bind(list[position])
     }
 
     override fun getItemCount() = list.size
@@ -35,30 +32,33 @@ class TodoListAdapter(private val list: MutableList<TodoItem>) :
         notifyItemRangeChanged(position, list.size)
     }
 
-    private fun setOnClickListener(position: Int) {
-        binding.apply {
-            checkBox.setOnClickListener {
-                list[position].isChecked = checkBox.isChecked
-            }
-            toDoTitle.setOnClickListener {
-                checkBox.isChecked.apply {
-                    list[position].isChecked = !this
-                    checkBox.isChecked = !this
-                }
-            }
-            removeButton.setOnClickListener {
-                removeTodo(position)
-            }
-        }
-    }
-
-    class TodoViewHolder(private val binding: ToDoListBinding) :
+    class TodoViewHolder(
+        private val binding: ToDoListBinding,
+        private val removeItem: (Int) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(todoItem: TodoItem) {
             binding.apply {
                 checkBox.isChecked = todoItem.isChecked
                 toDoTitle.text = todoItem.todoTitle
-                currentTime.text = todoItem.timeStamp
+                setOnClickListener(todoItem)
+            }
+        }
+
+        private fun setOnClickListener(item: TodoItem) {
+            binding.apply {
+                checkBox.setOnClickListener {
+                    item.isChecked = checkBox.isChecked
+                }
+                toDoTitle.setOnClickListener {
+                    checkBox.isChecked.apply {
+                        item.isChecked = !this
+                        checkBox.isChecked = !this
+                    }
+                }
+                removeButton.setOnClickListener {
+                    removeItem.invoke(adapterPosition)
+                }
             }
         }
     }
