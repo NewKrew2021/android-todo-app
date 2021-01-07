@@ -3,6 +3,7 @@ package com.survivalcoding.todolist.ui.main
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DefaultItemAnimator
 import com.survivalcoding.todolist.adapter.TodoItem
 import com.survivalcoding.todolist.adapter.TodoListAdapter
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
@@ -28,6 +29,10 @@ class MainActivity : AppCompatActivity() {
         binding.list.apply {
             adapter = this@MainActivity.adapter
             addItemDecoration(VerticalSpaceItemDecoration(ITEM_VERTICAL_INTERVAL))
+            itemAnimator = DefaultItemAnimator().apply {
+                changeDuration = 100
+                moveDuration = 100
+            }
         }
     }
 
