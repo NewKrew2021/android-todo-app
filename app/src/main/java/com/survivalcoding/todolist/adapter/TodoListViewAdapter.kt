@@ -14,8 +14,8 @@ class TodoListViewAdapter() : BaseAdapter() {
     private fun sortItem() {
         //To-Do 아이템 sorting (완료 -> 즐겨찾기 -> 시간 순으로)
         items = items.sortedWith(compareBy(
-            { if (it.check) 1 else 0 },
-            { if (it.mark) 0 else 1 },
+            { if (it.isChecked) 1 else 0 },
+            { if (it.isMarked) 0 else 1 },
             { -it.time }
         )).toMutableList()
         notifyDataSetChanged()

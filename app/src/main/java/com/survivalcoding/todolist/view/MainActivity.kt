@@ -14,8 +14,8 @@ import java.util.*
 data class TodoData(
     var text: String,
     var time: Long,
-    var check: Boolean = false,
-    var mark: Boolean = false,
+    var isChecked: Boolean = false,
+    var isMarked: Boolean = false,
     var pid: Int = 0,
 )
 
@@ -31,10 +31,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
         val todoRecyclerViewAdapter = TodoRecyclerViewAdapter()
         binding.recyclerView.adapter = todoRecyclerViewAdapter
-        var markBool = false
+        var isMarked = false
         binding.markBox.setOnClickListener {
-            markBool = !markBool
-            if (markBool) binding.markBox.setImageResource(R.drawable.ic_baseline_star_24)
+            isMarked = !isMarked
+            if (isMarked) binding.markBox.setImageResource(R.drawable.ic_baseline_star_24)
             else binding.markBox.setImageResource(R.drawable.ic_baseline_star_outline_24)
         }
         fun clickAction() {
@@ -46,13 +46,13 @@ class MainActivity : AppCompatActivity() {
                     TodoData(
                         binding.editTodo.text.toString(),
                         Calendar.getInstance().timeInMillis,
-                        mark = markBool,
+                        isMarked = isMarked,
                         pid = pid++,
                     )
                 )
                 binding.editTodo.text.clear()
                 binding.markBox.setImageResource(R.drawable.ic_baseline_star_outline_24)
-                markBool = false
+                isMarked = false
 
                 //키보드 비활성화
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
