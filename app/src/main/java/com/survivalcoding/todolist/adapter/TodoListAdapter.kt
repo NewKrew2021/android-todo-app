@@ -19,9 +19,7 @@ class TodoListAdapter : RecyclerView.Adapter<TodoViewHolder>() {
     override fun getItemCount(): Int = list.size
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
-        holder.bind(list[position]) {
-            sortItems()
-        }
+        holder.bind(list[position], ::sortItems, ::removeItem)
     }
 
     fun addItem(item: TodoItem) {
@@ -34,6 +32,12 @@ class TodoListAdapter : RecyclerView.Adapter<TodoViewHolder>() {
         _list.clear()
         _list.addAll(items)
         notifyDataSetChanged()
+    }
+
+    fun removeItem(position: Int) {
+        _list.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, 1)
     }
 
     private fun sortItems() {
