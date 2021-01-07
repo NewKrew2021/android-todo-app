@@ -23,6 +23,7 @@ object ListActivityVM {
             )
         )
         adapter.notifyItemInserted(0)
+        adapter.notifyItemRangeChanged(0, adapter.data.size)
         binding.editText.setText("")
     }
 
