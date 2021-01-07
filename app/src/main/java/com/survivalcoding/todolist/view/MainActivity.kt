@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val adapter = TodoAdapter(items, ::showToastMessage)
+        val adapter = TodoAdapter(items) { message: String -> showToastMessage(message) }
 
         binding.apply {
             recyclerView.adapter = adapter

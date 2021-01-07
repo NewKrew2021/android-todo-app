@@ -22,7 +22,12 @@ class TodoAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position], position, ::remove, ::sort)
+        holder.bind(
+            items[position],
+            position,
+            { _position -> remove(_position) },
+            { sort() },
+        )
     }
 
     override fun getItemCount(): Int = items.size
