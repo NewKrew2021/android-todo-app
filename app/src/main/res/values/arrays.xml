@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string-array name="sort_options">
+        <item>시간 순</item>
+        <item>사전 순</item>
+    </string-array>
+</resources>
