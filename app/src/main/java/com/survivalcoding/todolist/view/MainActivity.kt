@@ -3,6 +3,7 @@ package com.survivalcoding.todolist.view
 import android.content.Context
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -62,9 +63,10 @@ class MainActivity : AppCompatActivity() {
         binding.buttonAdd.setOnClickListener {
             clickAction()
         }
-        binding.editTodo.setOnEditorActionListener { _, _, event ->
+        binding.editTodo.setOnEditorActionListener { _, actionId, event ->
             //엔터키 입력시 자동으로 추가
-            if (event.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER) clickAction()
+            if (actionId == EditorInfo.IME_ACTION_DONE) clickAction() //모바일기기의 엔터키
+            else event.let { if (event.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER) clickAction() } //키보드에서의 엔터키
             true
         }
     }
