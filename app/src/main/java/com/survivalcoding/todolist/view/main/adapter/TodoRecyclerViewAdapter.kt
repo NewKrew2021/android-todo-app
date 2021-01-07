@@ -1,10 +1,10 @@
-package com.survivalcoding.todolist.adapter
+package com.survivalcoding.todolist.view.main.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.todolist.databinding.ListItemBinding
-import com.survivalcoding.todolist.view.TodoData
+import com.survivalcoding.todolist.view.main.model.TodoData
 
 class TodoRecyclerViewAdapter() :
     RecyclerView.Adapter<TodoRecyclerViewHolder>() {

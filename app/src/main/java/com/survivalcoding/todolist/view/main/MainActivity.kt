@@ -1,4 +1,4 @@
-package com.survivalcoding.todolist.view
+package com.survivalcoding.todolist.view.main
 
 import android.content.Context
 import android.os.Bundle
@@ -8,17 +8,11 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.survivalcoding.todolist.R
-import com.survivalcoding.todolist.adapter.TodoRecyclerViewAdapter
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
+import com.survivalcoding.todolist.view.main.adapter.TodoRecyclerViewAdapter
+import com.survivalcoding.todolist.view.main.model.TodoData
 import java.util.*
 
-data class TodoData(
-    var text: String,
-    var time: Long,
-    var isChecked: Boolean = false,
-    var isMarked: Boolean = false,
-    var pid: Int = 0,
-)
 
 class MainActivity : AppCompatActivity() {
 
