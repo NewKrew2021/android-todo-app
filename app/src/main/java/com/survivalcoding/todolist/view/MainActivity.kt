@@ -13,6 +13,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    private lateinit var adapter: TodoAdapter
+
     private val items = mutableListOf<Todo>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val adapter = TodoAdapter(items) { message: String -> showToastMessage(message) }
+        adapter = TodoAdapter(items) { message: String -> showToastMessage(message) }
 
         binding.apply {
             recyclerView.adapter = adapter
@@ -43,7 +45,27 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putParcelableArrayList(TODO_ITEM_STATE_KEY, items as ArrayList<out Todo>)
+
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        savedInstanceState.getParcelableArrayList<Todo>(TODO_ITEM_STATE_KEY)?.let {
+            items.clear()
+            items.addAll(it)
+            adapter.notifyDataSetChanged()
+        }
+    }
+
     private fun showToastMessage(message: String) {
         Toast.makeText(this, "$message 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+    }
+
+    companion object {
+        const val TODO_ITEM_STATE_KEY = "TODO_ITEM_STATE_KEY"
     }
 }
