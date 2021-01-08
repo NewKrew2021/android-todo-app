@@ -1,6 +1,7 @@
 package com.survivalcoding.todolist.viewmodel
 
 import com.survivalcoding.todolist.model.TodoItem
+import com.survivalcoding.todolist.view.MainActivity
 
 class TodoViewModel {
     private val _todoList = mutableListOf<TodoItem>()
@@ -13,7 +14,8 @@ class TodoViewModel {
     }
 
     fun addTodo(todoItem: TodoItem) {
-        if (todoItem.id == null) {
+        // id 값이 NEW_TODO_TASK 인 경우 새로 id 값 할당
+        if (todoItem.id == MainActivity.NEW_TODO_TASK) {
             todoItem.id = itemId++
         }
         _todoList.add(todoItem)

@@ -54,7 +54,8 @@ class MainActivity : AppCompatActivity() {
             registerButton.setOnClickListener {
                 toDoEditText.text.apply {
                     val time = getCurrentTime()
-                    viewModel.addTodo(TodoItem(null, false, toString(), time))
+                    // id 값을 ViewModel 에서 관리해주기 때문에 처음에 등록할 때는 NEW_TODO_TASK 로 지정
+                    viewModel.addTodo(TodoItem(NEW_TODO_TASK, false, toString(), time))
                     clear()
                 }
                 updateTodoList()
@@ -96,5 +97,6 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val SAVE_INSTANCE_TODO_ITEM_KEY = "todoList"
+        const val NEW_TODO_TASK = -1
     }
 }

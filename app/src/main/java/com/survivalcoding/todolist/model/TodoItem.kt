@@ -5,7 +5,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class TodoItem(
-    var id: Int?,
+    var id: Int,
     var isChecked: Boolean,
     var todoTitle: String,
     var timeStamp: String
