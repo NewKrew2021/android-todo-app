@@ -2,10 +2,11 @@ package com.survivalcoding.todolist.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import com.survivalcoding.todolist.databinding.ItemTodoBinding
 
-class TodoListAdapter : RecyclerView.Adapter<TodoViewHolder>() {
+//class TodoListAdapter : RecyclerView.Adapter<TodoViewHolder>() {
+class TodoListAdapter : ListAdapter<TodoItem, TodoViewHolder>(TodoDiffCallback) {
 
     private val _list = mutableListOf<TodoItem>()
     val list: List<TodoItem>
@@ -34,10 +35,13 @@ class TodoListAdapter : RecyclerView.Adapter<TodoViewHolder>() {
         notifyDataSetChanged()
     }
 
-    fun removeItem(position: Int) {
-        _list.removeAt(position)
-        notifyItemRemoved(position)
-        notifyItemRangeChanged(position, 1)
+    private fun removeItem(target: Int) {
+        target
+            .takeIf { it in 0.._list.size }
+            ?.let {
+                _list.removeAt(it)
+                notifyItemRemoved(it)
+            }
     }
 
     private fun sortItems() {
