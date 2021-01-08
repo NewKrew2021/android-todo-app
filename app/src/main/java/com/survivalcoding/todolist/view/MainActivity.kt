@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.survivalcoding.todolist.adapter.TodoAdapter
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
-import com.survivalcoding.todolist.extension.navigateForResult
 import com.survivalcoding.todolist.model.Todo
 import com.survivalcoding.todolist.util.dateToString
 import java.util.*
@@ -25,7 +24,12 @@ class MainActivity : AppCompatActivity() {
 
         adapter = TodoAdapter(
             showToastMessage = { message: String -> showToastMessage(message) },
-            editClickEvent = { args: Bundle -> navigateForResult(EditActivity::class, args, EDIT_ACTIVITY_REQ_CODE) },
+            editClickEvent = { item ->
+                val intent = Intent(this, EditActivity::class.java).apply {
+                    putExtra(TODO_ITEM_KEY, item)
+                }
+                startActivityForResult(intent, EDIT_ACTIVITY_REQ_CODE)
+            },
         )
 
         binding.apply {

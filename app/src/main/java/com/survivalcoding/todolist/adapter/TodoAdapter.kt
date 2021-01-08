@@ -1,6 +1,5 @@
 package com.survivalcoding.todolist.adapter
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,12 +7,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.todolist.databinding.ItemTodoListBinding
 import com.survivalcoding.todolist.model.Todo
 import com.survivalcoding.todolist.util.stringToDate
-import com.survivalcoding.todolist.view.MainActivity
 
 // TODO : isDone, Times 에 따른 정렬 구현
 class TodoAdapter(
     private val showToastMessage: (String) -> Unit,
-    private val editClickEvent: (Bundle) -> Unit,
+    private val editClickEvent: (Todo) -> Unit,
 ) : RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
 
     private val _items = mutableListOf<Todo>()
@@ -32,7 +30,7 @@ class TodoAdapter(
             _items[position],
             remove = { _position -> remove(_position) },
             sort = { sort() },
-            editClickEvent = { args -> editClickEvent(args) },
+            editClickEvent = { item -> editClickEvent(item) },
             updateUI = { notifyDataSetChanged() },
         )
     }
@@ -72,9 +70,10 @@ class TodoAdapter(
         val position = _items.indexOf(item)
 
         try {
-            _items[position].apply {
+            with(_items[position]) {
                 this.title = title
                 this.times = times
+                this.isOption = false
             }
             sort()
             notifyDataSetChanged()
@@ -90,7 +89,7 @@ class TodoAdapter(
             todo: Todo,
             remove: (Int) -> Unit,
             sort: () -> Unit,
-            editClickEvent: (Bundle) -> Unit,
+            editClickEvent: (Todo) -> Unit,
             updateUI: () -> Unit,
         ) {
             binding.apply {
@@ -119,10 +118,7 @@ class TodoAdapter(
                 }
 
                 buttonEdit.setOnClickListener {
-                    val args = Bundle()
-                    args.putParcelable(MainActivity.TODO_ITEM_KEY, todo)
-
-                    editClickEvent.invoke(args)
+                    editClickEvent.invoke(todo)
                 }
 
                 buttonDelete.setOnClickListener {
