@@ -11,7 +11,7 @@ import com.survivalcoding.todolist.databinding.ActivityListBinding
 import com.survivalcoding.todolist.databinding.Dialog1Binding
 import com.survivalcoding.todolist.viewModel.ListActivityVM
 import com.survivalcoding.todolist.viewModel.MyAdapterRecycler
-
+//d
 class ListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityListBinding
