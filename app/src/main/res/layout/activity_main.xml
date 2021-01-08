@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.MainActivity">
+    tools:context=".view.main.MainActivity">
 
     <EditText
         android:id="@+id/edit_text_title"
@@ -13,7 +13,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:ems="10"
-        android:hint="할 일"
+        android:hint="@string/main_activity_edit_text_title_hint"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toStartOf="@id/button_add"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:text="Add"
+        android:text="@string/main_activity_button_add_text"
         app:layout_constraintBottom_toBottomOf="@id/edit_text_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/edit_text_title"
@@ -40,6 +40,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edit_text_title"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_todo_list"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

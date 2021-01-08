@@ -1,11 +1,12 @@
-package com.survivalcoding.todolist.view
+package com.survivalcoding.todolist.view.edit
 
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.survivalcoding.todolist.databinding.ActivityEditBinding
-import com.survivalcoding.todolist.model.Todo
+import com.survivalcoding.todolist.view.main.MainActivity
+import com.survivalcoding.todolist.view.main.model.Todo
 
 class EditActivity : AppCompatActivity() {
 

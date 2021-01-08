@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.EditActivity">
+    tools:context=".view.edit.EditActivity">
 
     <EditText
         android:id="@+id/edit_text_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="수정하기"
+        android:hint="@string/edit_activity_edit_text_title_hint"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@id/button_ok"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="확인"
+        android:text="@string/edit_activity_button_ok_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/button_cancel"
         app:layout_constraintStart_toStartOf="parent" />
@@ -33,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="취소"
+        android:text="@string/edit_activity_button_cancel_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/button_ok" />

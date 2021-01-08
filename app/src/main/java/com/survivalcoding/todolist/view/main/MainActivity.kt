@@ -1,14 +1,15 @@
-package com.survivalcoding.todolist.view
+package com.survivalcoding.todolist.view.main
 
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.survivalcoding.todolist.adapter.TodoAdapter
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
-import com.survivalcoding.todolist.model.Todo
 import com.survivalcoding.todolist.util.dateToString
+import com.survivalcoding.todolist.view.edit.EditActivity
+import com.survivalcoding.todolist.view.main.adapter.TodoAdapter
+import com.survivalcoding.todolist.view.main.model.Todo
 import java.util.*
 
 class MainActivity : AppCompatActivity() {

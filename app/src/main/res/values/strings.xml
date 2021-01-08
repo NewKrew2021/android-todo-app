@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Todo List</string>
+
+    <!-- activity_main -->
+    <string name="main_activity_edit_text_title_hint">할 일</string>
+    <string name="main_activity_button_add_text">Add</string>
+
+    <!-- activity_edit -->
+    <string name="edit_activity_edit_text_title_hint">수정하기</string>
+    <string name="edit_activity_button_ok_text">확인</string>
+    <string name="edit_activity_button_cancel_text">취</string>
+
+    <!-- item_todo_list -->
+    <string name="todo_list_text_view_title_text_tools">할 일 제목</string>
+    <string name="todo_list_text_view_times_text_tools">2021.01.01 오전 10:00:00</string>
+
 </resources>
