@@ -2,15 +2,19 @@ package com.survivalcoding.todolist.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.todolist.databinding.ItemTodoBinding
 import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.util.convertToDate
+import java.util.*
 
 class TodoAdapter(private var todoList: MutableList<TodoItem>) :
-    RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
+    RecyclerView.Adapter<TodoAdapter.TodoViewHolder>(), Filterable {
 
     private var listener: ((todoItem: TodoItem) -> Unit)? = null
+    private var filterList: MutableList<TodoItem> = todoList
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         val inflater: LayoutInflater = LayoutInflater.from(parent.context)
@@ -19,13 +23,13 @@ class TodoAdapter(private var todoList: MutableList<TodoItem>) :
     }
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
-        holder.bindView(todoList[position])
-        holder.checkBoxEventProcess(todoList[position]) { sortTodoItem() }
+        holder.bindView(filterList[position])
+        holder.checkBoxEventProcess(filterList[position]) { sortTodoItem() }
         holder.removeEventProcess { removeTodoItem(position) }
-        holder.modifyEventProcess(todoList[position], listener!!, { removeTodoItem((position)) })
+        holder.modifyEventProcess(filterList[position], listener!!, { removeTodoItem((position)) })
     }
 
-    override fun getItemCount() = todoList.size
+    override fun getItemCount() = filterList.size
 
     fun addTodoItem(todoItem: TodoItem) {
         todoList.add(todoItem)
@@ -37,6 +41,7 @@ class TodoAdapter(private var todoList: MutableList<TodoItem>) :
             { if (it.complete) 1 else 0 },
             { -it.time }
         )).toMutableList()
+        filterList = todoList
         notifyDataSetChanged()
     }
 
@@ -46,9 +51,38 @@ class TodoAdapter(private var todoList: MutableList<TodoItem>) :
         notifyItemRangeChanged(position, todoList.size)
     }
 
-    fun setModifyTodoItemListener(listener : (todoItem : TodoItem) -> Unit){
+    fun setModifyTodoItemListener(listener: (todoItem: TodoItem) -> Unit) {
         this.listener = listener
     }
+
+    override fun getFilter(): Filter = object : Filter() {
+        override fun performFiltering(constraint: CharSequence?): FilterResults {
+            val filterString = constraint.toString()
+            filterList = if (filterString=="") {
+                todoList
+            } else {
+                val filteringList = mutableListOf<TodoItem>()
+                for (i in todoList.indices) {
+                   if (todoList[i].contents!!.toUpperCase(Locale.ROOT)
+                            .contains(filterString.toUpperCase(Locale.ROOT))
+                    ) filteringList.add(todoList[i])
+                }
+                filteringList
+            }
+
+            val filterResult = FilterResults()
+            filterResult.values = filterList
+            return filterResult
+        }
+
+        override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+            if (results != null) {
+                filterList = results.values as MutableList<TodoItem>
+                notifyDataSetChanged()
+            }
+        }
+    }
+
 
     class TodoViewHolder(private val binding: ItemTodoBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -73,7 +107,11 @@ class TodoAdapter(private var todoList: MutableList<TodoItem>) :
             }
         }
 
-        fun modifyEventProcess(todoItem: TodoItem, listener: (todoItem: TodoItem) -> Unit, remove: () -> Unit){
+        fun modifyEventProcess(
+            todoItem: TodoItem,
+            listener: (todoItem: TodoItem) -> Unit,
+            remove: () -> Unit
+        ) {
             binding.ivModifyTodo.setOnClickListener {
                 listener.invoke(todoItem)
                 remove.invoke()
@@ -82,5 +120,6 @@ class TodoAdapter(private var todoList: MutableList<TodoItem>) :
 
 
     }
+
 }
 
