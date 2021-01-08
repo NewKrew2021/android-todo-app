@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showToastMessage(message: String) {
-        Toast.makeText(this, "$message 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "$message", Toast.LENGTH_SHORT).show()
     }
 
     companion object {

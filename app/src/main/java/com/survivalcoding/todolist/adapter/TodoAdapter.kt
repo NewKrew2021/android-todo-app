@@ -59,11 +59,15 @@ class TodoAdapter(
     fun edit(item: Todo, title: String, times: String) {
         val position = items.indexOf(item)
 
-        items[position].apply {
-            this.title = title
-            this.times = times
+        try {
+            items[position].apply {
+                this.title = title
+                this.times = times
+            }
+            sort()
+        } catch (e: ArrayIndexOutOfBoundsException) {
+            showToastMessage("일시적인 오류로 인해 수정할 수 없습니다.")
         }
-        sort()
     }
 
     class ViewHolder(private val binding: ItemTodoListBinding) :
