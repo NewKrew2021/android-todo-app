@@ -6,6 +6,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.survivalcoding.todolist.adapter.TodoListAdapter
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
+import com.survivalcoding.todolist.extension.gotoActivityForResult
 import com.survivalcoding.todolist.model.TodoItem
 import java.util.*
 
@@ -25,10 +26,8 @@ class MainActivity : AppCompatActivity() {
                 inputMethodManager.hideSoftInputFromWindow(searchEdit.windowToken, 0)
             }
             addButton.setOnClickListener {
-                if (searchEdit.text.toString().trim() != "") {
-                    todoListAdapter.addItem(TodoItem(searchEdit.text.toString(), "d-30", false, false))
-                    searchEdit.text.clear()
-                }
+                val bundle : Bundle = Bundle()
+                gotoActivityForResult(MakeTodoActivity::class.java, bundle, ADD_REQUEST_CODE)
             }
         }
 
@@ -49,5 +48,9 @@ class MainActivity : AppCompatActivity() {
             todoListAdapter.notifyDataSetChanged()
         }
     }
+    companion object{
+        const val ADD_REQUEST_CODE = 100
+        const val EDIT_REQUEST_CODE = 200
 
+    }
 }

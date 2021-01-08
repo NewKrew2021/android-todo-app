@@ -9,7 +9,7 @@
     tools:context=".view.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/addLayout"
+        android:id="@+id/searchLayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginStart="10dp"
@@ -66,7 +66,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addLayout"
+        app:layout_constraintTop_toBottomOf="@id/searchLayout"
         tools:listitem="@layout/todo_item" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
