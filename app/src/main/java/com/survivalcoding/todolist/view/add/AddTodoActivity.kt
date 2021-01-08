@@ -46,7 +46,7 @@ class AddTodoActivity : BaseActivity<ActivityAddTodoBinding>() {
             val cancelIntent = Intent().apply {
                 if (todoItem != null) {
                     putExtra("contents", todoItem.contents)
-                    putExtra("time", Calendar.getInstance().timeInMillis)
+                    putExtra("time", todoItem.time)
                 }
             }
             setResult(Activity.RESULT_OK, cancelIntent)
