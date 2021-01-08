@@ -51,6 +51,4 @@ class TodoListAdapter(private val removeTodoListener: (TodoItem) -> Unit) :
             }
         }
     }
-
-    val TAG = this::class.java.simpleName
 }
