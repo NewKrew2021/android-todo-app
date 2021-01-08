@@ -35,9 +35,9 @@ class TodoListAdapter : ListAdapter<TodoItem, TodoViewHolder>(TodoDiffCallback) 
         notifyDataSetChanged()
     }
 
-    private fun removeItem(target: Int) {
-        target
-            .takeIf { it in 0.._list.size }
+    private fun removeItem(targetPosition: Int) {
+        targetPosition
+            .takeIf { it in 0 until _list.size }
             ?.let {
                 _list.removeAt(it)
                 notifyItemRemoved(it)
