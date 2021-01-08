@@ -14,7 +14,7 @@ import com.survivalcoding.todolist.view.MainActivity
 class TodoAdapter(
     private val items: MutableList<Todo>,
     private val showToastMessage: (String) -> Unit,
-    private val startEditActivity: (Bundle) -> Unit,
+    private val editClickEvent: (Bundle) -> Unit,
 ) : RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,22 +27,22 @@ class TodoAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(
             items[position],
-            { item -> remove(item) },
-            { sort() },
-            { args -> startEditActivity(args) },
+            remove = { _position -> remove(_position) },
+            sort = { sort() },
+            editClickEvent = { args -> editClickEvent(args) },
         )
     }
 
     override fun getItemCount(): Int = items.size
 
-    private fun remove(item: Todo) {
-        val position = items.indexOf(item)
+    private fun remove(position: Int) {
+        val item = items[position]
 
-        items.remove(item)
+        items.removeAt(position)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, items.size - position)
 
-        showToastMessage(item.title)
+        showToastMessage("${item.title} 삭제되었습니다.")
     }
 
     // 아직 완료하지 않은 일들만 시간 순으로 내림차순 정렬
@@ -56,7 +56,7 @@ class TodoAdapter(
         notifyDataSetChanged()
     }
 
-    fun modify(item: Todo, title: String, times: String) {
+    fun edit(item: Todo, title: String, times: String) {
         val position = items.indexOf(item)
 
         items[position].apply {
@@ -69,7 +69,12 @@ class TodoAdapter(
     class ViewHolder(private val binding: ItemTodoListBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(todo: Todo, remove: (Todo) -> Unit, sort: () -> Unit, startEditActivity: (Bundle) -> Unit) {
+        fun bind(
+            todo: Todo,
+            remove: (Int) -> Unit,
+            sort: () -> Unit,
+            editClickEvent: (Bundle) -> Unit,
+        ) {
             binding.apply {
                 textViewTitle.text = todo.title
                 textViewTimes.text = todo.times
@@ -79,7 +84,7 @@ class TodoAdapter(
 
                 checkBox.setOnClickListener {
                     todo.isDone = checkBox.isChecked
-                    sort()
+                    sort.invoke()
                 }
 
                 layoutItem.setOnClickListener {
@@ -98,11 +103,11 @@ class TodoAdapter(
                     val args = Bundle()
                     args.putParcelable(MainActivity.TODO_ITEM_KEY, todo)
 
-                    startEditActivity(args)
+                    editClickEvent.invoke(args)
                 }
 
                 buttonDelete.setOnClickListener {
-                    remove(todo)
+                    remove.invoke(adapterPosition)
                 }
             }
         }

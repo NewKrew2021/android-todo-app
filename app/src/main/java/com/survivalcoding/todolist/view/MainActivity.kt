@@ -27,8 +27,8 @@ class MainActivity : AppCompatActivity() {
 
         adapter = TodoAdapter(
             items,
-            { message: String -> showToastMessage(message) },
-            { args: Bundle -> navigateForResult(EditActivity::class, args, EDIT_ACTIVITY_REQ_CODE) },
+            showToastMessage = { message: String -> showToastMessage(message) },
+            editClickEvent = { args: Bundle -> navigateForResult(EditActivity::class, args, EDIT_ACTIVITY_REQ_CODE) },
         )
 
         binding.apply {
@@ -58,10 +58,10 @@ class MainActivity : AppCompatActivity() {
                 EDIT_ACTIVITY_REQ_CODE -> {
                     data?.extras?.let {
                         if (it[TODO_ITEM_KEY] != null && it[TODO_ITEM_TITLE_KEY] != null) {
-                            adapter.modify(
-                                it[TODO_ITEM_KEY] as Todo,
-                                it[TODO_ITEM_TITLE_KEY].toString(),
-                                dateToString(Calendar.getInstance().time),
+                            adapter.edit(
+                                item = it[TODO_ITEM_KEY] as Todo,
+                                title = it[TODO_ITEM_TITLE_KEY].toString(),
+                                times = dateToString(Calendar.getInstance().time),
                             )
                         }
                     }
