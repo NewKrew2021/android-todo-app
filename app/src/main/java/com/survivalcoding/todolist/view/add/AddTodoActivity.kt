@@ -2,9 +2,7 @@ package com.survivalcoding.todolist.view.add
 
 import android.app.Activity
 import android.content.Intent
-import android.os.Build
 import android.text.Editable
-import androidx.annotation.RequiresApi
 import com.survivalcoding.todolist.databinding.ActivityAddTodoBinding
 import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.view.base.BaseActivity
@@ -18,7 +16,6 @@ class AddTodoActivity : BaseActivity<ActivityAddTodoBinding>() {
         setContentView(view)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun afterStartView() {
         eventProcess()
         isModifyTodoItem()
@@ -34,7 +31,6 @@ class AddTodoActivity : BaseActivity<ActivityAddTodoBinding>() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun eventProcess() {
         binding.btnSaveAddTodo.setOnClickListener {
             val saveIntent = Intent().apply {
@@ -57,5 +53,4 @@ class AddTodoActivity : BaseActivity<ActivityAddTodoBinding>() {
             finish()
         }
     }
-
 }
