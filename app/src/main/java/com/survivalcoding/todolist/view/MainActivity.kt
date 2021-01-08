@@ -22,6 +22,23 @@ class MainActivity : AppCompatActivity() {
         setOnClickListener()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelableArrayList(
+            SAVE_INSTANCE_TODO_ITEM_KEY,
+            adapter.list as ArrayList<TodoItem>
+        )
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        val list = savedInstanceState.getParcelableArrayList<TodoItem>(SAVE_INSTANCE_TODO_ITEM_KEY)
+        list?.let {
+            adapter.list.clear()
+            adapter.list.addAll(it)
+        }
+    }
+
     private fun setOnClickListener() {
         binding.apply {
             registerButton.setOnClickListener {
@@ -59,5 +76,9 @@ class MainActivity : AppCompatActivity() {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.sortOptionSpinner.adapter = adapter
         }
+    }
+
+    companion object {
+        const val SAVE_INSTANCE_TODO_ITEM_KEY = "todoList"
     }
 }

@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.todolist.databinding.ToDoListBinding
 import com.survivalcoding.todolist.model.TodoItem
 
-class TodoListAdapter(private val list: MutableList<TodoItem>) :
+class TodoListAdapter(val list: MutableList<TodoItem>) :
     RecyclerView.Adapter<TodoListAdapter.TodoViewHolder>() {
     private lateinit var binding: ToDoListBinding
 
