@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Todo List</string>
     <string name="addDescription">Item add</string>
-    <string name="addEditTextHint">Add a to do…</string>
+    <string name="searchEditTextHint">Search a to do…</string>
     <string name="bookMarkDescription">Bookmark</string>
+    <string name="searchDescription">Search Todo</string>
 </resources>

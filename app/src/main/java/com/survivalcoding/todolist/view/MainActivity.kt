@@ -22,11 +22,13 @@ class MainActivity : AppCompatActivity() {
             todoListView.adapter = todoListAdapter
             mainLayout.setOnClickListener {
                 val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(addEdit.windowToken, 0)
+                inputMethodManager.hideSoftInputFromWindow(searchEdit.windowToken, 0)
             }
             addButton.setOnClickListener {
-                todoListAdapter.addItem(TodoItem(addEdit.text.toString(), "d-30", false, false))
-                addEdit.text.clear()
+                if (searchEdit.text.toString().trim() != "") {
+                    todoListAdapter.addItem(TodoItem(searchEdit.text.toString(), "d-30", false, false))
+                    searchEdit.text.clear()
+                }
             }
         }
 
@@ -47,6 +49,5 @@ class MainActivity : AppCompatActivity() {
             todoListAdapter.notifyDataSetChanged()
         }
     }
-
 
 }
