@@ -18,15 +18,12 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var adapter: TodoAdapter
 
-    private val items = mutableListOf<Todo>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         adapter = TodoAdapter(
-            items,
             showToastMessage = { message: String -> showToastMessage(message) },
             editClickEvent = { args: Bundle -> navigateForResult(EditActivity::class, args, EDIT_ACTIVITY_REQ_CODE) },
         )
@@ -36,14 +33,13 @@ class MainActivity : AppCompatActivity() {
 
             buttonAdd.setOnClickListener {
                 if (editTextTitle.text.trim().isNotEmpty()) {
-                    items.add(
-                        index = 0,
-                        element = Todo(
+                    adapter.add(
+                        Todo(
                             editTextTitle.text.toString(),
                             dateToString(Calendar.getInstance().time)
                         )
                     )
-                    adapter.notifyItemInserted(0)
+                    updateUI()
 
                     recyclerView.smoothScrollToPosition(0)
                     editTextTitle.text.clear()
@@ -63,6 +59,7 @@ class MainActivity : AppCompatActivity() {
                                 title = it[TODO_ITEM_TITLE_KEY].toString(),
                                 times = dateToString(Calendar.getInstance().time),
                             )
+                            updateUI()
                         }
                     }
                 }
@@ -72,7 +69,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelableArrayList(TODO_ITEM_STATE_KEY, items as ArrayList<out Todo>)
+        outState.putParcelableArrayList(TODO_ITEM_STATE_KEY, adapter.items as ArrayList<out Todo>)
 
         super.onSaveInstanceState(outState)
     }
@@ -81,14 +78,17 @@ class MainActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
 
         savedInstanceState.getParcelableArrayList<Todo>(TODO_ITEM_STATE_KEY)?.let {
-            items.clear()
-            items.addAll(it)
-            adapter.notifyDataSetChanged()
+            adapter.addAll(it)
+            updateUI()
         }
     }
 
     private fun showToastMessage(message: String) {
-        Toast.makeText(this, "$message", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun updateUI() {
+        adapter.notifyDataSetChanged()
     }
 
     companion object {
