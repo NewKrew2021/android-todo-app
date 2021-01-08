@@ -23,19 +23,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setOnClickListener() {
-        binding.registerButton.setOnClickListener {
-            binding.toDoEditText.text.apply {
-                val time = getCurrentTime()
-                adapter.addNewTodo(TodoItem(false, toString(), time))
-                clear()
+        binding.apply {
+            registerButton.setOnClickListener {
+                toDoEditText.text.apply {
+                    val time = getCurrentTime()
+                    adapter.addNewTodo(TodoItem(false, toString(), time))
+                    clear()
+                }
             }
-        }
-        binding.sortButton.setOnClickListener {
-            val sortOptions = resources.getStringArray(R.array.sort_options)
-            if (binding.sortOptionSpinner.selectedItem.toString() == sortOptions[0]) {
-                adapter.sortByTime()
-            } else if (binding.sortOptionSpinner.selectedItem.toString() == sortOptions[1]) {
-                adapter.sortByTitle()
+            sortButton.setOnClickListener {
+                val sortOptions = resources.getStringArray(R.array.sort_options)
+                // 시간 순으로 정렬
+                if (binding.sortOptionSpinner.selectedItem.toString() == sortOptions[0]) {
+                    adapter.sortByTime()
+                }
+                // 사전 순으로 정렬
+                else if (binding.sortOptionSpinner.selectedItem.toString() == sortOptions[1]) {
+                    adapter.sortByTitle()
+                }
             }
         }
     }
