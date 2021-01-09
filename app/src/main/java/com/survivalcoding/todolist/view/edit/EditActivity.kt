@@ -19,22 +19,22 @@ class EditActivity : AppCompatActivity() {
         binding = ActivityEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val item: Todo? = intent.getParcelableExtra<Todo>(MainActivity.TODO_ITEM_KEY)
+        val todo: Todo? = intent.getParcelableExtra<Todo>(MainActivity.TODO_KEY)
 
         binding.apply {
             buttonOk.setOnClickListener {
                 if (editTextTitle.text.trim().isNotEmpty()) {
-                    if (item == null) {
+                    if (todo == null) {
                         setResult(Activity.RESULT_CANCELED)
                         finish()
                     }
                     else {
-                        item.title = editTextTitle.text.toString()
-                        item.times = dateToString(Calendar.getInstance().time)
+                        todo.title = editTextTitle.text.toString()
+                        todo.times = dateToString(Calendar.getInstance().time)
 
                         val data = Intent().apply {
-                            putExtra(MainActivity.TODO_ITEM_TITLE_KEY, editTextTitle.text)
-                            putExtra(MainActivity.TODO_ITEM_KEY, item)
+                            putExtra(MainActivity.TODO_TITLE_KEY, editTextTitle.text)
+                            putExtra(MainActivity.TODO_KEY, todo)
                         }
                         setResult(Activity.RESULT_OK, data)
                         finish()

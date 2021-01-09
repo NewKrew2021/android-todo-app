@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
             updateListener = { updateUI() },
             editClickListener = { todo ->
                 val intent = Intent(this, EditActivity::class.java).apply {
-                    putExtra(TODO_ITEM_KEY, todo)
+                    putExtra(TODO_KEY, todo)
                 }
                 startActivityForResult(intent, EDIT_ACTIVITY_REQ_CODE)
             },
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 EDIT_ACTIVITY_REQ_CODE -> {
-                    data?.extras?.getParcelable<Todo>(TODO_ITEM_KEY)?.let {
+                    data?.extras?.getParcelable<Todo>(TODO_KEY)?.let {
                         val isEdited = viewModel.edit(it)
                         if (isEdited) {
                             updateUI()
@@ -81,15 +81,15 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        outState.putInt(TODO_ITEM_ID_KEY, viewModel.id.get())
-        outState.putParcelableArrayList(TODO_ITEM_STATE_KEY, viewModel.items as ArrayList<out Todo>)
+        outState.putInt(TODO_ID_KEY, viewModel.id.get())
+        outState.putParcelableArrayList(TODO_STATE_KEY, viewModel.items as ArrayList<out Todo>)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
 
-        viewModel.id.set(savedInstanceState.getInt(TODO_ITEM_ID_KEY))
-        savedInstanceState.getParcelableArrayList<Todo>(TODO_ITEM_STATE_KEY)?.let {
+        viewModel.id.set(savedInstanceState.getInt(TODO_ID_KEY))
+        savedInstanceState.getParcelableArrayList<Todo>(TODO_STATE_KEY)?.let {
             viewModel.addAll(it)
             updateUI()
         }
@@ -104,10 +104,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val TODO_ITEM_ID_KEY = "TODO_ITEM_ID_KEY"
-        const val TODO_ITEM_STATE_KEY = "TODO_ITEM_STATE_KEY"
-        const val TODO_ITEM_TITLE_KEY = "TODO_ITEM_TITLE_KEY"
-        const val TODO_ITEM_KEY = "TODO_ITEM_KEY"
+        const val TODO_ID_KEY = "TODO_ID_KEY"
+        const val TODO_STATE_KEY = "TODO_STATE_KEY"
+        const val TODO_TITLE_KEY = "TODO_TITLE_KEY"
+        const val TODO_KEY = "TODO_KEY"
 
         const val EDIT_ACTIVITY_REQ_CODE = 100
     }
