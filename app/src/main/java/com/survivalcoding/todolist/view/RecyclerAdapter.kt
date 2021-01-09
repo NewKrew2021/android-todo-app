@@ -1,26 +1,34 @@
-package com.survivalcoding.todolist.viewModel
+package com.survivalcoding.todolist.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.todolist.databinding.ItemBinding
+import com.survivalcoding.todolist.viewModel.listItem
 
-class MyAdapterRecycler(val itemClick: (MyAdapterRecycler, Int) -> Unit) :
-    RecyclerView.Adapter<Holder>() {
+class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
+    ListAdapter<listItem, Holder>(ItemDiffCallback) {
 
     var data = mutableListOf<listItem>()
 
 
+    fun dataUpdate(){
+        data=data.sortedBy{ it.time }.toMutableList()
+        submitList(data)
+    }
+
     fun checkedRemove() {
-        var tmp = mutableListOf<Int>()
         var i = 0
         while (i <= data.size - 1) {
             if (data[i].check == true) {
                 data.removeAt(i)
+                notifyItemRemoved(i)
             } else i += 1
         }
-        notifyDataSetChanged()
     }
+
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val itemBinding = ItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -48,7 +56,7 @@ class MyAdapterRecycler(val itemClick: (MyAdapterRecycler, Int) -> Unit) :
 
 class Holder(
     val binding: ItemBinding,
-    val itemClick: (MyAdapterRecycler, Int) -> Unit,
+    val itemClick: (RecyclerAdapter, Int) -> Unit,
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
@@ -59,7 +67,7 @@ class Holder(
         binding.checkBox.isChecked = false
     }
 
-    fun itemClickListener(position: Int, adapter: MyAdapterRecycler) {
+    fun itemClickListener(position: Int, adapter: RecyclerAdapter) {
         binding.button.setOnClickListener {
             itemClick(adapter, position)
         }
