@@ -1,54 +1,108 @@
 package com.survivalcoding.todolist.view
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.todolist.databinding.ItemBinding
 import com.survivalcoding.todolist.viewModel.listItem
+import com.survivalcoding.todolist.viewModel.searchItem
 
 class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
     ListAdapter<listItem, Holder>(ItemDiffCallback) {
 
     var data = mutableListOf<listItem>()
-
+    var searchData = mutableListOf<searchItem>()
 
     fun dataUpdate() {
         data = data.toMutableList()
         submitList(data)
     }
 
+
+    //코틀린에서 문자열 찾는 알고리즘이 없어서 라빈 카프 알고리즘 구현
+    //시간복잡도 -> O(1)
+    fun findString(sentence: String, pattern: String): Boolean {
+        var sentenceHash = 0
+        var patternHash = 0
+        var power = 1
+        for (i in 0..sentence.length - pattern.length) {
+            if (i == 0) {
+                for (j in 0..pattern.length - 1) {
+                    sentenceHash += sentence[pattern.length - 1 - j].toInt() * power
+                    patternHash += pattern[pattern.length - 1 - j].toInt() * power
+                    if (j < pattern.length - 1) power *= 403
+                }
+            } else {
+                sentenceHash =
+                    403 * (sentenceHash - sentence[i - 1].toInt() * power) + sentence[pattern.length - 1 + i].toInt()
+            }
+            if (sentenceHash == patternHash) return true
+        }
+        return false
+    }
+
+    fun searching(pattern: String) {
+        searchData.clear()
+        for (i in 0..data.size - 1) {
+            if (findString(data[i].toDo, pattern)) {
+                searchData.add(searchItem(data[i], i))
+            }
+        }
+        //Log.d("로그", "$data")
+        notifyDataSetChanged()
+    }
+
     fun checkedComplete() {
-        var tmp_size = data.size
+
+        checkingComplete(searchData)
+
+        for (i in 0..searchData.size - 1) {
+            if (searchData[i].item.complete == true) {
+                var index = searchData[i].index
+                data[index].complete = true
+            }
+        }
+        data.sortBy { it.complete }
+    }
+
+
+    fun checkingComplete(dataList: MutableList<searchItem>) {
+        var tmp_size = dataList.size
         var index = 0
         for (i in 0..tmp_size - 1) {
-            if (data[index].check == true) {
+            if (dataList[index].item.check == true) {
 
-                data[index].check=false
-                data[index].complete=true
-                data.add(
-                    data[index]
+                dataList[index].item.check = false
+                dataList[index].item.complete = true
+                dataList.add(
+                    dataList[index]
                 )
-                data.removeAt(index)
+                dataList.removeAt(index)
                 notifyItemRemoved(index)
+            } else index += 1
+        }
+        notifyItemRangeChanged(0, dataList.size)
+
+    }
+
+    fun checkedRemove(pattern: String) {
+        var tmp = mutableListOf<Int>()
+        for (i in 0..searchData.size - 1) {
+            if (searchData[i].item.check == true) {
+                tmp.add(searchData[i].index)
             }
-            else index+=1
         }
-        notifyItemRangeChanged(0,data.size)
-    }
-
-    fun checkedRemove() {
-        var i = 0
-        while (i <= data.size - 1) {
-            if (data[i].check == true) {
-                data.removeAt(i)
-                notifyItemRemoved(i)
-            } else i += 1
+        tmp.sortBy { it }
+        for (i in tmp.size - 1 downTo 0) {
+            data.removeAt(tmp[i])
         }
+        searching(pattern)
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val itemBinding = ItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -60,16 +114,14 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
     }
 
     override fun getItemCount(): Int {
-        return data.size
+        return searchData.size
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
 
-        holder.setData(data[position])
-
+        holder.setData(searchData[position].item)
+        holder.checkBoxClickListener(searchData[position].item)
         holder.itemClickListener(position, this)
-
-        holder.checkBoxClickListener(data[position])
 
     }
 }
@@ -85,12 +137,17 @@ class Holder(
         binding.checkBox.text = data.toDo
         binding.textView.text = data.time
         binding.checkBox.isChecked = false
-        if(data.complete==true){
+        if (data.complete == true) {
             binding.ConstraintLayout.setBackgroundColor(Color.RED)
-            binding.checkBox.isClickable=false
-            binding.button.isEnabled=false
+            binding.checkBox.isClickable = false
+            binding.button.isEnabled = false
+        } else {
+            binding.ConstraintLayout.setBackgroundColor(Color.TRANSPARENT)
+            binding.checkBox.isClickable = true
+            binding.button.isEnabled = true
         }
     }
+
 
     fun itemClickListener(position: Int, adapter: RecyclerAdapter) {
         binding.button.setOnClickListener {

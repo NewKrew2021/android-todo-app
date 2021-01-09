@@ -1,11 +1,14 @@
 package com.survivalcoding.todolist.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.todolist.R
@@ -32,19 +35,19 @@ class ListActivity : AppCompatActivity() {
         adapter =
             RecyclerAdapter() { adapter: RecyclerAdapter, position: Int ->
 
-                    val dialogView = layoutInflater.inflate(R.layout.dialog1, null)
+                val dialogView = layoutInflater.inflate(R.layout.dialog1, null)
 
-                    builder.setView(dialogView).setTitle("수정사항을 입력하세요")
-                            .setPositiveButton("확인") { dialogInterface, i ->
+                builder.setView(dialogView).setTitle("수정사항을 입력하세요")
+                    .setPositiveButton("확인") { dialogInterface, i ->
 
-                                dialogSetting(dialogView, adapter, position)
+                        dialogSetting(dialogView, adapter, position)
 
-                            }
-                            .setNegativeButton("취소") { dialogInterface, i ->
+                    }
+                    .setNegativeButton("취소") { dialogInterface, i ->
 
-                            }
-                            .show()
-                }
+                    }
+                    .show()
+            }
 
         binding.RecyclerView.adapter = adapter
         binding.RecyclerView.layoutManager = LinearLayoutManager(this)
@@ -67,14 +70,18 @@ class ListActivity : AppCompatActivity() {
             true
         }
         binding.removeButton.setOnClickListener {
-            adapter.checkedRemove()
+            adapter.checkedRemove(binding.searchEditText.text.toString())
         }
 
         binding.completeButton.setOnClickListener {
 
             adapter.checkedComplete()
         }
+        binding.searchEditText.addTextChangedListener {
+            adapter.searching(binding.searchEditText.text.toString())
+        }
     }
+
     fun dialogSetting(dialogView: View, adapter: RecyclerAdapter, position: Int) {
         var reviseText = dialogView.findViewById<EditText>(R.id.reviseText)
 
@@ -83,23 +90,23 @@ class ListActivity : AppCompatActivity() {
         val date = System.currentTimeMillis()
         val currentDate = sdf.format(date)
 
-
         adapter.data.add(
-                0,
-                listItem(
-                        tmpString,
-                        currentDate,
-                        false,
-                    false,
-                )
+            0,
+            listItem(
+                tmpString,
+                currentDate,
+                false,
+                false,
+            )
         )
+        adapter.data.removeAt(adapter.searchData[position].index + 1)
 
-        adapter.notifyItemInserted(0)
-        adapter.data.removeAt(position + 1)
-        adapter.notifyItemRemoved(position+1)
+        //adapter.notifyItemInserted(0)
+        //adapter.data.removeAt(position + 1)
+        //adapter.notifyItemRemoved(position+1)
 
-        adapter.notifyItemRangeChanged(0, adapter.data.size)
-        //adapter.notifyDataSetChanged()
+        //adapter.notifyItemRangeChanged(0, adapter.data.size)
+        adapter.searching(binding.searchEditText.text.toString())
     }
 
     fun addButtonListener(adapter: RecyclerAdapter, binding: ActivityListBinding) {
@@ -109,17 +116,18 @@ class ListActivity : AppCompatActivity() {
 
         adapter.data.add(
             0,
-                listItem(
-                        binding.editText.text.toString(),
-                        currentDate,
-                        false,
-                    false,
-                )
+            listItem(
+                binding.editText.text.toString(),
+                currentDate,
+                false,
+                false,
+            )
         )
         //adapter.dataUpdate()
-        adapter.notifyItemInserted(0)
-        adapter.notifyItemRangeChanged(0,adapter.data.size)
+        //adapter.notifyItemInserted(0)
+        //adapter.notifyItemRangeChanged(0,adapter.data.size)
         binding.editText.setText("")
+        adapter.searching(binding.searchEditText.text.toString())
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -11,12 +11,11 @@
         android:id="@+id/RecyclerView"
         android:layout_width="match_parent"
         android:layout_height="500dp"
-        android:layout_marginTop="4dp"
         android:background="@color/purple_200"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintTop_toBottomOf="@+id/searchEditText" />
 
     <EditText
         android:id="@+id/editText"
@@ -57,5 +56,16 @@
         android:text="선택 모두 완료"
         app:layout_constraintStart_toEndOf="@+id/removeButton"
         app:layout_constraintTop_toBottomOf="@+id/RecyclerView" />
+
+    <EditText
+        android:id="@+id/searchEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="입력즉시 검색"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/editText"
+        app:layout_constraintTop_toBottomOf="@+id/editText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
