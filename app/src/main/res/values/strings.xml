@@ -8,7 +8,7 @@
     <!-- activity_edit -->
     <string name="edit_activity_edit_text_title_hint">수정하기</string>
     <string name="edit_activity_button_ok_text">확인</string>
-    <string name="edit_activity_button_cancel_text">취</string>
+    <string name="edit_activity_button_cancel_text">취소</string>
 
     <!-- item_todo_list -->
     <string name="todo_list_text_view_title_text_tools">할 일 제목</string>
