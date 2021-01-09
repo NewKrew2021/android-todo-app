@@ -5,8 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.survivalcoding.todolist.databinding.ActivityEditBinding
+import com.survivalcoding.todolist.util.dateToString
 import com.survivalcoding.todolist.view.main.MainActivity
 import com.survivalcoding.todolist.view.main.model.Todo
+import java.util.*
 
 class EditActivity : AppCompatActivity() {
 
@@ -22,12 +24,21 @@ class EditActivity : AppCompatActivity() {
         binding.apply {
             buttonOk.setOnClickListener {
                 if (editTextTitle.text.trim().isNotEmpty()) {
-                    val data = Intent().apply {
-                        putExtra(MainActivity.TODO_ITEM_TITLE_KEY, editTextTitle.text)
-                        putExtra(MainActivity.TODO_ITEM_KEY, item)
+                    if (item == null) {
+                        setResult(Activity.RESULT_CANCELED)
+                        finish()
                     }
-                    setResult(Activity.RESULT_OK, data)
-                    finish()
+                    else {
+                        item.title = editTextTitle.text.toString()
+                        item.times = dateToString(Calendar.getInstance().time)
+
+                        val data = Intent().apply {
+                            putExtra(MainActivity.TODO_ITEM_TITLE_KEY, editTextTitle.text)
+                            putExtra(MainActivity.TODO_ITEM_KEY, item)
+                        }
+                        setResult(Activity.RESULT_OK, data)
+                        finish()
+                    }
                 }
             }
             buttonCancel.setOnClickListener {

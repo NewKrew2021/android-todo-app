@@ -8,4 +8,5 @@ data class Todo (
     var times: String,
     var isDone: Boolean = false,
     var isOption: Boolean = false,  // true : 수정 삭제 Visible, false : 수정 삭제 Invisible
+    var id: Int = 0,
 ) : Parcelable

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.survivalcoding.todolist.data.MainViewModel
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import com.survivalcoding.todolist.util.dateToString
 import com.survivalcoding.todolist.view.edit.EditActivity
@@ -13,6 +14,8 @@ import com.survivalcoding.todolist.view.main.model.Todo
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
+
+    private val viewModel = MainViewModel()
 
     private lateinit var binding: ActivityMainBinding
 
@@ -24,10 +27,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         adapter = TodoAdapter(
-            showToastMessage = { message: String -> showToastMessage(message) },
-            editClickEvent = { item ->
+            showToastMessageListener = { message: String -> showToastMessage(message) },
+            removeClickListener = { todo -> viewModel.remove(todo) },
+            updateListener = { updateUI() },
+            editClickListener = { todo ->
                 val intent = Intent(this, EditActivity::class.java).apply {
-                    putExtra(TODO_ITEM_KEY, item)
+                    putExtra(TODO_ITEM_KEY, todo)
                 }
                 startActivityForResult(intent, EDIT_ACTIVITY_REQ_CODE)
             },
@@ -38,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
             buttonAdd.setOnClickListener {
                 if (editTextTitle.text.trim().isNotEmpty()) {
-                    adapter.add(
+                    viewModel.add(
                         Todo(
                             editTextTitle.text.toString(),
                             dateToString(Calendar.getInstance().time)
@@ -54,36 +59,38 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 EDIT_ACTIVITY_REQ_CODE -> {
-                    data?.extras?.let {
-                        if (it[TODO_ITEM_KEY] != null && it[TODO_ITEM_TITLE_KEY] != null) {
-                            adapter.edit(
-                                item = it[TODO_ITEM_KEY] as Todo,
-                                title = it[TODO_ITEM_TITLE_KEY].toString(),
-                                times = dateToString(Calendar.getInstance().time),
-                            )
+                    data?.extras?.getParcelable<Todo>(TODO_ITEM_KEY)?.let {
+                        val isEdited = viewModel.edit(it)
+                        if (isEdited) {
                             updateUI()
+                        }
+                        else {
+                            showToastMessage("일시적인 오류로 수정할 수 없습니다.")
                         }
                     }
                 }
             }
         }
-        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelableArrayList(TODO_ITEM_STATE_KEY, adapter.items as ArrayList<out Todo>)
-
         super.onSaveInstanceState(outState)
+
+        outState.putInt(TODO_ITEM_ID_KEY, viewModel.id.get())
+        outState.putParcelableArrayList(TODO_ITEM_STATE_KEY, viewModel.items as ArrayList<out Todo>)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
 
+        viewModel.id.set(savedInstanceState.getInt(TODO_ITEM_ID_KEY))
         savedInstanceState.getParcelableArrayList<Todo>(TODO_ITEM_STATE_KEY)?.let {
-            adapter.addAll(it)
+            viewModel.addAll(it)
             updateUI()
         }
     }
@@ -93,10 +100,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateUI() {
-        adapter.notifyDataSetChanged()
+        adapter.submitList(viewModel.getOrderedItems())
     }
 
     companion object {
+        const val TODO_ITEM_ID_KEY = "TODO_ITEM_ID_KEY"
         const val TODO_ITEM_STATE_KEY = "TODO_ITEM_STATE_KEY"
         const val TODO_ITEM_TITLE_KEY = "TODO_ITEM_TITLE_KEY"
         const val TODO_ITEM_KEY = "TODO_ITEM_KEY"
