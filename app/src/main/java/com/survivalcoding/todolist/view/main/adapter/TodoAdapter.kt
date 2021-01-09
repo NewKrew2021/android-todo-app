@@ -9,9 +9,9 @@ import com.survivalcoding.todolist.view.main.model.Todo
 
 class TodoAdapter(
     private val showToastMessageListener: (String) -> Unit,
-    private val editClickListener: (Todo) -> Unit,
     private val removeClickListener: (Todo) -> Unit,
     private val updateListener: () -> Unit,
+    private val editClickListener: (Todo) -> Unit,
 ) : ListAdapter<Todo, TodoViewHolder>(TodoDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
