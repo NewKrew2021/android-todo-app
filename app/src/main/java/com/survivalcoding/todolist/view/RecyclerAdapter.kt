@@ -1,6 +1,8 @@
 package com.survivalcoding.todolist.view
 
+import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +27,7 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
             if (data[index].check == true) {
 
                 data[index].check=false
+                data[index].complete=true
                 data.add(
                     data[index]
                 )
@@ -82,6 +85,11 @@ class Holder(
         binding.checkBox.text = data.toDo
         binding.textView.text = data.time
         binding.checkBox.isChecked = false
+        if(data.complete==true){
+            binding.ConstraintLayout.setBackgroundColor(Color.RED)
+            binding.checkBox.isClickable=false
+            binding.button.isEnabled=false
+        }
     }
 
     fun itemClickListener(position: Int, adapter: RecyclerAdapter) {

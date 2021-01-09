@@ -89,7 +89,8 @@ class ListActivity : AppCompatActivity() {
                 listItem(
                         tmpString,
                         currentDate,
-                        false
+                        false,
+                    false,
                 )
         )
 
@@ -111,7 +112,8 @@ class ListActivity : AppCompatActivity() {
                 listItem(
                         binding.editText.text.toString(),
                         currentDate,
-                        false
+                        false,
+                    false,
                 )
         )
         //adapter.dataUpdate()
