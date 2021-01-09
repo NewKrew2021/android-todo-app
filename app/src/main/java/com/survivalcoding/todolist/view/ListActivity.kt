@@ -70,6 +70,10 @@ class ListActivity : AppCompatActivity() {
             adapter.checkedRemove()
         }
 
+        binding.completeButton.setOnClickListener {
+
+            adapter.checkedComplete()
+        }
     }
     fun dialogSetting(dialogView: View, adapter: RecyclerAdapter, position: Int) {
         var reviseText = dialogView.findViewById<EditText>(R.id.reviseText)

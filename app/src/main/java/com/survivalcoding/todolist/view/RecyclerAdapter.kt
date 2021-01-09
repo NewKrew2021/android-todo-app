@@ -13,9 +13,27 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
     var data = mutableListOf<listItem>()
 
 
-    fun dataUpdate(){
-        data=data.sortedBy{ it.time }.toMutableList()
+    fun dataUpdate() {
+        data = data.toMutableList()
         submitList(data)
+    }
+
+    fun checkedComplete() {
+        var tmp_size = data.size
+        var index = 0
+        for (i in 0..tmp_size - 1) {
+            if (data[index].check == true) {
+
+                data[index].check=false
+                data.add(
+                    data[index]
+                )
+                data.removeAt(index)
+                notifyItemRemoved(index)
+            }
+            else index+=1
+        }
+        notifyItemRangeChanged(0,data.size)
     }
 
     fun checkedRemove() {
@@ -27,7 +45,6 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
             } else i += 1
         }
     }
-
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
