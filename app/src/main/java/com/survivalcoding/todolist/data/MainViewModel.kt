@@ -35,12 +35,10 @@ class MainViewModel {
     }
 
     fun edit(todo: Todo): Boolean {
-        val index = _items.indexOfFirst{ it.id == todo.id }
-
-        return if (index == -1) false
-        else {
-            _items[index] = todo
-            true
+        _items.withIndex().find { it.value.id == todo.id }?.let {
+            _items[it.index] = todo
+            return true
         }
+        return false
     }
 }
