@@ -17,7 +17,7 @@ import com.survivalcoding.todolist.databinding.Dialog1Binding
 import com.survivalcoding.todolist.viewModel.listItem
 import java.text.SimpleDateFormat
 
-//d
+
 class ListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityListBinding
@@ -143,6 +143,5 @@ class ListActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged()
         }
     }
-
-
 }
+//오류 검토 완료
