@@ -21,6 +21,10 @@ class TodoViewModel {
         _todoList.add(todoItem)
     }
 
+    fun editTodo(todoItem: TodoItem, newTodoTitle: String) {
+        todoItem.todoTitle = newTodoTitle
+    }
+
     fun removeTodo(todoItem: TodoItem) {
         _todoList.remove(todoItem)
     }

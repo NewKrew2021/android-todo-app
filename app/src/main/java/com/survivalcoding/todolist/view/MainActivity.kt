@@ -87,10 +87,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeView() {
-        adapter = TodoListAdapter {
+        adapter = TodoListAdapter(editTodoListener = { todoItem, newTodoTitle ->
+            viewModel.editTodo(todoItem, newTodoTitle)
+            updateTodoList()
+        }, removeTodoListener = {
             viewModel.removeTodo(it)
             updateTodoList()
-        }
+        })
         binding.toDoList.apply {
             this.adapter = this@MainActivity.adapter
         }
