@@ -55,6 +55,10 @@ class MainActivity : AppCompatActivity() {
                     editTextTitle.text.clear()
                 }
             }
+            // SearchView 전체 클릭 시 활성화 Event
+            searchView.setOnClickListener {
+                searchView.isIconified = false
+            }
         }
     }
 
@@ -68,8 +72,7 @@ class MainActivity : AppCompatActivity() {
                         val isEdited = viewModel.edit(it)
                         if (isEdited) {
                             updateUI()
-                        }
-                        else {
+                        } else {
                             showToastMessage("일시적인 오류로 수정할 수 없습니다.")
                         }
                     }
