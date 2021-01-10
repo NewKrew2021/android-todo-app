@@ -39,6 +39,8 @@ class TodoListAdapter(
                 toDoTitle.text = todoItem.todoTitle
                 currentTime.text = todoItem.timeStamp
                 setOnClickListener(todoItem)
+                drawCancelLine(todoItem, todoItem.isChecked)
+                showEditButton(!todoItem.isChecked)
             }
         }
 
@@ -55,7 +57,7 @@ class TodoListAdapter(
                         item.isChecked = !this
                         checkBox.isChecked = !this
                         showEditButton(this)
-                        drawCancelLine(item, item.isChecked)
+                        drawCancelLine(item, !this)
                     }
                     checkTodoListener()
                 }
