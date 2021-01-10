@@ -47,13 +47,15 @@ class TodoListAdapter(
                 checkBox.setOnClickListener {
                     item.isChecked = checkBox.isChecked
                     drawCancelLine(item, item.isChecked)
+                    showEditButton(!checkBox.isChecked)
                     checkTodoListener()
                 }
                 toDoTitle.setOnClickListener {
                     checkBox.isChecked.apply {
                         item.isChecked = !this
                         checkBox.isChecked = !this
-                        drawCancelLine(item, !item.isChecked)
+                        showEditButton(this)
+                        drawCancelLine(item, item.isChecked)
                     }
                     checkTodoListener()
                 }
@@ -92,6 +94,10 @@ class TodoListAdapter(
                     editTodoLayout.visibility = View.INVISIBLE
                 }
             }
+        }
+
+        private fun showEditButton(isEditable: Boolean) {
+            binding.editButton.visibility = if (isEditable) View.VISIBLE else View.INVISIBLE
         }
     }
 }
