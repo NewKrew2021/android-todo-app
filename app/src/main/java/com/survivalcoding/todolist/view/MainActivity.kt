@@ -47,6 +47,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateTodoList() {
+        val sortOptions = resources.getStringArray(R.array.sort_options)
+        // 시간 순으로 정렬
+        if (binding.sortOptionSpinner.selectedItem.toString() == sortOptions[0]) {
+            viewModel.sortByTime()
+        }
+        // 사전 순으로 정렬
+        else if (binding.sortOptionSpinner.selectedItem.toString() == sortOptions[1]) {
+            viewModel.sortByTitle()
+        }
         adapter.submitList(viewModel.todoList.toList())
     }
 
@@ -70,29 +79,23 @@ class MainActivity : AppCompatActivity() {
                 updateTodoList()
             }
             sortButton.setOnClickListener {
-                val sortOptions = resources.getStringArray(R.array.sort_options)
-                // 시간 순으로 정렬
-                if (binding.sortOptionSpinner.selectedItem.toString() == sortOptions[0]) {
-                    viewModel.sortByTime()
-                    updateTodoList()
-                }
-                // 사전 순으로 정렬
-                else if (binding.sortOptionSpinner.selectedItem.toString() == sortOptions[1]) {
-                    viewModel.sortByTitle()
-                    updateTodoList()
-                }
+                updateTodoList()
             }
         }
     }
 
     private fun initializeView() {
-        adapter = TodoListAdapter(editTodoListener = { todoItem, newTodoTitle ->
-            viewModel.editTodo(todoItem, newTodoTitle)
-            updateTodoList()
-        }, removeTodoListener = {
-            viewModel.removeTodo(it)
-            updateTodoList()
-        })
+        adapter = TodoListAdapter(
+            checkTodoListener = {
+                updateTodoList()
+            },
+            editTodoListener = { todoItem, newTodoTitle ->
+                viewModel.editTodo(todoItem, newTodoTitle)
+                updateTodoList()
+            }, removeTodoListener = {
+                viewModel.removeTodo(it)
+                updateTodoList()
+            })
         binding.toDoList.apply {
             this.adapter = this@MainActivity.adapter
         }

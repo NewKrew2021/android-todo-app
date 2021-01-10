@@ -10,6 +10,7 @@ import com.survivalcoding.todolist.databinding.ToDoListBinding
 import com.survivalcoding.todolist.model.TodoItem
 
 class TodoListAdapter(
+    private val checkTodoListener: () -> Unit,
     private val editTodoListener: (TodoItem, String) -> Unit,
     private val removeTodoListener: (TodoItem) -> Unit
 ) :
@@ -18,7 +19,7 @@ class TodoListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         binding = ToDoListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return TodoViewHolder(binding, editTodoListener, removeTodoListener)
+        return TodoViewHolder(binding, checkTodoListener, editTodoListener, removeTodoListener)
     }
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
@@ -27,6 +28,7 @@ class TodoListAdapter(
 
     class TodoViewHolder(
         private val binding: ToDoListBinding,
+        private val checkTodoListener: () -> Unit,
         private val editTodoListener: (TodoItem, String) -> Unit,
         private val removeTodoListener: (TodoItem) -> Unit
     ) :
@@ -46,6 +48,7 @@ class TodoListAdapter(
                     item.isChecked = checkBox.isChecked
                     // 취소선 넣기
                     toDoTitle.paintFlags = if (item.isChecked) Paint.STRIKE_THRU_TEXT_FLAG else 0
+                    checkTodoListener()
                 }
                 toDoTitle.setOnClickListener {
                     checkBox.isChecked.apply {
@@ -55,6 +58,7 @@ class TodoListAdapter(
                         toDoTitle.paintFlags =
                             if (!this) Paint.STRIKE_THRU_TEXT_FLAG else 0
                     }
+                    checkTodoListener()
                 }
                 editButton.setOnClickListener {
                     normalTodoLayout.visibility = View.INVISIBLE
