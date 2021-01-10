@@ -24,10 +24,10 @@ class TodoAdapter(
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
         holder.bind(
             getItem(holder.adapterPosition),
-            showToastMessageListener = { string -> showToastMessageListener(string) },
-            removeClickListener = { todo -> removeClickListener(todo) },
-            updateListener = { updateListener() },
-            editClickListener = { todo -> editClickListener(todo) },
+            showToastMessageListener = showToastMessageListener,
+            removeClickListener = removeClickListener,
+            updateListener = updateListener,
+            editClickListener = editClickListener,
         )
     }
 }
