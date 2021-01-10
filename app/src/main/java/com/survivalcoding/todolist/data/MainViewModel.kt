@@ -20,6 +20,17 @@ class MainViewModel {
         )
     }
 
+    fun getOrderedWithFilteredItems(query: String): List<Todo> {
+        return _items
+            .filter { it.title.contains(query, true) }
+            .sortedWith(
+                compareBy {
+                    if (!it.isDone) -stringToDate(it.times).time
+                    else Long.MAX_VALUE
+                }
+            )
+    }
+
     fun add(todo: Todo) {
         todo.id = id.getAndIncrement()
         _items.add(0, todo)

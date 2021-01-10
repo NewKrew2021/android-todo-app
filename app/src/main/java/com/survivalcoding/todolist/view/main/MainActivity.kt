@@ -3,6 +3,7 @@ package com.survivalcoding.todolist.view.main
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.survivalcoding.todolist.data.MainViewModel
@@ -59,6 +60,22 @@ class MainActivity : AppCompatActivity() {
             searchView.setOnClickListener {
                 searchView.isIconified = false
             }
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                // Called when the user submits the query.
+                // Keyboard Key press (enter key) or press submit button.
+                // return false to let the SearchView handle the submission by launching any associated intent.
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return true
+                }
+
+                // Called when the query text is changed by the user.
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    newText?.let {
+                        updateUI()
+                    }
+                    return true
+                }
+            })
         }
     }
 
@@ -103,7 +120,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateUI() {
-        adapter.submitList(viewModel.getOrderedItems())
+        val query = binding.searchView.query.toString()
+
+        adapter.submitList(
+            if (query.isEmpty()) viewModel.getOrderedItems()
+            else viewModel.getOrderedWithFilteredItems(query)
+        )
     }
 
     companion object {
