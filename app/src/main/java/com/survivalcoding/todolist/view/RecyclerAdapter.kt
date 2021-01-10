@@ -1,13 +1,16 @@
 package com.survivalcoding.todolist.view
 
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.ItemBinding
 import com.survivalcoding.todolist.viewModel.listItem
 import com.survivalcoding.todolist.viewModel.searchItem
@@ -17,6 +20,7 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
 
     var data = mutableListOf<listItem>()
     var searchData = mutableListOf<searchItem>()
+
 
     fun dataUpdate() {
         data = data.toMutableList()
@@ -57,36 +61,45 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
         notifyDataSetChanged()
     }
 
-    fun checkedComplete() {
+    fun checkedComplete(pattern:String) {
 
         checkingComplete(searchData)
 
-        for (i in 0..searchData.size - 1) {
-            if (searchData[i].item.complete == true) {
-                var index = searchData[i].index
-                data[index].complete = true
+        var last_index = data.size-1
+        var index=0
+        for(i in 0..last_index){
+            if(data[index].complete==true){
+                data.add(last_index+1,data[index])
+                data.removeAt(index)
+            }else{
+                index+=1
             }
         }
-        data.sortBy { it.complete }
+        searching(pattern)
+        //data.sortBy { it.complete }
     }
-
 
     fun checkingComplete(dataList: MutableList<searchItem>) {
         var tmp_size = dataList.size
-        var index = 0
-        for (i in 0..tmp_size - 1) {
+       //var index = 0
+        for (index in 0..tmp_size - 1) {
             if (dataList[index].item.check == true) {
 
                 dataList[index].item.check = false
                 dataList[index].item.complete = true
+                data[dataList[index].index].complete=true
+
+                /*
                 dataList.add(
+
                     dataList[index]
                 )
                 dataList.removeAt(index)
                 notifyItemRemoved(index)
-            } else index += 1
+                */
+            }
         }
-        notifyItemRangeChanged(0, dataList.size)
+       // notifyItemRangeChanged(0, dataList.size)
 
     }
 
@@ -142,7 +155,7 @@ class Holder(
             binding.checkBox.isClickable = false
             binding.button.isEnabled = false
         } else {
-            binding.ConstraintLayout.setBackgroundColor(Color.TRANSPARENT)
+            binding.ConstraintLayout.setBackgroundColor(Color.WHITE)
             binding.checkBox.isClickable = true
             binding.button.isEnabled = true
         }

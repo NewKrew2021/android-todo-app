@@ -1,5 +1,6 @@
 package com.survivalcoding.todolist.view
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -25,11 +26,15 @@ class ListActivity : AppCompatActivity() {
 
     private lateinit var adapter: RecyclerAdapter
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityListBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+
+
 
         var builder = AlertDialog.Builder(this)
         adapter =
@@ -51,10 +56,9 @@ class ListActivity : AppCompatActivity() {
 
         binding.RecyclerView.adapter = adapter
         binding.RecyclerView.layoutManager = LinearLayoutManager(this)
-        val dividerItemDecoration =
-            DividerItemDecoration(this, LinearLayoutManager(this).orientation)
 
-        binding.RecyclerView.addItemDecoration(dividerItemDecoration)
+
+        //binding.RecyclerView.addItemDecoration(dividerItemDecoration)
         binding.addButton.setOnClickListener {
             addButtonListener(adapter, binding)
         }
@@ -75,7 +79,7 @@ class ListActivity : AppCompatActivity() {
 
         binding.completeButton.setOnClickListener {
 
-            adapter.checkedComplete()
+            adapter.checkedComplete(binding.searchEditText.text.toString())
         }
         binding.searchEditText.addTextChangedListener {
             adapter.searching(binding.searchEditText.text.toString())
