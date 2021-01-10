@@ -32,10 +32,10 @@ class TodoViewModel {
     }
 
     fun sortByTime() {
-        _todoList.sortBy { it.timeStamp }
+        _todoList.sortWith(compareBy<TodoItem> { it.isChecked }.thenByDescending { it.timeStamp })
     }
 
     fun sortByTitle() {
-        _todoList.sortBy { it.todoTitle }
+        _todoList.sortWith(compareBy<TodoItem> { it.isChecked }.thenBy { it.todoTitle })
     }
 }
