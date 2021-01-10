@@ -1,5 +1,6 @@
 package com.survivalcoding.todolist.adapter
 
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,11 +44,16 @@ class TodoListAdapter(
             binding.apply {
                 checkBox.setOnClickListener {
                     item.isChecked = checkBox.isChecked
+                    // 취소선 넣기
+                    toDoTitle.paintFlags = if (item.isChecked) Paint.STRIKE_THRU_TEXT_FLAG else 0
                 }
                 toDoTitle.setOnClickListener {
                     checkBox.isChecked.apply {
                         item.isChecked = !this
                         checkBox.isChecked = !this
+                        // 취소선 넣기
+                        toDoTitle.paintFlags =
+                            if (!this) Paint.STRIKE_THRU_TEXT_FLAG else 0
                     }
                 }
                 editButton.setOnClickListener {
