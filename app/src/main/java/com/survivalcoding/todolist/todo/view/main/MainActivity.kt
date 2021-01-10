@@ -1,62 +1,92 @@
 package com.survivalcoding.todolist.todo.view.main
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuCompat
+import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
-import com.survivalcoding.todolist.todo.view.main.adapter.RecyclerViewAdapter
-import com.survivalcoding.todolist.todo.view.model.TodoItem
+import com.survivalcoding.todolist.todo.data.TodoData
+import com.survivalcoding.todolist.todo.view.main.adapter.TodoAdapter
+import com.survivalcoding.todolist.todo.view.model.Todo
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
-
-    val data = mutableListOf<TodoItem>()
+    var orderMethod = ASCENDING
+    lateinit var todoAdapter: TodoAdapter
+    private val model = TodoData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val todoListBinding = ActivityMainBinding.inflate(layoutInflater)
-        val view = todoListBinding.root
-        setContentView(view)
+        Toast.makeText(this, Date().time.toString(), Toast.LENGTH_LONG).show()
+        val listBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(listBinding.root)
 
-        val todoAdapter =
-            RecyclerViewAdapter(
-                data
-            )
-        todoListBinding.todoList.adapter = todoAdapter
-
-        ////
-
-
-        // 좀 더 좋은 코드를 봤던것 같은데....
-        todoListBinding.addTodo.setOnClickListener { view ->
-            val todoText: String = todoListBinding.todoString.text.toString()
-            if (todoText.trim().isEmpty()) {    // todoText == ""
-                Toast.makeText(this, "값을 입력해 주세요", Toast.LENGTH_SHORT).show()
-            } else {
-                data.add(
-                    TodoItem(
-                        false,
-                        todoText
-                    )
-                )
-                Toast.makeText(this, "추가되었습니다.", Toast.LENGTH_SHORT).show()
-            }
+        todoAdapter = TodoAdapter()
+        listBinding.todoList.adapter = todoAdapter
+        listBinding.addTodoButton.setOnClickListener {
+            // Todo AddActivity로 전환된 후, 추가할 Todo객체를 intent로 받아온다.
+            val text = "simple text"
+            todoAdapter.addTodo(Todo(false, text, Date().time))
         }
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelableArrayList("listData", data as ArrayList<TodoItem>)
+        outState.putParcelableArrayList(ROTATION_RESTORE_KEY, model.todoList as ArrayList<Todo>)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        val list = savedInstanceState.getParcelableArrayList<TodoItem>("listData")
-        list?.let {
-            data.clear()
-            data.addAll(it.toMutableList())
-//            data.notifyDataSetChanged // 메인에서 데이터를 가지고있어서 notifyDataSetChanged메소드가 없다...
+        val list = savedInstanceState.getParcelableArrayList<Todo>(ROTATION_RESTORE_KEY)
+        list?.let { model.updateTodo(list) }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        val menuInflater = menuInflater
+        menuInflater.inflate(R.menu.menu_option, menu)
+        MenuCompat.setGroupDividerEnabled(menu, true)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.sortToDate -> {
+                todoAdapter.sortByDueDate(orderMethod)
+                Toast.makeText(this, "날짜순 정렬", Toast.LENGTH_SHORT).show()
+                return true
+            }
+            R.id.sortToTitle -> {
+                todoAdapter.sortByTitle(orderMethod)
+                Toast.makeText(this, "가나다순 정렬", Toast.LENGTH_SHORT).show()
+                return true
+            }
+            R.id.ascending -> {
+                Toast.makeText(this, "오름차순 정렬", Toast.LENGTH_SHORT).show()
+                item.isChecked = true
+                orderMethod = ASCENDING
+                return true
+            }
+            R.id.descending -> {
+                Toast.makeText(this, "내림차순 정렬", Toast.LENGTH_SHORT).show()
+                item.isChecked = true
+                orderMethod = DESCENDING
+                return true
+            }
         }
+        return false
+    }
+
+    companion object {
+        const val ROTATION_RESTORE_KEY = "listData"
+        const val ASCENDING = 123456    // 1, 2이면 다른 값과 중복되지 않을까 해서 임의의 값을 넣었다.
+        const val DESCENDING = 654321
+        const val DATE_FORMAT = "yyyy-mm-dd"
+        const val INTENT_KEY = "todo"
     }
 }
