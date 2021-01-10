@@ -21,7 +21,7 @@ class EditActivity : AppCompatActivity() {
 
         val todo: Todo? = intent.getParcelableExtra<Todo>(MainActivity.TODO_KEY)
 
-        binding.apply {
+        with(binding) {
             buttonOk.setOnClickListener {
                 if (editTextTitle.text.trim().isNotEmpty()) {
                     if (todo == null) {
@@ -41,6 +41,7 @@ class EditActivity : AppCompatActivity() {
                     }
                 }
             }
+
             buttonCancel.setOnClickListener {
                 finish()
             }

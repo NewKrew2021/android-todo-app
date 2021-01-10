@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
             },
         )
 
-        binding.apply {
+        with(binding) {
             recyclerView.adapter = adapter
 
             buttonAdd.setOnClickListener {
