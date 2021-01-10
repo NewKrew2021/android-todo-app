@@ -46,36 +46,48 @@ class TodoListAdapter(
             binding.apply {
                 checkBox.setOnClickListener {
                     item.isChecked = checkBox.isChecked
-                    // 취소선 넣기
-                    toDoTitle.paintFlags = if (item.isChecked) Paint.STRIKE_THRU_TEXT_FLAG else 0
+                    drawCancelLine(item, item.isChecked)
                     checkTodoListener()
                 }
                 toDoTitle.setOnClickListener {
                     checkBox.isChecked.apply {
                         item.isChecked = !this
                         checkBox.isChecked = !this
-                        // 취소선 넣기
-                        toDoTitle.paintFlags =
-                            if (!this) Paint.STRIKE_THRU_TEXT_FLAG else 0
+                        drawCancelLine(item, !item.isChecked)
                     }
                     checkTodoListener()
                 }
                 editButton.setOnClickListener {
-                    normalTodoLayout.visibility = View.INVISIBLE
-                    editTodoLayout.visibility = View.VISIBLE
+                    setLayoutVisibility(true)
                     editTodoTitle.setText(toDoTitle.text.toString())
                 }
                 removeButton.setOnClickListener {
                     removeTodoListener(item)
                 }
                 editApplyButton.setOnClickListener {
-                    normalTodoLayout.visibility = View.VISIBLE
-                    editTodoLayout.visibility = View.INVISIBLE
+                    setLayoutVisibility(false)
                     toDoTitle.text = editTodoTitle.text.toString()
                     currentTime.text = item.timeStamp
                     editTodoListener(item, editTodoTitle.text.toString())
                 }
                 editCancelButton.setOnClickListener {
+                    setLayoutVisibility(false)
+                }
+            }
+        }
+
+        // 체크 되어있으면 취소선을 그리고 체크 해제되면 취소선을 지운다
+        private fun drawCancelLine(item: TodoItem, isChecked: Boolean) {
+            binding.toDoTitle.paintFlags = if (isChecked) Paint.STRIKE_THRU_TEXT_FLAG else 0
+        }
+
+        // 수정하기 모드인지 일반 모드인지 구분해서 레이아웃 출
+        private fun setLayoutVisibility(canEditTitle: Boolean) {
+            binding.apply {
+                if (canEditTitle) {
+                    normalTodoLayout.visibility = View.INVISIBLE
+                    editTodoLayout.visibility = View.VISIBLE
+                } else {
                     normalTodoLayout.visibility = View.VISIBLE
                     editTodoLayout.visibility = View.INVISIBLE
                 }
