@@ -4,53 +4,54 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.todolist.databinding.ItemTodoBinding
-import com.survivalcoding.todolist.todo.view.model.TodoItem
+import com.survivalcoding.todolist.todo.data.TodoData
+import com.survivalcoding.todolist.todo.view.model.Todo
+import java.util.*
 
-class RecyclerViewAdapter(private val data: MutableList<TodoItem>) :
-    RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
+class TodoAdapter() : RecyclerView.Adapter<TodoAdapterViewHolder>() {
+    lateinit var itemTodoBinding: ItemTodoBinding
+    private val model = TodoData
+    private val currentTime = Date().time
 
-    lateinit var todoBinding: ItemTodoBinding
-
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-        todoBinding =
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): TodoAdapterViewHolder {
+        itemTodoBinding =
             ItemTodoBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
-        return ViewHolder(
-            todoBinding,
-            ::removeTodo
-        )
+        return TodoAdapterViewHolder(itemTodoBinding)
     }
 
-    override fun getItemCount() = data.size
+    override fun getItemCount() = model.getDataSize()
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindingHolder(data[position])
-        holder.bindingListener(position)
+    override fun onBindViewHolder(holder: TodoAdapterViewHolder, position: Int) {
+        val todoList = model.todoList
+        itemTodoBinding.apply {
+            todoText.text = todoList[position].text
+            isDoneButton.isChecked = todoList[position].isDone
+            val dueDate = (todoList[position].dueDate - currentTime) / (24 * 60 * 60 * 1000)
+            dueDateText.text = "D - $dueDate"
+
+            deleteTodoButton.setOnClickListener {
+                model.deleteTodo(todoList[position])
+                notifyDataSetChanged()
+            }
+            isDoneButton.setOnClickListener {
+                model.doneTodo(holder.adapterPosition)
+                notifyDataSetChanged()
+            }
+        }
     }
 
-    fun removeTodo(position: Int) {
-        data.removeAt(position)
+    fun addTodo(todo: Todo) {
+        model.addTodo(todo)
         notifyDataSetChanged()
     }
 
-    fun addTodo(todo: TodoItem) {
-        data.add(todo)
+    fun sortByTitle(order: Int) {
+        model.sortByTitle(order)
         notifyDataSetChanged()
     }
 
-
-    class ViewHolder(private val binding: ItemTodoBinding, val removeItem: (Int) -> Unit) : RecyclerView.ViewHolder(binding.root) {
-        fun bindingHolder(data: TodoItem) {
-            binding.todoText.text = data.title
-            binding.isDoneButton.isChecked = data.isDone
-        }
-
-        fun bindingListener(pos: Int) {
-            binding.isDoneButton.setOnClickListener { view ->
-                binding.isDoneButton.isChecked = !binding.isDoneButton.isChecked
-            }
-            binding.deleteButton.setOnClickListener {
-                removeItem.invoke(adapterPosition)
-            }
-        }
+    fun sortByDueDate(order: Int) {
+        model.sortByDate(order)
+        notifyDataSetChanged()
     }
 }
