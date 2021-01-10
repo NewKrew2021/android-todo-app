@@ -1,6 +1,7 @@
 package com.survivalcoding.todolist.viewmodel
 
 import com.survivalcoding.todolist.model.TodoItem
+import com.survivalcoding.todolist.util.getCurrentTime
 import com.survivalcoding.todolist.view.MainActivity
 
 class TodoViewModel {
@@ -23,6 +24,7 @@ class TodoViewModel {
 
     fun editTodo(todoItem: TodoItem, newTodoTitle: String) {
         todoItem.todoTitle = newTodoTitle
+        todoItem.timeStamp = getCurrentTime()
     }
 
     fun removeTodo(todoItem: TodoItem) {

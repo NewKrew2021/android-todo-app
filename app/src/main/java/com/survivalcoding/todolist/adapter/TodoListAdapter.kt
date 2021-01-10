@@ -62,6 +62,7 @@ class TodoListAdapter(
                     normalTodoLayout.visibility = View.VISIBLE
                     editTodoLayout.visibility = View.INVISIBLE
                     toDoTitle.text = editTodoTitle.text.toString()
+                    currentTime.text = item.timeStamp
                     editTodoListener(item, editTodoTitle.text.toString())
                 }
                 editCancelButton.setOnClickListener {

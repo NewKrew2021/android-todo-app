@@ -63,9 +63,8 @@ class MainActivity : AppCompatActivity() {
                         ).show()
                         return@setOnClickListener
                     }
-                    val time = getCurrentTime()
                     // id 값을 ViewModel 에서 관리해주기 때문에 처음에 등록할 때는 NEW_TODO_TASK 로 지정
-                    viewModel.addTodo(TodoItem(NEW_TODO_TASK, false, toString(), time))
+                    viewModel.addTodo(TodoItem(NEW_TODO_TASK, false, toString(), getCurrentTime()))
                     clear()
                 }
                 updateTodoList()
