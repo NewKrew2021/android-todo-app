@@ -1,10 +1,12 @@
-package com.survivalcoding.todolist.viewModel
+package com.survivalcoding.todolist.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.todolist.databinding.ItemBinding
+import com.survivalcoding.todolist.viewModel.listItem
 
+/*
 class MyAdapterRecycler(val itemClick: (MyAdapterRecycler, Int) -> Unit) :
     RecyclerView.Adapter<Holder>() {
 
@@ -17,12 +19,9 @@ class MyAdapterRecycler(val itemClick: (MyAdapterRecycler, Int) -> Unit) :
         while (i <= data.size - 1) {
             if (data[i].check == true) {
                 data.removeAt(i)
-                notifyItemRemoved(i)
             } else i += 1
         }
-
-        notifyItemRangeChanged(0, data.size)
-
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -75,3 +74,5 @@ class Holder(
         }
     }
 }
+
+ */
