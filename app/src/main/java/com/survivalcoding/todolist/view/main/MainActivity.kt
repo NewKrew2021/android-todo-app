@@ -14,6 +14,9 @@ import com.survivalcoding.todolist.extension.intentActionResult
 import com.survivalcoding.todolist.extension.intentActionResultWithBundle
 import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.util.ADD_TODO_REQUEST_CODE
+import com.survivalcoding.todolist.util.TODO_ITEM
+import com.survivalcoding.todolist.util.TODO_ITEM_CONTENTS
+import com.survivalcoding.todolist.util.TODO_ITEM_TIME
 import com.survivalcoding.todolist.view.add.AddTodoActivity
 import com.survivalcoding.todolist.view.base.BaseActivity
 
@@ -47,7 +50,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             setModifyTodoItemListener {
                 intentActionResultWithBundle(
                     AddTodoActivity::class,
-                    { putParcelable("todoItem", it) },
+                    { putParcelable(TODO_ITEM, it) },
                     ADD_TODO_REQUEST_CODE
                 )
             }
@@ -75,6 +78,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 todoAdapter.filter.filter(query)
                 return true
             }
+
             override fun onQueryTextChange(query: String?): Boolean {
                 todoAdapter.filter.filter(query)
                 return true
@@ -95,8 +99,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 if (data != null) {
                     todoAdapter.addTodoItem(
                         TodoItem(
-                            time = data.getLongExtra("time", 0),
-                            contents = data.getStringExtra("contents"),
+                            time = data.getLongExtra(TODO_ITEM_TIME, 0),
+                            contents = data.getStringExtra(TODO_ITEM_CONTENTS),
                             complete = false
                         )
                     )

@@ -58,12 +58,12 @@ class TodoAdapter(private var todoList: MutableList<TodoItem>) :
     override fun getFilter(): Filter = object : Filter() {
         override fun performFiltering(constraint: CharSequence?): FilterResults {
             val filterString = constraint.toString()
-            filterList = if (filterString=="") {
+            filterList = if (filterString == "") {
                 todoList
             } else {
                 val filteringList = mutableListOf<TodoItem>()
                 for (i in todoList.indices) {
-                   if (todoList[i].contents!!.toUpperCase(Locale.ROOT)
+                    if (todoList[i].contents!!.toUpperCase(Locale.ROOT)
                             .contains(filterString.toUpperCase(Locale.ROOT))
                     ) filteringList.add(todoList[i])
                 }
