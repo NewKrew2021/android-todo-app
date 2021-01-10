@@ -4,11 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="8dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginEnd="8dp"
-    app:cardCornerRadius="4dp"
-    app:cardElevation="8dp">
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="4dp"
+    app:cardCornerRadius="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,20 +24,33 @@
             android:id="@+id/todo_text"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
+            android:layout_weight="4"
+            android:clickable="true"
             android:gravity="center|left"
             android:textColor="@color/black"
             android:textSize="16dp"
             tools:text="sampleText" />
 
-        <Button
-            android:id="@+id/delete_button"
+        <TextView
+            android:id="@+id/due_date_text"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_margin="4dp"
             android:layout_weight="1"
-            android:text="삭제" />
+            android:gravity="center"
+            android:text="D-3"
+            android:textColor="@color/design_default_color_primary_variant"
+            android:textSize="16dp" />
 
+
+        <ImageButton
+            android:id="@+id/delete_todo_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#00ffffff"
+            android:padding="16dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/delete_todo_icon" />
 
     </LinearLayout>
 
