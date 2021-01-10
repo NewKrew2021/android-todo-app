@@ -15,34 +15,34 @@
         android:minWidth="0dp"
         android:minHeight="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/textView_title"
+        app:layout_constraintEnd_toStartOf="@id/text_view_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView_title"
+        android:id="@+id/text_view_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@id/textView_times"
+        app:layout_constraintBottom_toTopOf="@id/text_view_times"
         app:layout_constraintEnd_toStartOf="@id/button_edit"
         app:layout_constraintStart_toEndOf="@id/checkBox"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="할 일 제목" />
+        tools:text="@string/item_todo_list_text_view_title_text_tools" />
 
     <TextView
-        android:id="@+id/textView_times"
+        android:id="@+id/text_view_times"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/checkBox"
-        app:layout_constraintTop_toBottomOf="@id/textView_title"
-        tools:text="2021.01.05 PM 06:16" />
+        app:layout_constraintTop_toBottomOf="@id/text_view_title"
+        tools:text="@string/item_todo_list_text_view_times_text_tools" />
 
     <ImageButton
         android:id="@+id/button_menus"
