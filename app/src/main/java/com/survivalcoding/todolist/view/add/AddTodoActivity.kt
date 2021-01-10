@@ -2,11 +2,12 @@ package com.survivalcoding.todolist.view.add
 
 import android.app.Activity
 import android.content.Intent
-import android.os.Build
 import android.text.Editable
-import androidx.annotation.RequiresApi
 import com.survivalcoding.todolist.databinding.ActivityAddTodoBinding
 import com.survivalcoding.todolist.model.TodoItem
+import com.survivalcoding.todolist.util.TODO_ITEM
+import com.survivalcoding.todolist.util.TODO_ITEM_CONTENTS
+import com.survivalcoding.todolist.util.TODO_ITEM_TIME
 import com.survivalcoding.todolist.view.base.BaseActivity
 import java.util.*
 
@@ -18,7 +19,6 @@ class AddTodoActivity : BaseActivity<ActivityAddTodoBinding>() {
         setContentView(view)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun afterStartView() {
         eventProcess()
         isModifyTodoItem()
@@ -26,7 +26,7 @@ class AddTodoActivity : BaseActivity<ActivityAddTodoBinding>() {
 
     private fun isModifyTodoItem() {
         if (intent != null) {
-            val todoItem = intent.getParcelableExtra<TodoItem>("todoItem")
+            val todoItem = intent.getParcelableExtra<TodoItem>(TODO_ITEM)
             if (todoItem != null) {
                 binding.edtContentsAddTodo.text =
                     Editable.Factory.getInstance().newEditable(todoItem.contents)
@@ -34,28 +34,26 @@ class AddTodoActivity : BaseActivity<ActivityAddTodoBinding>() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun eventProcess() {
         binding.btnSaveAddTodo.setOnClickListener {
             val saveIntent = Intent().apply {
-                putExtra("contents", binding.edtContentsAddTodo.text.toString())
-                putExtra("time", Calendar.getInstance().timeInMillis)
+                putExtra(TODO_ITEM_CONTENTS, binding.edtContentsAddTodo.text.toString())
+                putExtra(TODO_ITEM_TIME, Calendar.getInstance().timeInMillis)
             }
             setResult(Activity.RESULT_OK, saveIntent)
             finish()
         }
 
         binding.btnCancelAddTodo.setOnClickListener {
-            val todoItem = intent.getParcelableExtra<TodoItem>("todoItem")
+            val todoItem = intent.getParcelableExtra<TodoItem>(TODO_ITEM)
             val cancelIntent = Intent().apply {
                 if (todoItem != null) {
-                    putExtra("contents", todoItem.contents)
-                    putExtra("time", Calendar.getInstance().timeInMillis)
+                    putExtra(TODO_ITEM_CONTENTS, todoItem.contents)
+                    putExtra(TODO_ITEM_TIME, todoItem.time)
                 }
             }
             setResult(Activity.RESULT_OK, cancelIntent)
             finish()
         }
     }
-
 }

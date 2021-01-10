@@ -12,6 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="@dimen/spacing_8"
+        android:autofillHints=""
         android:background="@android:drawable/edit_text"
         android:ems="10"
         android:hint="@string/edt_contents_hint_add_todo"
@@ -21,8 +22,7 @@
         app:layout_constraintBottom_toTopOf="@+id/btn_cancel_add_todo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:autofillHints="" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btn_save_add_todo"

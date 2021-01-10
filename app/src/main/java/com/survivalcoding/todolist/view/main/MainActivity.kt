@@ -1,6 +1,11 @@
 package com.survivalcoding.todolist.view.main
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
+import android.widget.SearchView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.todolist.adapter.TodoAdapter
@@ -9,6 +14,9 @@ import com.survivalcoding.todolist.extension.intentActionResult
 import com.survivalcoding.todolist.extension.intentActionResultWithBundle
 import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.util.ADD_TODO_REQUEST_CODE
+import com.survivalcoding.todolist.util.TODO_ITEM
+import com.survivalcoding.todolist.util.TODO_ITEM_CONTENTS
+import com.survivalcoding.todolist.util.TODO_ITEM_TIME
 import com.survivalcoding.todolist.view.add.AddTodoActivity
 import com.survivalcoding.todolist.view.base.BaseActivity
 
@@ -25,6 +33,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun afterStartView() {
         eventProcess()
         setRecyclerView()
+        setSearchView()
     }
 
     private fun eventProcess() {
@@ -33,6 +42,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setRecyclerView() {
         val todoList = mutableListOf<TodoItem>()
 
@@ -40,7 +50,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             setModifyTodoItemListener {
                 intentActionResultWithBundle(
                     AddTodoActivity::class,
-                    { putParcelable("todoItem", it) },
+                    { putParcelable(TODO_ITEM, it) },
                     ADD_TODO_REQUEST_CODE
                 )
             }
@@ -49,8 +59,37 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         binding.rvTodolistMain.apply {
             adapter = todoAdapter
             addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
+            setOnTouchListener { _, event ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        hideKeyboard()
+                        false
+                    }
+                    else -> false
+                }
+            }
         }
 
+    }
+
+    private fun setSearchView() {
+        binding.svSearchMain.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                todoAdapter.filter.filter(query)
+                return true
+            }
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                todoAdapter.filter.filter(query)
+                return true
+            }
+        })
+    }
+
+    private fun hideKeyboard() {
+        binding.svSearchMain.clearFocus()
+        val im = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        im.hideSoftInputFromWindow(binding.svSearchMain.windowToken, 0)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -60,8 +99,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 if (data != null) {
                     todoAdapter.addTodoItem(
                         TodoItem(
-                            time = data.getLongExtra("time", 0),
-                            contents = data.getStringExtra("contents"),
+                            time = data.getLongExtra(TODO_ITEM_TIME, 0),
+                            contents = data.getStringExtra(TODO_ITEM_CONTENTS),
                             complete = false
                         )
                     )
