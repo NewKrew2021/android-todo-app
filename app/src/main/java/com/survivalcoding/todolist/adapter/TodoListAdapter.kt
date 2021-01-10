@@ -2,40 +2,40 @@ package com.survivalcoding.todolist.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import com.survivalcoding.todolist.databinding.TodoItemBinding
+import com.survivalcoding.todolist.holder.TodoListViewHolder
 import com.survivalcoding.todolist.model.TodoItem
+import java.util.*
 
 
-class TodoListAdapter : RecyclerView.Adapter<TodoListAdapter.TodoListViewHolder>() {
-    private val items = mutableListOf<TodoItem>()
-
+class TodoListAdapter : ListAdapter<TodoItem, TodoListViewHolder>(TodoCallback) {
+    val currentTime = Calendar.getInstance()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoListViewHolder {
         val binding = TodoItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TodoListViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = items.size
-
     override fun onBindViewHolder(holder: TodoListViewHolder, position: Int) {
-        val currentItem = items[position]
+        val currentItem = getItem(position)
         holder.binding.apply {
             title.text = currentItem.title
-            dDay.text = currentItem.date
+            val longDday = getDay(currentItem.date)
+            val longTday = getDay(currentTime)
+            if (longTday - longDday - 1 == 0L) {
+                dDay.text = "D-0"
+            } else if (longTday - longDday - 1 < 0) {
+                dDay.text = "D${longTday - longDday - 1}"
+            } else {
+                dDay.text = "D+${longTday - longDday - 1}"
+            }
             completeCheck.isChecked = currentItem.isComplete
             completeCheck.setOnClickListener { currentItem.isComplete = completeCheck.isChecked }
         }
     }
 
-    fun addItem(todoItem: TodoItem) {
-        items.add(todoItem)
-        notifyDataSetChanged()
-    }
+    fun getDay(calendar: Calendar): Long = calendar.timeInMillis / (24 * 60 * 60 * 1000)
 
-    fun getItems(): MutableList<TodoItem> = items
 
-    class TodoListViewHolder(val binding: TodoItemBinding) : RecyclerView.ViewHolder(binding.root) {
-
-    }
 }
 
