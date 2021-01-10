@@ -1,4 +1,4 @@
-package com.survivalcoding.todolist.adapter
+package com.survivalcoding.todolist.model
 
 import android.os.Parcelable
 
