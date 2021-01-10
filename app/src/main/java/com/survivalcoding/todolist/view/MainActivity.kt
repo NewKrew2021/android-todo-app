@@ -1,6 +1,7 @@
 package com.survivalcoding.todolist.view
 
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -75,6 +76,7 @@ class MainActivity : AppCompatActivity() {
                     // id 값을 ViewModel 에서 관리해주기 때문에 처음에 등록할 때는 NEW_TODO_TASK 로 지정
                     viewModel.addTodo(TodoItem(NEW_TODO_TASK, false, toString(), getCurrentTime()))
                     clear()
+                    hideKeyboard()
                 }
                 updateTodoList()
             }
@@ -108,6 +110,15 @@ class MainActivity : AppCompatActivity() {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.sortOptionSpinner.adapter = adapter
         }
+    }
+
+    private fun hideKeyboard() {
+        val manager: InputMethodManager =
+            getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        manager.hideSoftInputFromWindow(
+            currentFocus!!.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS
+        )
     }
 
     companion object {
