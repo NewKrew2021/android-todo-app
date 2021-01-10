@@ -51,14 +51,17 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
     }
 
     fun searching(pattern: String) {
+
+        makeSearchData(pattern)
+        notifyDataSetChanged()
+    }
+    fun makeSearchData(pattern:String){
         searchData.clear()
         for (i in 0..data.size - 1) {
             if (findString(data[i].toDo, pattern)) {
                 searchData.add(searchItem(data[i], i))
             }
         }
-        //Log.d("로그", "$data")
-        notifyDataSetChanged()
     }
 
     fun checkedComplete(pattern:String) {
@@ -75,46 +78,45 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
                 index+=1
             }
         }
-        searching(pattern)
-        //data.sortBy { it.complete }
+        makeSearchData(pattern)
     }
 
     fun checkingComplete(dataList: MutableList<searchItem>) {
         var tmp_size = dataList.size
-       //var index = 0
-        for (index in 0..tmp_size - 1) {
+       var index = 0
+        for (i in 0..tmp_size - 1) {
             if (dataList[index].item.check == true) {
 
                 dataList[index].item.check = false
                 dataList[index].item.complete = true
                 data[dataList[index].index].complete=true
 
-                /*
                 dataList.add(
-
                     dataList[index]
                 )
                 dataList.removeAt(index)
                 notifyItemRemoved(index)
-                */
+
+            }else{
+                index +=1
             }
         }
-       // notifyItemRangeChanged(0, dataList.size)
-
+        notifyItemRangeChanged(0, dataList.size)
     }
 
     fun checkedRemove(pattern: String) {
         var tmp = mutableListOf<Int>()
-        for (i in 0..searchData.size - 1) {
+        for (i in searchData.size - 1 downTo 0) {
             if (searchData[i].item.check == true) {
                 tmp.add(searchData[i].index)
+                notifyItemRemoved(i)
             }
         }
         tmp.sortBy { it }
         for (i in tmp.size - 1 downTo 0) {
             data.removeAt(tmp[i])
         }
-        searching(pattern)
+        makeSearchData(pattern)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {

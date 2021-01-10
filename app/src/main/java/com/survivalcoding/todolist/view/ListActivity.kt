@@ -105,12 +105,12 @@ class ListActivity : AppCompatActivity() {
         )
         adapter.data.removeAt(adapter.searchData[position].index + 1)
 
-        //adapter.notifyItemInserted(0)
-        //adapter.data.removeAt(position + 1)
         //adapter.notifyItemRemoved(position+1)
 
         //adapter.notifyItemRangeChanged(0, adapter.data.size)
-        adapter.searching(binding.searchEditText.text.toString())
+        adapter.notifyItemRemoved(position)
+        adapter.makeSearchData(binding.searchEditText.text.toString())
+        adapter.notifyItemRangeChanged(0,adapter.searchData.size)
     }
 
     fun addButtonListener(adapter: RecyclerAdapter, binding: ActivityListBinding) {
@@ -128,10 +128,13 @@ class ListActivity : AppCompatActivity() {
             )
         )
         //adapter.dataUpdate()
-        //adapter.notifyItemInserted(0)
-        //adapter.notifyItemRangeChanged(0,adapter.data.size)
+        adapter.makeSearchData(binding.searchEditText.text.toString())
+        if(adapter.findString(binding.editText.text.toString(),binding.searchEditText.text.toString())){
+            adapter.notifyItemInserted(0)
+        }
+        adapter.notifyItemRangeChanged(0,adapter.data.size)
         binding.editText.setText("")
-        adapter.searching(binding.searchEditText.text.toString())
+        adapter.makeSearchData(binding.searchEditText.text.toString())
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
