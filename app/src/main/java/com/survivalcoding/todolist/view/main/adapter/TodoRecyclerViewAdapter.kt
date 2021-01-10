@@ -6,9 +6,10 @@ import androidx.recyclerview.widget.ListAdapter
 import com.survivalcoding.todolist.databinding.ListItemBinding
 import com.survivalcoding.todolist.view.main.model.TodoData
 import com.survivalcoding.todolist.viewmodel.TodoRepository
+import kotlin.reflect.KFunction1
 
 
-class TodoRecyclerViewAdapter() :
+class TodoRecyclerViewAdapter(val itemClickListener: KFunction1<TodoData, Unit>) :
     ListAdapter<TodoData, TodoRecyclerViewHolder>(TodoDiffCallback) {
 
     lateinit var holder: TodoRecyclerViewHolder
@@ -32,7 +33,8 @@ class TodoRecyclerViewAdapter() :
             item,
             sortFunction = { model.sortItem() },
             delFunction = { model.delItem(item) },
-            submitFunction = { updateUI() })
+            submitFunction = { updateUI() },
+            itemClickListener = { itemClickListener(item) })
 
     }
 

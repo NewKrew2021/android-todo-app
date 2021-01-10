@@ -14,7 +14,8 @@ class TodoRecyclerViewHolder(view: View, val binding: ListItemBinding) :
         item: TodoData,
         sortFunction: () -> Unit,
         delFunction: () -> Unit,
-        submitFunction: () -> Unit
+        submitFunction: () -> Unit,
+        itemClickListener: () -> Unit,
     ) {
         binding.checkBox.setOnClickListener {
             // To-Do 항목 완료
@@ -41,5 +42,6 @@ class TodoRecyclerViewHolder(view: View, val binding: ListItemBinding) :
         val dateFormat =
             SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.KOREA).format(Date(item.time))
         binding.textDate.text = dateFormat.toString()
+        itemView.setOnClickListener { itemClickListener() }
     }
 }
