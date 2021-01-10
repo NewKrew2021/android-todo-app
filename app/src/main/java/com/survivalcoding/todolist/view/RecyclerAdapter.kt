@@ -27,55 +27,34 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
         submitList(data)
     }
 
-
-    //코틀린에서 문자열 찾는 알고리즘이 없어서 라빈 카프 알고리즘 구현
-    //시간복잡도 -> O(1)
-    fun findString(sentence: String, pattern: String): Boolean {
-        var sentenceHash = 0
-        var patternHash = 0
-        var power = 1
-        for (i in 0..sentence.length - pattern.length) {
-            if (i == 0) {
-                for (j in 0..pattern.length - 1) {
-                    sentenceHash += sentence[pattern.length - 1 - j].toInt() * power
-                    patternHash += pattern[pattern.length - 1 - j].toInt() * power
-                    if (j < pattern.length - 1) power *= 403
-                }
-            } else {
-                sentenceHash =
-                    403 * (sentenceHash - sentence[i - 1].toInt() * power) + sentence[pattern.length - 1 + i].toInt()
-            }
-            if (sentenceHash == patternHash) return true
-        }
-        return false
-    }
-
     fun searching(pattern: String) {
 
         makeSearchData(pattern)
         notifyDataSetChanged()
     }
-    fun makeSearchData(pattern:String){
+
+    fun makeSearchData(pattern: String) {
         searchData.clear()
+
         for (i in 0..data.size - 1) {
-            if (findString(data[i].toDo, pattern)) {
+            if (data[i].toDo.contains(pattern)) {
                 searchData.add(searchItem(data[i], i))
             }
         }
     }
 
-    fun checkedComplete(pattern:String) {
+    fun checkedComplete(pattern: String) {
 
         checkingComplete(searchData)
 
-        var last_index = data.size-1
-        var index=0
-        for(i in 0..last_index){
-            if(data[index].complete==true){
-                data.add(last_index+1,data[index])
+        var last_index = data.size - 1
+        var index = 0
+        for (i in 0..last_index) {
+            if (data[index].complete == true) {
+                data.add(last_index + 1, data[index])
                 data.removeAt(index)
-            }else{
-                index+=1
+            } else {
+                index += 1
             }
         }
         makeSearchData(pattern)
@@ -83,13 +62,13 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
 
     fun checkingComplete(dataList: MutableList<searchItem>) {
         var tmp_size = dataList.size
-       var index = 0
+        var index = 0
         for (i in 0..tmp_size - 1) {
             if (dataList[index].item.check == true) {
 
                 dataList[index].item.check = false
                 dataList[index].item.complete = true
-                data[dataList[index].index].complete=true
+                data[dataList[index].index].complete = true
 
                 dataList.add(
                     dataList[index]
@@ -97,8 +76,8 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
                 dataList.removeAt(index)
                 notifyItemRemoved(index)
 
-            }else{
-                index +=1
+            } else {
+                index += 1
             }
         }
         notifyItemRangeChanged(0, dataList.size)

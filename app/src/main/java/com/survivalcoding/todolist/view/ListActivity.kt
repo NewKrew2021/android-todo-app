@@ -26,14 +26,11 @@ class ListActivity : AppCompatActivity() {
 
     private lateinit var adapter: RecyclerAdapter
 
-    @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityListBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-
-
 
 
         var builder = AlertDialog.Builder(this)
@@ -110,7 +107,7 @@ class ListActivity : AppCompatActivity() {
         //adapter.notifyItemRangeChanged(0, adapter.data.size)
         adapter.notifyItemRemoved(position)
         adapter.makeSearchData(binding.searchEditText.text.toString())
-        adapter.notifyItemRangeChanged(0,adapter.searchData.size)
+        adapter.notifyItemRangeChanged(0, adapter.searchData.size)
     }
 
     fun addButtonListener(adapter: RecyclerAdapter, binding: ActivityListBinding) {
@@ -129,10 +126,12 @@ class ListActivity : AppCompatActivity() {
         )
         //adapter.dataUpdate()
         adapter.makeSearchData(binding.searchEditText.text.toString())
-        if(adapter.findString(binding.editText.text.toString(),binding.searchEditText.text.toString())){
+        if (
+            binding.editText.text.toString().contains(binding.searchEditText.text.toString())
+        ) {
             adapter.notifyItemInserted(0)
         }
-        adapter.notifyItemRangeChanged(0,adapter.data.size)
+        adapter.notifyItemRangeChanged(0, adapter.data.size)
         binding.editText.setText("")
         adapter.makeSearchData(binding.searchEditText.text.toString())
     }

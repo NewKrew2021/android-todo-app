@@ -5,12 +5,12 @@ import com.survivalcoding.todolist.viewModel.listItem
 
 object ItemDiffCallback : DiffUtil.ItemCallback<listItem>() {
     override fun areItemsTheSame(oldItem: listItem, newItem: listItem): Boolean {
-        return oldItem.time==newItem.time
+        return oldItem.time == newItem.time
 
     }
 
     override fun areContentsTheSame(oldItem: listItem, newItem: listItem): Boolean {
-        return oldItem==newItem
+        return oldItem == newItem
     }
 
 }
