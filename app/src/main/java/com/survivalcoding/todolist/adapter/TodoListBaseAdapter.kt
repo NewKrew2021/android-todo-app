@@ -1,3 +1,4 @@
+/*
 package com.survivalcoding.todolist.adapter
 
 import android.view.LayoutInflater
@@ -61,4 +62,4 @@ class TodoListBaseAdapter(private var list: MutableList<TodoItem>) : BaseAdapter
             }
         }
     }
-}
+}*/

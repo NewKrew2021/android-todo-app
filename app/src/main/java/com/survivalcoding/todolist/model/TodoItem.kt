@@ -1,3 +1,12 @@
 package com.survivalcoding.todolist.model
 
-data class TodoItem(var isChecked: Boolean, var todoTitle: String, var timeStamp: String)
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+data class TodoItem(
+    var id: Int,
+    var isChecked: Boolean,
+    var todoTitle: String,
+    var timeStamp: String
+) : Parcelable
