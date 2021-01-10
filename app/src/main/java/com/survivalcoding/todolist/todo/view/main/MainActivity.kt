@@ -1,16 +1,16 @@
-package com.survivalcoding.todolist.todo.view
+package com.survivalcoding.todolist.todo.view.main
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
-import com.survivalcoding.todolist.todo.adapter.RecyclerViewAdapter
-import com.survivalcoding.todolist.todo.model.TodoItems
+import com.survivalcoding.todolist.todo.view.main.adapter.RecyclerViewAdapter
+import com.survivalcoding.todolist.todo.view.model.TodoItem
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    val data = mutableListOf<TodoItems>()
+    val data = mutableListOf<TodoItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +19,10 @@ class MainActivity : AppCompatActivity() {
         val view = todoListBinding.root
         setContentView(view)
 
-        val todoAdapter = RecyclerViewAdapter(data)
+        val todoAdapter =
+            RecyclerViewAdapter(
+                data
+            )
         todoListBinding.todoList.adapter = todoAdapter
 
         ////
@@ -31,7 +34,12 @@ class MainActivity : AppCompatActivity() {
             if (todoText.trim().isEmpty()) {    // todoText == ""
                 Toast.makeText(this, "값을 입력해 주세요", Toast.LENGTH_SHORT).show()
             } else {
-                data.add(TodoItems(false, todoText))
+                data.add(
+                    TodoItem(
+                        false,
+                        todoText
+                    )
+                )
                 Toast.makeText(this, "추가되었습니다.", Toast.LENGTH_SHORT).show()
             }
         }
@@ -39,12 +47,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelableArrayList("listData", data as ArrayList<TodoItems>)
+        outState.putParcelableArrayList("listData", data as ArrayList<TodoItem>)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        val list = savedInstanceState.getParcelableArrayList<TodoItems>("listData")
+        val list = savedInstanceState.getParcelableArrayList<TodoItem>("listData")
         list?.let {
             data.clear()
             data.addAll(it.toMutableList())

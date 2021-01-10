@@ -1,12 +1,12 @@
-package com.survivalcoding.todolist.todo.adapter
+package com.survivalcoding.todolist.todo.view.main.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.todolist.databinding.ItemTodoBinding
-import com.survivalcoding.todolist.todo.model.TodoItems
+import com.survivalcoding.todolist.todo.view.model.TodoItem
 
-class RecyclerViewAdapter(private val data: MutableList<TodoItems>) :
+class RecyclerViewAdapter(private val data: MutableList<TodoItem>) :
     RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
     lateinit var todoBinding: ItemTodoBinding
@@ -14,7 +14,10 @@ class RecyclerViewAdapter(private val data: MutableList<TodoItems>) :
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         todoBinding =
             ItemTodoBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
-        return ViewHolder(todoBinding, ::removeTodo)
+        return ViewHolder(
+            todoBinding,
+            ::removeTodo
+        )
     }
 
     override fun getItemCount() = data.size
@@ -29,14 +32,14 @@ class RecyclerViewAdapter(private val data: MutableList<TodoItems>) :
         notifyDataSetChanged()
     }
 
-    fun addTodo(todo:TodoItems) {
+    fun addTodo(todo: TodoItem) {
         data.add(todo)
         notifyDataSetChanged()
     }
 
 
     class ViewHolder(private val binding: ItemTodoBinding, val removeItem: (Int) -> Unit) : RecyclerView.ViewHolder(binding.root) {
-        fun bindingHolder(data: TodoItems) {
+        fun bindingHolder(data: TodoItem) {
             binding.todoText.text = data.title
             binding.isDoneButton.isChecked = data.isDone
         }
