@@ -11,6 +11,7 @@ import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import com.survivalcoding.todolist.todo.data.TodoData
 import com.survivalcoding.todolist.todo.view.add.AddActivity
+import com.survivalcoding.todolist.todo.view.edit.EditActivity
 import com.survivalcoding.todolist.todo.view.main.adapter.TodoAdapter
 import com.survivalcoding.todolist.todo.view.model.Todo
 import java.util.*
@@ -27,9 +28,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(listBinding.root)
 
         // edit button으로 사용 예정
-        val textClickEvent = { Toast.makeText(this, "text clicked", Toast.LENGTH_SHORT).show() }
+        val textClickEvent: (Todo) -> (Unit) = {
+            val intent = Intent(this, EditActivity::class.java)
+            startActivityForResult(intent, EDIT_REQUEST_QUEUE)
+        }
 
-        todoAdapter = TodoAdapter(textClickEvent)
+        todoAdapter = TodoAdapter(textClickEvent = textClickEvent)
         listBinding.todoList.adapter = todoAdapter
         listBinding.addTodoButton.setOnClickListener {
             val intent = Intent(this, AddActivity::class.java)
@@ -58,6 +62,12 @@ class MainActivity : AppCompatActivity() {
                 ADD_REQUEST_QUEUE -> {
                     data?.getParcelableExtra<Todo>(INTENT_KEY)?.let {
                         todoAdapter.addTodo(it)
+                    }
+                }
+                EDIT_REQUEST_QUEUE -> {
+                    data?.getParcelableExtra<Todo>(INTENT_KEY)?.let {
+                        model.editTodo(it)
+
                     }
                 }
             }

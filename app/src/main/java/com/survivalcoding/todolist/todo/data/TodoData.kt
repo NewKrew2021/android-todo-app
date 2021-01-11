@@ -30,6 +30,20 @@ object TodoData {
         data[pos].isDone = !data[pos].isDone
     }
 
+    fun editTodo(item: Todo) {
+        val changeData = data.map { e ->
+            if (e.id == item.id) {
+                item
+            } else {
+                e
+            }
+        }
+        data.apply {
+            clear()
+            addAll(changeData)
+        }
+    }
+
     fun sortByDate(order: Int) {
         if (order == MainActivity.ASCENDING) {
             data.sortBy { it.dueDate }

@@ -12,7 +12,7 @@ import com.survivalcoding.todolist.todo.util.Util
 import com.survivalcoding.todolist.todo.view.main.MainActivity
 import com.survivalcoding.todolist.todo.view.model.Todo
 
-class TodoAdapter(final val textClickEvent: () -> Unit) :
+class TodoAdapter(private final val textClickEvent: (Todo) -> Unit) :
     ListAdapter<Todo, TodoAdapterViewHolder>(TodoDiffCallback) {
     lateinit var itemTodoBinding: ItemTodoBinding
     private val model = TodoData
@@ -44,7 +44,7 @@ class TodoAdapter(final val textClickEvent: () -> Unit) :
                 drawCancelLine(this, todoList[holder.adapterPosition].isDone)
             }
             todoText.setOnClickListener { _ ->
-                textClickEvent.invoke()
+                textClickEvent.invoke(todoList[holder.adapterPosition])
             }
         }
     }
