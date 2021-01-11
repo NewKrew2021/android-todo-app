@@ -1,6 +1,7 @@
 package com.survivalcoding.todolist.view.main
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
@@ -9,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
+import com.survivalcoding.todolist.view.edit.EditActivity
 import com.survivalcoding.todolist.view.main.adapter.TodoRecyclerViewAdapter
 import com.survivalcoding.todolist.view.main.model.TodoData
 import java.util.*
@@ -19,13 +21,19 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: TodoRecyclerViewAdapter
     var pid = 0
+    private fun itemClickListener(item: TodoData) {
+        val intent = Intent(this, EditActivity::class.java).apply {
+            putExtra(TODO_ITEM, item)
+        }
+        startActivityForResult(intent, EDIT_MAIN_REQ_CODE)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        adapter = TodoRecyclerViewAdapter()
+        adapter = TodoRecyclerViewAdapter(itemClickListener = ::itemClickListener)
         binding.recyclerView.adapter = adapter
         var isMarked = false
         binding.markBox.setOnClickListener {
@@ -83,6 +91,8 @@ class MainActivity : AppCompatActivity() {
         private const val DATA_SAVE = "todo"
         private const val PID_SAVE = "pid"
         private const val ALERT_RENAME = "내용을 입력해주세요."
+        const val TODO_ITEM = "todo_pid"
+        private const val EDIT_MAIN_REQ_CODE = 1
         private val TAG by lazy { MainActivity::class.java.simpleName }
     }
 }

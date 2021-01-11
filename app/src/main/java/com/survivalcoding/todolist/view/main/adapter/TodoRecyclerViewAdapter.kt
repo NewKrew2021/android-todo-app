@@ -2,50 +2,20 @@ package com.survivalcoding.todolist.view.main.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import com.survivalcoding.todolist.databinding.ListItemBinding
 import com.survivalcoding.todolist.view.main.model.TodoData
+import com.survivalcoding.todolist.viewmodel.TodoRepository
+import kotlin.reflect.KFunction1
 
 
-class TodoRecyclerViewAdapter() :
-    RecyclerView.Adapter<TodoRecyclerViewHolder>() {
+class TodoRecyclerViewAdapter(val itemClickListener: KFunction1<TodoData, Unit>) :
+    ListAdapter<TodoData, TodoRecyclerViewHolder>(TodoDiffCallback) {
 
-    private var _items = mutableListOf<TodoData>()
-    val items: List<TodoData>
-        get() = _items
     lateinit var holder: TodoRecyclerViewHolder
-
-    fun addAllItems(data: List<TodoData>) {
-        _items.clear()
-        _items.addAll(data)
-    }
-
-    private fun sortItem(target: Int) {
-        //To-Do 아이템 sorting (완료 -> 즐겨찾기 -> 시간 순으로)
-        val fromPosition = _items.map { it.pid }.indexOf(target)
-        _items = _items.sortedWith(compareBy(
-            { if (it.isChecked) 1 else 0 },
-            { if (it.isMarked) 0 else 1 },
-            { -it.time }
-        )).toMutableList()
-        val toPosition = _items.map { it.pid }.indexOf(target)
-        //이동 애니메이션 적용
-        notifyItemMoved(fromPosition, toPosition)
-
-    }
-
-    fun addItem(data: TodoData) {
-        //To-Do 아이템 추가
-        _items.add(0, data)
-        //추가 애니메이션 적용
-        notifyItemInserted(0)
-    }
-
-    fun delItem(data: TodoData) {
-        val delPosition = _items.indexOf(data)
-        _items.remove(data)
-        notifyItemRemoved(delPosition)
-    }
+    private var model = TodoRepository()
+    val items: List<TodoData>
+        get() = model.items
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): TodoRecyclerViewHolder {
         val binding =
@@ -58,11 +28,30 @@ class TodoRecyclerViewAdapter() :
 
     override fun onBindViewHolder(viewHolder: TodoRecyclerViewHolder, position: Int) {
 
-        val item = _items[position]
-        holder.bind(item, ::sortItem, ::delItem)
+        val item = model.getItem(position)
+        holder.bind(
+            item,
+            sortFunction = { model.sortItem() },
+            delFunction = { model.delItem(item) },
+            submitFunction = { updateUI() },
+            itemClickListener = { itemClickListener(item) })
 
     }
 
-    override fun getItemCount() = _items.size
+    override fun getItemCount() = model.getSize()
+
+    fun addAllItems(data: List<TodoData>) {
+        model.addAllItems(data)
+        updateUI()
+    }
+
+    fun addItem(data: TodoData) {
+        model.addItem(data)
+        updateUI()
+    }
+
+    private fun updateUI() {
+        submitList(model.items.toList())
+    }
 
 }
