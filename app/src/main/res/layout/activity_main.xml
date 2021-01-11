@@ -16,23 +16,23 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/view_round"
         app:layout_constraintBottom_toTopOf="@id/list"
-        app:layout_constraintEnd_toStartOf="@id/add"
-        app:layout_constraintHorizontal_weight="10"
+        app:layout_constraintEnd_toStartOf="@id/search"
+        app:layout_constraintHorizontal_weight="14"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/add"
+    <ImageButton
+        android:id="@+id/search"
         android:layout_width="@dimen/match_constraint"
         android:layout_height="@dimen/match_constraint"
         android:layout_marginEnd="@dimen/margin_small"
-        android:background="@drawable/view_round"
-        android:text="@string/add"
+        android:background="@drawable/view_round_yellow"
+        android:src="@drawable/ic_baseline_search_24"
         android:textAllCaps="false"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/input"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="3"
+        app:layout_constraintHorizontal_weight="2"
         app:layout_constraintStart_toEndOf="@id/input"
         app:layout_constraintTop_toTopOf="@id/input" />
 
