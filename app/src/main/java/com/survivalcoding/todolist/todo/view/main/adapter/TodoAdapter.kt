@@ -1,17 +1,22 @@
 package com.survivalcoding.todolist.todo.view.main.adapter
 
+import android.graphics.Color
+import android.graphics.Paint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import com.survivalcoding.todolist.databinding.ItemTodoBinding
 import com.survivalcoding.todolist.todo.data.TodoData
+import com.survivalcoding.todolist.todo.util.Util
+import com.survivalcoding.todolist.todo.view.main.MainActivity
 import com.survivalcoding.todolist.todo.view.model.Todo
-import java.util.*
 
-class TodoAdapter() : RecyclerView.Adapter<TodoAdapterViewHolder>() {
+class TodoAdapter(private final val textClickEvent: (Todo) -> Unit) :
+    ListAdapter<Todo, TodoAdapterViewHolder>(TodoDiffCallback) {
     lateinit var itemTodoBinding: ItemTodoBinding
     private val model = TodoData
-    private val currentTime = Date().time
+    private val currentTime = Util.getPresentDate()
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): TodoAdapterViewHolder {
         itemTodoBinding =
@@ -19,39 +24,63 @@ class TodoAdapter() : RecyclerView.Adapter<TodoAdapterViewHolder>() {
         return TodoAdapterViewHolder(itemTodoBinding)
     }
 
-    override fun getItemCount() = model.getDataSize()
-
     override fun onBindViewHolder(holder: TodoAdapterViewHolder, position: Int) {
         val todoList = model.todoList
+
         itemTodoBinding.apply {
-            todoText.text = todoList[position].text
-            isDoneButton.isChecked = todoList[position].isDone
-            val dueDate = (todoList[position].dueDate - currentTime) / (24 * 60 * 60 * 1000)
+            todoText.text = todoList[holder.adapterPosition].text
+            isDoneButton.isChecked = todoList[holder.adapterPosition].isDone
+            val dueDate =
+                (todoList[holder.adapterPosition].dueDate - currentTime) / MainActivity.ONE_DAY_MILLISECONDS
             dueDateText.text = "D - $dueDate"
 
             deleteTodoButton.setOnClickListener {
-                model.deleteTodo(todoList[position])
-                notifyDataSetChanged()
+                model.deleteTodo(todoList[holder.adapterPosition])
+                Log.d("TAG", "onBindViewHolder: after delete list : ${model.todoList}")
+                submitList(model.todoList.toList())
             }
             isDoneButton.setOnClickListener {
                 model.doneTodo(holder.adapterPosition)
-                notifyDataSetChanged()
+                drawCancelLine(this, todoList[holder.adapterPosition].isDone)
+            }
+            todoText.setOnClickListener { _ ->
+                textClickEvent.invoke(todoList[holder.adapterPosition])
             }
         }
     }
 
     fun addTodo(todo: Todo) {
         model.addTodo(todo)
-        notifyDataSetChanged()
+        submitList(model.todoList.toList())
     }
 
     fun sortByTitle(order: Int) {
         model.sortByTitle(order)
-        notifyDataSetChanged()
+        submitList(model.todoList.toList())
     }
 
     fun sortByDueDate(order: Int) {
         model.sortByDate(order)
-        notifyDataSetChanged()
+        submitList(model.todoList.toList())
+    }
+
+    fun updateTodo(item: ArrayList<Todo>) {
+        model.updateTodo(item)
+        submitList(model.todoList.toList())
+    }
+
+    private fun drawCancelLine(binding: ItemTodoBinding, isDone: Boolean) {
+        if (isDone) {
+            binding.todoText.apply {
+                paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+                setTextColor(Color.GRAY)
+            }
+        } else {
+            binding.todoText.apply {
+                paintFlags = 0
+                setTextColor(Color.BLACK)
+            }
+        }
+        binding.isDoneButton.isChecked = isDone
     }
 }
