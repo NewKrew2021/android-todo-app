@@ -5,13 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.survivalcoding.todolist.databinding.ItemTodoBinding
 import com.survivalcoding.todolist.todo.data.TodoData
+import com.survivalcoding.todolist.todo.view.main.MainActivity
 import com.survivalcoding.todolist.todo.view.model.Todo
 import java.util.*
 
 class TodoAdapter() : ListAdapter<Todo, TodoAdapterViewHolder>(TodoDiffCallback) {
     lateinit var itemTodoBinding: ItemTodoBinding
     private val model = TodoData
-    private val currentTime = Date().time
+    private val currentTime = Date().time - MainActivity.ONE_DAY_MILLISECONDS
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): TodoAdapterViewHolder {
         itemTodoBinding =
@@ -27,7 +28,7 @@ class TodoAdapter() : ListAdapter<Todo, TodoAdapterViewHolder>(TodoDiffCallback)
             todoText.text = todoList[holderPos].text
             isDoneButton.isChecked = todoList[holderPos].isDone
             val dueDate =
-                (todoList[holderPos].dueDate - currentTime) / (ONE_DAY_MILLISECONDS)
+                (todoList[holderPos].dueDate - currentTime) / MainActivity.ONE_DAY_MILLISECONDS
             dueDateText.text = "D - $dueDate"
 
             deleteTodoButton.setOnClickListener {
@@ -54,9 +55,5 @@ class TodoAdapter() : ListAdapter<Todo, TodoAdapterViewHolder>(TodoDiffCallback)
     fun sortByDueDate(order: Int) {
         model.sortByDate(order)
         submitList(model.todoList.toList())
-    }
-
-    companion object {
-        const val ONE_DAY_MILLISECONDS = 24 * 60 * 60 * 1000 // 86_400_000
     }
 }

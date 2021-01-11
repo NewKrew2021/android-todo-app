@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, AddActivity::class.java)
             startActivityForResult(intent, ADD_REQUEST_QUEUE)
         }
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -107,5 +106,6 @@ class MainActivity : AppCompatActivity() {
         const val DATE_FORMAT = "yyyy-mm-dd"
         const val INTENT_KEY = "todo"
         const val ADD_REQUEST_QUEUE = 100
+        const val ONE_DAY_MILLISECONDS = 24 * 60 * 60 * 1000 // 86_400_000
     }
 }

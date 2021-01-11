@@ -18,7 +18,7 @@ class AddActivity : AppCompatActivity() {
         addBinding = ActivityAddBinding.inflate(layoutInflater)
         setContentView(addBinding.root)
 
-        var dueDate = Date().time
+        var dueDate = Date().time - MainActivity.ONE_DAY_MILLISECONDS
         val format = SimpleDateFormat(MainActivity.DATE_FORMAT)
 
         addBinding.cancelButton.setOnClickListener { finish() }
