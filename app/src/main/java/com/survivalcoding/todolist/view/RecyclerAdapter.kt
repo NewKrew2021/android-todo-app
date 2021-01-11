@@ -16,21 +16,22 @@ import com.survivalcoding.todolist.viewModel.listItem
 import com.survivalcoding.todolist.viewModel.searchItem
 
 class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
-    ListAdapter<listItem, Holder>(ItemDiffCallback) {
+    ListAdapter<searchItem, Holder>(ItemDiffCallback) {
 
     var data = mutableListOf<listItem>()
     var searchData = mutableListOf<searchItem>()
 
-
     fun dataUpdate() {
-        data = data.toMutableList()
-        submitList(data)
+        searchData = searchData.toMutableList()
+        submitList(searchData)
     }
 
     fun searching(pattern: String) {
 
         makeSearchData(pattern)
+        //dataUpdate()
         notifyDataSetChanged()
+        //dataUpdate()
     }
 
     fun makeSearchData(pattern: String) {
@@ -113,9 +114,9 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
 
-        holder.setData(searchData[position].item)
-        holder.checkBoxClickListener(searchData[position].item)
-        holder.itemClickListener(position, this)
+        holder.setData(searchData[holder.adapterPosition].item)
+        holder.checkBoxClickListener(searchData[holder.adapterPosition].item)
+        holder.itemClickListener(holder.adapterPosition, this)
 
     }
 }

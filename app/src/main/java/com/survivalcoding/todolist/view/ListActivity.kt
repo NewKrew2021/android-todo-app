@@ -1,16 +1,15 @@
 package com.survivalcoding.todolist.view
 
-import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.KeyEvent
-import android.view.View
+import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.ActivityListBinding
@@ -25,6 +24,7 @@ class ListActivity : AppCompatActivity() {
     private lateinit var bindingDialog: Dialog1Binding
 
     private lateinit var adapter: RecyclerAdapter
+    var imm: InputMethodManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +32,7 @@ class ListActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        imm = getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as InputMethodManager?
 
         var builder = AlertDialog.Builder(this)
         adapter =
@@ -83,6 +84,38 @@ class ListActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        val intent = Intent()
+        intent.putExtra("key", "bye bye")
+        setResult(Activity.RESULT_OK, intent)
+        finish()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.addItem -> {
+                var toast = Toast.makeText(this, "hello world", Toast.LENGTH_SHORT)
+                toast.setGravity(Gravity.TOP or Gravity.LEFT, 400, 400)
+                toast.show()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.main, menu)
+        return true
+    }
+
+    fun hideKeyboard(v: View) {
+        if (v != null) {
+            imm?.hideSoftInputFromWindow(v.windowToken, 0)
+        }
+    }
+
     fun dialogSetting(dialogView: View, adapter: RecyclerAdapter, position: Int) {
         var reviseText = dialogView.findViewById<EditText>(R.id.reviseText)
 
@@ -124,7 +157,8 @@ class ListActivity : AppCompatActivity() {
                 false,
             )
         )
-        //adapter.dataUpdate()
+
+
         adapter.makeSearchData(binding.searchEditText.text.toString())
         if (
             binding.editText.text.toString().contains(binding.searchEditText.text.toString())
@@ -132,8 +166,16 @@ class ListActivity : AppCompatActivity() {
             adapter.notifyItemInserted(0)
         }
         adapter.notifyItemRangeChanged(0, adapter.data.size)
+
+
+
+
         binding.editText.setText("")
         adapter.makeSearchData(binding.searchEditText.text.toString())
+        //adapter.dataUpdate()
+        hideKeyboard(binding.root)
+
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
