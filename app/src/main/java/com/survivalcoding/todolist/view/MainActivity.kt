@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateList() {
-        todoListAdapter.submitList(todoViewModel.getItemList().toList())
+        todoListAdapter.submitList(todoViewModel.getItemList())
     }
 }
 

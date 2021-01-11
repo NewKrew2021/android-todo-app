@@ -17,7 +17,7 @@ class TodoListAdapter : ListAdapter<TodoItem, TodoListViewHolder>(TodoCallback) 
     }
 
     override fun onBindViewHolder(holder: TodoListViewHolder, position: Int) {
-        val currentItem = getItem(position)
+        val currentItem = getItem(holder.adapterPosition)
         holder.binding.apply {
             title.text = currentItem.title
             val longDday = getDay(currentItem.date)

@@ -6,7 +6,7 @@ class TodoViewModel {
 
     var items = mutableListOf<TodoItem>()
 
-    fun getItemList() = items
+    fun getItemList() = items.toMutableList()
 
     fun add(item: TodoItem) = items.add(item)
 
