@@ -13,7 +13,6 @@ import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import com.survivalcoding.todolist.extension.intentActionResult
 import com.survivalcoding.todolist.extension.intentActionResultWithBundle
 import com.survivalcoding.todolist.model.TodoItem
-import com.survivalcoding.todolist.util.ADD_TODO_REQUEST_CODE
 import com.survivalcoding.todolist.util.TODO_ITEM
 import com.survivalcoding.todolist.util.TODO_ITEM_CONTENTS
 import com.survivalcoding.todolist.util.TODO_ITEM_TIME
@@ -21,6 +20,10 @@ import com.survivalcoding.todolist.view.add.AddTodoActivity
 import com.survivalcoding.todolist.view.base.BaseActivity
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
+
+    companion object {
+        const val ADD_TODO_REQUEST_CODE = 1000
+    }
 
     lateinit var todoAdapter: TodoAdapter
 

@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.todolist.databinding.ItemTodoBinding
 import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.util.convertToDate
-import java.util.*
 
 class TodoAdapter(private var todoList: MutableList<TodoItem>) :
     RecyclerView.Adapter<TodoAdapter.TodoViewHolder>(), Filterable {
@@ -62,10 +61,10 @@ class TodoAdapter(private var todoList: MutableList<TodoItem>) :
                 todoList
             } else {
                 val filteringList = mutableListOf<TodoItem>()
-                for (i in todoList.indices) {
-                    if (todoList[i].contents!!.toUpperCase(Locale.ROOT)
-                            .contains(filterString.toUpperCase(Locale.ROOT))
-                    ) filteringList.add(todoList[i])
+                todoList.filter {
+                    it.contents?.toUpperCase()?.contains((filterString.toUpperCase())) ?: false
+                }.forEach {
+                    filteringList.add(it)
                 }
                 filteringList
             }
