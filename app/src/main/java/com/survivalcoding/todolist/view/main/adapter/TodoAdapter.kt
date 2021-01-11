@@ -2,6 +2,7 @@ package com.survivalcoding.todolist.view.main.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.ListAdapter
 import com.survivalcoding.todolist.databinding.ItemTodoListBinding
 import com.survivalcoding.todolist.view.main.holder.TodoViewHolder
@@ -12,6 +13,8 @@ class TodoAdapter(
     private val removeClickListener: (Todo) -> Unit,
     private val updateListener: () -> Unit,
     private val editClickListener: (Todo) -> Unit,
+    private val getActionMode: () -> ActionMode?,
+    private val setActionBarTitle: () -> Unit,
 ) : ListAdapter<Todo, TodoViewHolder>(TodoDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
@@ -28,6 +31,8 @@ class TodoAdapter(
             removeClickListener = removeClickListener,
             updateListener = updateListener,
             editClickListener = editClickListener,
+            getActionMode = getActionMode,
+            setActionBarTitle = setActionBarTitle,
         )
     }
 }

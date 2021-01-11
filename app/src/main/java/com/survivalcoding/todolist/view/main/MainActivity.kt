@@ -3,9 +3,13 @@ package com.survivalcoding.todolist.view.main
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
+import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.data.MainViewModel
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import com.survivalcoding.todolist.util.dateToString
@@ -17,6 +21,8 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private val viewModel = MainViewModel()
+
+    private var actionMode: ActionMode? = null
 
     private lateinit var binding: ActivityMainBinding
 
@@ -37,6 +43,8 @@ class MainActivity : AppCompatActivity() {
                 }
                 startActivityForResult(intent, EDIT_ACTIVITY_REQ_CODE)
             },
+            getActionMode = { getActionMode() },
+            setActionBarTitle = { setActionBarTitle() },
         )
 
         with(binding) {
@@ -98,6 +106,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_mode_remove -> {
+                actionMode = startSupportActionMode(removeModeCallback)
+                adapter.notifyDataSetChanged()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
@@ -126,6 +150,45 @@ class MainActivity : AppCompatActivity() {
             if (query.isEmpty()) viewModel.getOrderedItems()
             else viewModel.getOrderedWithFilteredItems(query)
         )
+    }
+
+    private fun getActionMode(): ActionMode? = actionMode
+
+    private fun setActionBarTitle() {
+        actionMode?.title = "${viewModel.getRemovablesCount()}개 선택"
+    }
+
+    private val removeModeCallback = object : ActionMode.Callback {
+        override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            mode?.menuInflater?.inflate(R.menu.main_menu_remove, menu)
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            mode?.title = "${viewModel.getRemovablesCount()}개 선택"
+            return false
+        }
+
+        override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+            return when (item?.itemId) {
+                R.id.menu_remove -> {
+                    val isRemoved = viewModel.removeAllRemovable()
+
+                    if (isRemoved) {
+                        updateUI()
+                        mode?.finish()
+                    }
+                    true
+                }
+                else -> false
+            }
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode?) {
+            actionMode = null
+            viewModel.clearAllRemovable()
+            adapter.notifyDataSetChanged()
+        }
     }
 
     companion object {
