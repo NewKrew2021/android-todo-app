@@ -9,7 +9,7 @@ import com.survivalcoding.todolist.todo.view.main.MainActivity
 import com.survivalcoding.todolist.todo.view.model.Todo
 import java.util.*
 
-class TodoAdapter() : ListAdapter<Todo, TodoAdapterViewHolder>(TodoDiffCallback) {
+class TodoAdapter(final val textClickEvent: () -> Unit) : ListAdapter<Todo, TodoAdapterViewHolder>(TodoDiffCallback) {
     lateinit var itemTodoBinding: ItemTodoBinding
     private val model = TodoData
     private val currentTime = Date().time - MainActivity.ONE_DAY_MILLISECONDS
@@ -22,22 +22,24 @@ class TodoAdapter() : ListAdapter<Todo, TodoAdapterViewHolder>(TodoDiffCallback)
 
     override fun onBindViewHolder(holder: TodoAdapterViewHolder, position: Int) {
         val todoList = model.todoList
-        val holderPos = holder.adapterPosition
 
         itemTodoBinding.apply {
-            todoText.text = todoList[holderPos].text
-            isDoneButton.isChecked = todoList[holderPos].isDone
+            todoText.text = todoList[holder.adapterPosition].text
+            isDoneButton.isChecked = todoList[holder.adapterPosition].isDone
             val dueDate =
-                (todoList[holderPos].dueDate - currentTime) / MainActivity.ONE_DAY_MILLISECONDS
+                (todoList[holder.adapterPosition].dueDate - currentTime) / MainActivity.ONE_DAY_MILLISECONDS
             dueDateText.text = "D - $dueDate"
 
             deleteTodoButton.setOnClickListener {
-                model.deleteTodo(todoList[holderPos])
+                model.deleteTodo(todoList[holder.adapterPosition])
                 submitList(model.todoList.toList())
             }
             isDoneButton.setOnClickListener {
-                model.doneTodo(holderPos)
+                model.doneTodo(holder.adapterPosition)
                 submitList(model.todoList.toList())
+            }
+            todoText.setOnClickListener {_ ->
+                textClickEvent.invoke()
             }
         }
     }
@@ -54,6 +56,11 @@ class TodoAdapter() : ListAdapter<Todo, TodoAdapterViewHolder>(TodoDiffCallback)
 
     fun sortByDueDate(order: Int) {
         model.sortByDate(order)
+        submitList(model.todoList.toList())
+    }
+
+    fun updateTodo(item: ArrayList<Todo>) {
+        model.updateTodo(item)
         submitList(model.todoList.toList())
     }
 }

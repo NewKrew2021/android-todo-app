@@ -26,10 +26,12 @@ class MainActivity : AppCompatActivity() {
         val listBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(listBinding.root)
 
-        todoAdapter = TodoAdapter()
+        // edit button으로 사용 예정
+        val textClickEvent = { Toast.makeText(this, "text clicked", Toast.LENGTH_SHORT).show()}
+
+        todoAdapter = TodoAdapter(textClickEvent)
         listBinding.todoList.adapter = todoAdapter
         listBinding.addTodoButton.setOnClickListener {
-            // Todo AddActivity로 전환된 후, 추가할 Todo객체를 intent로 받아온다.
             val intent = Intent(this, AddActivity::class.java)
             startActivityForResult(intent, ADD_REQUEST_QUEUE)
         }
@@ -43,7 +45,7 @@ class MainActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         val list = savedInstanceState.getParcelableArrayList<Todo>(ROTATION_RESTORE_KEY)
-        list?.let { model.updateTodo(list) }
+        list?.let { todoAdapter.updateTodo(list) }
     }
 
     // resultCode = AddActivity에서 setResult메소드로 넣어준 값
@@ -55,8 +57,7 @@ class MainActivity : AppCompatActivity() {
             when (requestCode) {
                 ADD_REQUEST_QUEUE -> {
                     data?.getParcelableExtra<Todo>(INTENT_KEY)?.let {
-                        model.addTodo(it)
-                        todoAdapter.submitList(model.todoList.toList())
+                        todoAdapter.addTodo(it)
                     }
                 }
             }
@@ -106,6 +107,7 @@ class MainActivity : AppCompatActivity() {
         const val DATE_FORMAT = "yyyy-mm-dd"
         const val INTENT_KEY = "todo"
         const val ADD_REQUEST_QUEUE = 100
+        const val EDIT_REQUEST_QUEUE = 200
         const val ONE_DAY_MILLISECONDS = 24 * 60 * 60 * 1000 // 86_400_000
     }
 }

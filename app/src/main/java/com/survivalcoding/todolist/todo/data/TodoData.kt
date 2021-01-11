@@ -5,7 +5,7 @@ import com.survivalcoding.todolist.todo.view.model.Todo
 import java.util.concurrent.atomic.AtomicInteger
 
 object TodoData {
-    private val data = mutableListOf<Todo>()
+    private var data = mutableListOf<Todo>()
     private val id = AtomicInteger(0)
 
     val todoList: List<Todo>
@@ -17,8 +17,9 @@ object TodoData {
     }
 
     fun updateTodo(item: ArrayList<Todo>) {
+        val _list = item.toList()   // 이유는 모르겠지만, data.clear()시에 item도 clear가 되서 임시로 저장.
         data.clear()
-        data.addAll(item.toMutableList())
+        data.addAll(_list)
     }
 
     fun deleteTodo(item: Todo) {
