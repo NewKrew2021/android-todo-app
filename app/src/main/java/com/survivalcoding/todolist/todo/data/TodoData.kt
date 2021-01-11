@@ -2,35 +2,17 @@ package com.survivalcoding.todolist.todo.data
 
 import com.survivalcoding.todolist.todo.view.main.MainActivity
 import com.survivalcoding.todolist.todo.view.model.Todo
+import java.util.concurrent.atomic.AtomicInteger
 
 object TodoData {
-    private val data = mutableListOf<Todo>(
-        Todo(
-            false,
-            "Todo1",
-            1610300000000L
-        ),
-        Todo(
-            false,
-            "Todo2",
-            1610400000000L
-        ),
-        Todo(
-            false,
-            "Todo3",
-            1610500000000L
-        ),
-        Todo(
-            true,
-            "Todo4",
-            1610600000000L
-        ),
-    )
+    private val data = mutableListOf<Todo>()
+    private val id = AtomicInteger(0)
 
     val todoList: List<Todo>
         get() = data
 
     fun addTodo(item: Todo) {
+        item.id = id.getAndIncrement()
         data.add(item)
     }
 
