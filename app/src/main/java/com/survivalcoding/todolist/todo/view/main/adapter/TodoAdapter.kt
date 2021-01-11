@@ -7,15 +7,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.survivalcoding.todolist.databinding.ItemTodoBinding
 import com.survivalcoding.todolist.todo.data.TodoData
+import com.survivalcoding.todolist.todo.util.Util
 import com.survivalcoding.todolist.todo.view.main.MainActivity
 import com.survivalcoding.todolist.todo.view.model.Todo
-import java.util.*
 
 class TodoAdapter(final val textClickEvent: () -> Unit) :
     ListAdapter<Todo, TodoAdapterViewHolder>(TodoDiffCallback) {
     lateinit var itemTodoBinding: ItemTodoBinding
     private val model = TodoData
-    private val currentTime = Date().time - MainActivity.ONE_DAY_MILLISECONDS
+    private val currentTime = Util.getPresentDate()
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): TodoAdapterViewHolder {
         itemTodoBinding =
