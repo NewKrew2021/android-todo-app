@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onQueryTextChange(newText: String): Boolean {
                     adapter.submitList(viewModel.searchTodoItem(newText))
-                    return false
+                    return true
                 }
             })
         }
