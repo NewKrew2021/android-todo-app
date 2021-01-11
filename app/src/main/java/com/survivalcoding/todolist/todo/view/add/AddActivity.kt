@@ -34,6 +34,9 @@ class AddActivity : AppCompatActivity() {
             } else {
                 val item = Todo(false, todoString, dueDate)
                 val intent = Intent().putExtra(MainActivity.INTENT_KEY, item)
+
+                setResult(RESULT_OK, intent)
+                finish()
             }
         }
     }

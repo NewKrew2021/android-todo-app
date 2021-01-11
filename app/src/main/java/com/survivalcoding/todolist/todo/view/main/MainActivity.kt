@@ -1,5 +1,6 @@
 package com.survivalcoding.todolist.todo.view.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -9,6 +10,7 @@ import androidx.core.view.MenuCompat
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import com.survivalcoding.todolist.todo.data.TodoData
+import com.survivalcoding.todolist.todo.view.add.AddActivity
 import com.survivalcoding.todolist.todo.view.main.adapter.TodoAdapter
 import com.survivalcoding.todolist.todo.view.model.Todo
 import java.util.*
@@ -21,7 +23,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Toast.makeText(this, Date().time.toString(), Toast.LENGTH_LONG).show()
         val listBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(listBinding.root)
 
@@ -29,8 +30,8 @@ class MainActivity : AppCompatActivity() {
         listBinding.todoList.adapter = todoAdapter
         listBinding.addTodoButton.setOnClickListener {
             // Todo AddActivity로 전환된 후, 추가할 Todo객체를 intent로 받아온다.
-            val text = "simple text"
-            todoAdapter.addTodo(Todo(false, text, Date().time))
+            val intent = Intent(this, AddActivity::class.java)
+            startActivityForResult(intent, ADD_REQUEST_QUEUE)
         }
 
     }
@@ -44,6 +45,23 @@ class MainActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         val list = savedInstanceState.getParcelableArrayList<Todo>(ROTATION_RESTORE_KEY)
         list?.let { model.updateTodo(list) }
+    }
+
+    // resultCode = AddActivity에서 setResult메소드로 넣어준 값
+    // requestCode = MainActivity에서 intent시에 넣어준 두 번째 매개변수
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == RESULT_OK) {
+            when (requestCode) {
+                ADD_REQUEST_QUEUE -> {
+                    data?.getParcelableExtra<Todo>(INTENT_KEY)?.let {
+                        model.addTodo(it)
+                        todoAdapter.submitList(model.todoList.toList())
+                    }
+                }
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -79,7 +97,7 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
         }
-        return false
+        return super.onOptionsItemSelected(item)
     }
 
     companion object {
@@ -88,5 +106,6 @@ class MainActivity : AppCompatActivity() {
         const val DESCENDING = 654321
         const val DATE_FORMAT = "yyyy-mm-dd"
         const val INTENT_KEY = "todo"
+        const val ADD_REQUEST_QUEUE = 100
     }
 }
