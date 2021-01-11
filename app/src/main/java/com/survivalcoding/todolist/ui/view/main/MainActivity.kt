@@ -3,11 +3,13 @@ package com.survivalcoding.todolist.ui.view.main
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.view.Menu
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import com.survivalcoding.todolist.extension.intentActionResult
 import com.survivalcoding.todolist.extension.intentActionResultWithBundle
@@ -30,6 +32,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     override val viewModel: MainViewModel by viewModel()
 
     lateinit var todoAdapter: TodoAdapter
+    lateinit var searchView: SearchView
 
     override fun initStartView() {
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -40,7 +43,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     override fun afterStartView() {
         eventProcess()
         setRecyclerView()
-        setSearchView()
+        setToolbar()
     }
 
     private fun eventProcess() {
@@ -84,7 +87,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     }
 
     private fun setSearchView() {
-        binding.svSearchMain.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 todoAdapter.filter.filter(query)
                 return true
@@ -97,10 +100,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         })
     }
 
+    private fun setToolbar() {
+        setSupportActionBar(binding.toolbarMain)
+    }
+
     private fun hideKeyboard() {
-        binding.svSearchMain.clearFocus()
+        searchView.clearFocus()
         val im = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        im.hideSoftInputFromWindow(binding.svSearchMain.windowToken, 0)
+        im.hideSoftInputFromWindow(searchView.windowToken, 0)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -119,6 +126,13 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 }
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_search, menu)
+        searchView = menu.findItem(R.id.action_search).actionView as SearchView
+        setSearchView()
+        return true
     }
 
 

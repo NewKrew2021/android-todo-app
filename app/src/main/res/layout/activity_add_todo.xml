@@ -32,7 +32,7 @@
         android:layout_marginBottom="@dimen/spacing_40"
         android:backgroundTint="#C3E8EC"
         android:text="@string/btn_save_add_todo"
-        android:textColor="#F6F6F6"
+        android:textColor="#000000"
         android:textSize="@dimen/body_16"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -45,6 +45,7 @@
         android:layout_marginBottom="@dimen/spacing_40"
         android:backgroundTint="#C3E8EC"
         android:text="@string/btn_cancel_add_todo"
+        android:textColor="#000000"
         android:textSize="@dimen/body_16"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

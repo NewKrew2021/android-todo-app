@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Todo List</string>
+    <string name="app_name">Todo</string>
 
     <!-- activity_main -->
     <string name="btn_add_main">Add a to do..</string>
@@ -14,4 +14,6 @@
     <string name="edt_title_hint_add_todo">제목을 입력하세요</string>
     <string name="edt_contents_hint_add_todo">내용을 입력하세요</string>
 
+    <!-- menu -->
+    <string name="menu_search_title">Search</string>
 </resources>
