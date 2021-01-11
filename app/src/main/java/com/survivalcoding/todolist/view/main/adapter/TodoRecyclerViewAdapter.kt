@@ -34,7 +34,8 @@ class TodoRecyclerViewAdapter(val itemClickListener: KFunction1<TodoData, Unit>)
             sortFunction = { model.sortItem() },
             delFunction = { model.delItem(item) },
             submitFunction = { updateUI() },
-            itemClickListener = { itemClickListener(item) })
+            itemClickListener = { itemClickListener(item) },
+        )
 
     }
 
@@ -52,6 +53,14 @@ class TodoRecyclerViewAdapter(val itemClickListener: KFunction1<TodoData, Unit>)
 
     private fun updateUI() {
         submitList(model.items.toList())
+        //todo updateUI가 edit시에 잘 작동하지않음
+    }
+
+
+    fun changeEditable(isEdit: Boolean) {
+        model.makeEditable(isEdit)
+        //todo updateUI가 작동 안함
+        notifyItemRangeChanged(0, model.items.size)
     }
 
 }

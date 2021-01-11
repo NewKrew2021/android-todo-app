@@ -38,4 +38,8 @@ class TodoRepository {
     fun getItem(position: Int): TodoData {
         return _items[position]
     }
+
+    fun makeEditable(isEdit: Boolean) {
+        _items.forEach { it.isEdit = isEdit }
+    }
 }
