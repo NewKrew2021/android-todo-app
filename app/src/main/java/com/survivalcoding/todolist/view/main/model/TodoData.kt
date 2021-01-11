@@ -9,5 +9,6 @@ data class TodoData(
     var time: Long,
     var isChecked: Boolean = false,
     var isMarked: Boolean = false,
+    var isEdit: Boolean = false,
     var pid: Int = 0,
 ) : Parcelable

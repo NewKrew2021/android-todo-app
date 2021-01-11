@@ -1,16 +1,17 @@
 package com.survivalcoding.todolist.view.main
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
-import com.survivalcoding.todolist.view.edit.EditActivity
 import com.survivalcoding.todolist.view.main.adapter.TodoRecyclerViewAdapter
 import com.survivalcoding.todolist.view.main.model.TodoData
 import java.util.*
@@ -21,11 +22,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: TodoRecyclerViewAdapter
     var pid = 0
+    var isEdit = false
     private fun itemClickListener(item: TodoData) {
-        val intent = Intent(this, EditActivity::class.java).apply {
-            putExtra(TODO_ITEM, item)
-        }
-        startActivityForResult(intent, EDIT_MAIN_REQ_CODE)
+        // todo click시 로직 변경 필요
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,6 +84,28 @@ class MainActivity : AppCompatActivity() {
         val savedData = savedInstanceState.getParcelableArrayList<TodoData>(DATA_SAVE)
         savedData?.let { adapter.addAllItems(savedData.toList()) }
         pid = savedInstanceState.getInt(PID_SAVE)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_add -> {
+                binding.layoutAdd.visibility =
+                    if (binding.layoutAdd.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+                true
+            }
+            R.id.action_edit -> {
+                adapter.changeEditable(!isEdit)
+                isEdit = !isEdit
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     companion object {
