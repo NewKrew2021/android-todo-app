@@ -22,7 +22,7 @@ class TodoViewModel {
         _todoList.add(todoItem)
     }
 
-    fun editTodo(todoItem: TodoItem, newTodoTitle: String) {
+    fun updateTodo(todoItem: TodoItem, newTodoTitle: String) {
         todoItem.todoTitle = newTodoTitle
         todoItem.timeStamp = getCurrentTime()
     }

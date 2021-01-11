@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity() {
                 updateTodoList()
             },
             editTodoListener = { todoItem, newTodoTitle ->
-                viewModel.editTodo(todoItem, newTodoTitle)
+                viewModel.updateTodo(todoItem, newTodoTitle)
                 updateTodoList()
             }, removeTodoListener = {
                 viewModel.removeTodo(it)
