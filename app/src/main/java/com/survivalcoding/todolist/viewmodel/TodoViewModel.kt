@@ -3,6 +3,7 @@ package com.survivalcoding.todolist.viewmodel
 import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.util.getCurrentTime
 import com.survivalcoding.todolist.view.MainActivity
+import java.util.*
 
 class TodoViewModel {
     private val _todoList = mutableListOf<TodoItem>()
@@ -22,7 +23,7 @@ class TodoViewModel {
         _todoList.add(todoItem)
     }
 
-    fun editTodo(todoItem: TodoItem, newTodoTitle: String) {
+    fun updateTodo(todoItem: TodoItem, newTodoTitle: String) {
         todoItem.todoTitle = newTodoTitle
         todoItem.timeStamp = getCurrentTime()
     }
@@ -37,5 +38,13 @@ class TodoViewModel {
 
     fun sortByTitle() {
         _todoList.sortWith(compareBy<TodoItem> { it.isChecked }.thenBy { it.todoTitle })
+    }
+
+    fun searchTodoItem(inputTitle: String): List<TodoItem> {
+        return _todoList
+            .filter {
+                it.todoTitle.toLowerCase(Locale.getDefault())
+                    .contains(inputTitle.toLowerCase(Locale.getDefault()))
+            }.sortedBy { it.todoTitle.length }
     }
 }

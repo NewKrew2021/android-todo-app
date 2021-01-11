@@ -45,6 +45,16 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/input_layout">
 
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:iconifiedByDefault="false"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/sort_option_spinner"
+            app:layout_constraintTop_toTopOf="parent"
+            app:queryHint="@string/empty_search_bar_message" />
+
         <Spinner
             android:id="@+id/sort_option_spinner"
             android:layout_width="wrap_content"

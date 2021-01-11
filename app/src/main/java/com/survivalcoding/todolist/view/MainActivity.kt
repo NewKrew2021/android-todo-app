@@ -1,10 +1,14 @@
 package com.survivalcoding.todolist.view
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.adapter.TodoListAdapter
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
@@ -25,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initializeView()
-        setOnClickListener()
+        setOnListener()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -60,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         adapter.submitList(viewModel.todoList.toList())
     }
 
-    private fun setOnClickListener() {
+    private fun setOnListener() {
         binding.apply {
             registerButton.setOnClickListener {
                 toDoEditText.text.apply {
@@ -83,6 +87,17 @@ class MainActivity : AppCompatActivity() {
             sortButton.setOnClickListener {
                 updateTodoList()
             }
+            searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                // 현재는 구현할 필요없음
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    adapter.submitList(viewModel.searchTodoItem(newText))
+                    return false
+                }
+            })
         }
     }
 
@@ -92,12 +107,14 @@ class MainActivity : AppCompatActivity() {
                 updateTodoList()
             },
             editTodoListener = { todoItem, newTodoTitle ->
-                viewModel.editTodo(todoItem, newTodoTitle)
+                viewModel.updateTodo(todoItem, newTodoTitle)
                 updateTodoList()
-            }, removeTodoListener = {
+            },
+            removeTodoListener = {
                 viewModel.removeTodo(it)
                 updateTodoList()
-            })
+            }
+        )
         binding.toDoList.apply {
             this.adapter = this@MainActivity.adapter
         }
@@ -112,6 +129,35 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.actions, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.about_app -> {
+                startActivityForResult(
+                    Intent(this, AppInfoActivity::class.java),
+                    GO_TO_APP_INFO_ACTIVITY
+                )
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == GO_TO_APP_INFO_ACTIVITY && resultCode == RESULT_OK) {
+            Toast.makeText(
+                this,
+                data?.getStringExtra(AppInfoActivity.INFO_KEY),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
     private fun hideKeyboard() {
         val manager: InputMethodManager =
             getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
@@ -123,6 +169,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val SAVE_INSTANCE_TODO_ITEM_KEY = "todoList"
+        const val GO_TO_APP_INFO_ACTIVITY = 123
         const val NEW_TODO_TASK = -1
     }
 }

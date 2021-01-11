@@ -9,7 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TodoList">
-        <activity android:name=".view.MainActivity">
+        <activity
+            android:name=".view.AppInfoActivity"
+            android:parentActivityName=".view.MainActivity" />
+        <activity
+            android:name=".view.MainActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

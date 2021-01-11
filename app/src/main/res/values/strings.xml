@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">Todo List</string>
+    <string name="app_version">버전 0.6</string>
     <string name="register_todo">등록</string>
     <string name="empty_title_warning_message">내용을 입력해주세요</string>
+    <string name="empty_search_bar_message">검색어을 입력해주세요</string>
+    <string name="app_info">정보</string>
+    <string name="developer_name">Tony</string>
+    <string name="developer_email">tony.mb@kakaocorp.com</string>
 </resources>
