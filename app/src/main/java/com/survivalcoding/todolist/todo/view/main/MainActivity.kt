@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(listBinding.root)
 
         // edit button으로 사용 예정
-        val textClickEvent = { Toast.makeText(this, "text clicked", Toast.LENGTH_SHORT).show()}
+        val textClickEvent = { Toast.makeText(this, "text clicked", Toast.LENGTH_SHORT).show() }
 
         todoAdapter = TodoAdapter(textClickEvent)
         listBinding.todoList.adapter = todoAdapter

@@ -1,5 +1,7 @@
 package com.survivalcoding.todolist.todo.view.main.adapter
 
+import android.graphics.Color
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
@@ -9,7 +11,8 @@ import com.survivalcoding.todolist.todo.view.main.MainActivity
 import com.survivalcoding.todolist.todo.view.model.Todo
 import java.util.*
 
-class TodoAdapter(final val textClickEvent: () -> Unit) : ListAdapter<Todo, TodoAdapterViewHolder>(TodoDiffCallback) {
+class TodoAdapter(final val textClickEvent: () -> Unit) :
+    ListAdapter<Todo, TodoAdapterViewHolder>(TodoDiffCallback) {
     lateinit var itemTodoBinding: ItemTodoBinding
     private val model = TodoData
     private val currentTime = Date().time - MainActivity.ONE_DAY_MILLISECONDS
@@ -36,9 +39,9 @@ class TodoAdapter(final val textClickEvent: () -> Unit) : ListAdapter<Todo, Todo
             }
             isDoneButton.setOnClickListener {
                 model.doneTodo(holder.adapterPosition)
-                submitList(model.todoList.toList())
+                drawCancelLine(this, todoList[holder.adapterPosition].isDone)
             }
-            todoText.setOnClickListener {_ ->
+            todoText.setOnClickListener { _ ->
                 textClickEvent.invoke()
             }
         }
@@ -62,5 +65,20 @@ class TodoAdapter(final val textClickEvent: () -> Unit) : ListAdapter<Todo, Todo
     fun updateTodo(item: ArrayList<Todo>) {
         model.updateTodo(item)
         submitList(model.todoList.toList())
+    }
+
+    private fun drawCancelLine(binding: ItemTodoBinding, isDone: Boolean) {
+        if (isDone) {
+            binding.todoText.apply {
+                paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+                setTextColor(Color.GRAY)
+            }
+        } else {
+            binding.todoText.apply {
+                paintFlags = 0
+                setTextColor(Color.BLACK)
+            }
+        }
+        binding.isDoneButton.isChecked = isDone
     }
 }
