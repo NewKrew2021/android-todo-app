@@ -45,6 +45,16 @@ class MainViewModel {
         _items.remove(todo)
     }
 
+    fun removeAllRemovable(): Boolean {
+        val removables = _items.filter { it.isRemovable }
+
+        if (removables.isNotEmpty()) {
+            _items.removeAll(removables)
+            return true
+        }
+        return false
+    }
+
     fun edit(todo: Todo): Boolean {
         _items.withIndex().find { it.value.id == todo.id }?.let {
             _items[it.index] = todo

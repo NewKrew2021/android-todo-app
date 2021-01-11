@@ -166,8 +166,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
-            mode?.finish()
-            return true
+            return when (item?.itemId) {
+                R.id.menu_remove -> {
+                    val isRemoved = viewModel.removeAllRemovable()
+
+                    if (isRemoved) {
+                        updateUI()
+                        mode?.finish()
+                    }
+                    true
+                }
+                else -> false
+            }
         }
 
         override fun onDestroyActionMode(mode: ActionMode?) {
