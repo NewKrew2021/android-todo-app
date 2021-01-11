@@ -1,5 +1,6 @@
 package com.survivalcoding.todolist.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -122,6 +123,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.about_app -> {
+                startActivity(Intent(this, AppInfoActivity::class.java))
                 true
             }
             else -> super.onOptionsItemSelected(item)
