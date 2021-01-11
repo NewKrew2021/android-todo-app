@@ -8,6 +8,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.adapter.TodoListAdapter
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initializeView()
-        setOnClickListener()
+        setOnListener()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -63,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         adapter.submitList(viewModel.todoList.toList())
     }
 
-    private fun setOnClickListener() {
+    private fun setOnListener() {
         binding.apply {
             registerButton.setOnClickListener {
                 toDoEditText.text.apply {
@@ -86,6 +87,17 @@ class MainActivity : AppCompatActivity() {
             sortButton.setOnClickListener {
                 updateTodoList()
             }
+            searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                // 현재는 구현할 필요없음
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    adapter.submitList(viewModel.searchTodoItem(newText))
+                    return false
+                }
+            })
         }
     }
 
@@ -97,10 +109,12 @@ class MainActivity : AppCompatActivity() {
             editTodoListener = { todoItem, newTodoTitle ->
                 viewModel.updateTodo(todoItem, newTodoTitle)
                 updateTodoList()
-            }, removeTodoListener = {
+            },
+            removeTodoListener = {
                 viewModel.removeTodo(it)
                 updateTodoList()
-            })
+            }
+        )
         binding.toDoList.apply {
             this.adapter = this@MainActivity.adapter
         }
