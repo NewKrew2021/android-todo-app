@@ -25,4 +25,21 @@ class TodoViewModel {
             addAll(modifyItems)
         }
     }
+
+    fun sort() = items.sortedWith(compareBy<TodoItem>(
+            { it.isComplete },
+            { it.isMark },
+            { it.date }))
+
+    fun complete(item: TodoItem) {
+        items.filter { it.id == item.id }.forEach {
+            it.isComplete = !it.isComplete
+        }
+    }
+
+    fun mark(item: TodoItem) {
+        items.filter { it.id == item.id }.forEach {
+            it.isMark = !it.isMark
+        }
+    }
 }

@@ -9,7 +9,10 @@ import com.survivalcoding.todolist.model.TodoItem
 import java.util.*
 
 
-class TodoListAdapter(private val _clickListener: (todo: TodoItem) -> Unit) : ListAdapter<TodoItem, TodoListViewHolder>(TodoCallback) {
+class TodoListAdapter(private val _completeListener: (todo: TodoItem) -> Unit,
+                      private val _modifyListener: (todo: TodoItem) -> Unit,
+                      private val _deleteListener: (todo: TodoItem) -> Unit,
+                      private val _markListener: (todo: TodoItem) -> Unit) : ListAdapter<TodoItem, TodoListViewHolder>(TodoCallback) {
     val currentTime = Calendar.getInstance()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoListViewHolder {
         val binding = TodoItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -29,16 +32,24 @@ class TodoListAdapter(private val _clickListener: (todo: TodoItem) -> Unit) : Li
             } else {
                 dDay.text = "D+${longTday - longDday - 1}"
             }
-            completeCheck.isChecked = currentItem.isComplete
-            completeCheck.setOnClickListener { currentItem.isComplete = completeCheck.isChecked }
-            modifyButton.setOnClickListener{
-                _clickListener.invoke(getItem(holder.adapterPosition))
+//            completeCheck.isChecked = currentItem.isComplete
+//            completeCheck.setOnClickListener { currentItem.isComplete = completeCheck.isChecked }
+            modifyButton.setOnClickListener {
+                _modifyListener.invoke(getItem(holder.adapterPosition))
+            }
+            deleteButton.setOnClickListener {
+                _deleteListener.invoke(getItem(holder.adapterPosition))
+            }
+            completeCheck.setOnClickListener {
+                _completeListener.invoke(getItem(holder.adapterPosition))
+            }
+            markButton.setOnClickListener {
+                _markListener.invoke(getItem(holder.adapterPosition))
             }
         }
     }
 
     fun getDay(calendar: Calendar): Long = calendar.timeInMillis / (24 * 60 * 60 * 1000)
-
 
 
 }

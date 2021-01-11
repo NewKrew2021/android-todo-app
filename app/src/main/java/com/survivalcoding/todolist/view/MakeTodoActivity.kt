@@ -46,7 +46,7 @@ class MakeTodoActivity : AppCompatActivity() {
                         Toast.makeText(this@MakeTodoActivity, "기한을 선택해주세요", Toast.LENGTH_SHORT).show()
                     } else {
                         val calendar = Calendar.getInstance()
-                        calendar.time = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).parse(dateView.text.toString())
+                        calendar.time = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).parse(dateView.text.toString())?: Date(Calendar.getInstance().timeInMillis)
                         lateinit var data: Intent
                         if (mode == MainActivity.ACTIVITY_EDIT_MODE) {
                             data = Intent().apply {
@@ -61,7 +61,7 @@ class MakeTodoActivity : AppCompatActivity() {
                                 putExtra("TodoItem", TodoItem(title = titleEdit.text.toString(),
                                         date = calendar,
                                         isComplete = false,
-                                        isMark = false))
+                                        isMark = true))
                             }
                         }
                         setResult(Activity.RESULT_OK, data)
