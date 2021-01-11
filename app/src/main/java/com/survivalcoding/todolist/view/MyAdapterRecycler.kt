@@ -19,9 +19,12 @@ class MyAdapterRecycler(val itemClick: (MyAdapterRecycler, Int) -> Unit) :
         while (i <= data.size - 1) {
             if (data[i].check == true) {
                 data.removeAt(i)
+                notifyItemRemoved(i)
             } else i += 1
         }
-        notifyDataSetChanged()
+
+        notifyItemRangeChanged(0, data.size)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
