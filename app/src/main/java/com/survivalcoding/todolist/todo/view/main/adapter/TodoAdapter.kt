@@ -2,6 +2,7 @@ package com.survivalcoding.todolist.todo.view.main.adapter
 
 import android.graphics.Color
 import android.graphics.Paint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
@@ -35,6 +36,7 @@ class TodoAdapter(final val textClickEvent: () -> Unit) :
 
             deleteTodoButton.setOnClickListener {
                 model.deleteTodo(todoList[holder.adapterPosition])
+                Log.d("TAG", "onBindViewHolder: after delete list : ${model.todoList}")
                 submitList(model.todoList.toList())
             }
             isDoneButton.setOnClickListener {
