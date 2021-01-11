@@ -54,9 +54,11 @@ class AddTodoActivity : BaseActivity<ActivityAddTodoBinding, AddTodoViewModel>()
                 if (todoItem != null) {
                     putExtra(TODO_ITEM_CONTENTS, todoItem.contents)
                     putExtra(TODO_ITEM_TIME, todoItem.time)
+                    setResult(Activity.RESULT_OK, this)
+                } else {
+                    setResult(Activity.RESULT_OK)
                 }
             }
-            setResult(Activity.RESULT_OK, cancelIntent)
             finish()
         }
     }
