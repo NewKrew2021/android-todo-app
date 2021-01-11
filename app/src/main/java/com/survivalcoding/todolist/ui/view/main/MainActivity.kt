@@ -8,22 +8,26 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.survivalcoding.todolist.ui.adapter.TodoAdapter
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import com.survivalcoding.todolist.extension.intentActionResult
 import com.survivalcoding.todolist.extension.intentActionResultWithBundle
 import com.survivalcoding.todolist.model.TodoItem
+import com.survivalcoding.todolist.ui.adapter.TodoAdapter
+import com.survivalcoding.todolist.ui.view.add.AddTodoActivity
+import com.survivalcoding.todolist.ui.view.base.BaseActivity
+import com.survivalcoding.todolist.ui.viewmodel.MainViewModel
 import com.survivalcoding.todolist.util.TODO_ITEM
 import com.survivalcoding.todolist.util.TODO_ITEM_CONTENTS
 import com.survivalcoding.todolist.util.TODO_ITEM_TIME
-import com.survivalcoding.todolist.ui.view.add.AddTodoActivity
-import com.survivalcoding.todolist.ui.view.base.BaseActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : BaseActivity<ActivityMainBinding>() {
+class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
     companion object {
         const val ADD_TODO_REQUEST_CODE = 1000
     }
+
+    override val viewModel: MainViewModel by viewModel()
 
     lateinit var todoAdapter: TodoAdapter
 
@@ -47,9 +51,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setRecyclerView() {
-        val todoList = mutableListOf<TodoItem>()
-
-        todoAdapter = TodoAdapter(todoList).apply {
+        todoAdapter = TodoAdapter(viewModel.todoList as MutableList<TodoItem>).apply {
             setModifyTodoItemListener {
                 intentActionResultWithBundle(
                     AddTodoActivity::class,
@@ -61,6 +63,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         binding.rvTodolistMain.apply {
             adapter = todoAdapter
+            setHasFixedSize(true)
             addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
             setOnTouchListener { _, event ->
                 when (event.action) {

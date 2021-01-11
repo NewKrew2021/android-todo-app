@@ -12,8 +12,9 @@ import com.survivalcoding.todolist.util.convertToDate
 class TodoAdapter(private var todoList: MutableList<TodoItem>) :
     RecyclerView.Adapter<TodoAdapter.TodoViewHolder>(), Filterable {
 
-    private var listener: ((todoItem: TodoItem) -> Unit)? = null
     private var filterList: MutableList<TodoItem> = todoList
+
+    private var listener: ((todoItem: TodoItem) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         val inflater: LayoutInflater = LayoutInflater.from(parent.context)

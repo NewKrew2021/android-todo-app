@@ -6,12 +6,16 @@ import android.text.Editable
 import com.survivalcoding.todolist.databinding.ActivityAddTodoBinding
 import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.ui.view.base.BaseActivity
+import com.survivalcoding.todolist.ui.viewmodel.AddTodoViewModel
 import com.survivalcoding.todolist.util.TODO_ITEM
 import com.survivalcoding.todolist.util.TODO_ITEM_CONTENTS
 import com.survivalcoding.todolist.util.TODO_ITEM_TIME
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
-class AddTodoActivity : BaseActivity<ActivityAddTodoBinding>() {
+class AddTodoActivity : BaseActivity<ActivityAddTodoBinding, AddTodoViewModel>() {
+
+    override val viewModel: AddTodoViewModel by viewModel()
 
     override fun initStartView() {
         binding = ActivityAddTodoBinding.inflate(layoutInflater)
