@@ -51,13 +51,18 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setRecyclerView() {
-        todoAdapter = TodoAdapter(viewModel.todoList as MutableList<TodoItem>).apply {
+        todoAdapter = TodoAdapter().apply {
+            setTodoList(viewModel.todoList)
             setModifyTodoItemListener {
                 intentActionResultWithBundle(
                     AddTodoActivity::class,
                     { putParcelable(TODO_ITEM, it) },
                     ADD_TODO_REQUEST_CODE
                 )
+            }
+            setSortTodoItemListener {
+                viewModel.sortTodoItem()
+                todoAdapter.setTodoList(viewModel.todoList)
             }
         }
 
@@ -103,14 +108,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         when (requestCode) {
             ADD_TODO_REQUEST_CODE -> {
                 if (data != null) {
-                    todoAdapter.addTodoItem(
+                    viewModel.addTodoItem(
                         TodoItem(
                             time = data.getLongExtra(TODO_ITEM_TIME, 0),
                             contents = data.getStringExtra(TODO_ITEM_CONTENTS),
                             complete = false
                         )
                     )
-                    todoAdapter.notifyDataSetChanged()
+                    todoAdapter.setTodoList(viewModel.todoList)
                 }
             }
         }

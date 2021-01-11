@@ -9,12 +9,14 @@ import com.survivalcoding.todolist.databinding.ItemTodoBinding
 import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.util.convertToDate
 
-class TodoAdapter(private var todoList: MutableList<TodoItem>) :
+class TodoAdapter :
     RecyclerView.Adapter<TodoAdapter.TodoViewHolder>(), Filterable {
 
+    private var todoList: MutableList<TodoItem> = ArrayList()
     private var filterList: MutableList<TodoItem> = todoList
 
-    private var listener: ((todoItem: TodoItem) -> Unit)? = null
+    private var modifyListener: ((todoItem: TodoItem) -> Unit)? = null
+    private var sortListener: (() -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         val inflater: LayoutInflater = LayoutInflater.from(parent.context)
@@ -24,23 +26,23 @@ class TodoAdapter(private var todoList: MutableList<TodoItem>) :
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
         holder.bindView(filterList[position])
-        holder.checkBoxEventProcess(filterList[position]) { sortTodoItem() }
+        holder.checkBoxEventProcess(filterList[position], sortListener!!, { afterSortTodoItem() })
         holder.removeEventProcess { removeTodoItem(position) }
-        holder.modifyEventProcess(filterList[position], listener!!, { removeTodoItem((position)) })
+        holder.modifyEventProcess(
+            filterList[position],
+            modifyListener!!,
+            { removeTodoItem((position)) })
     }
 
     override fun getItemCount() = filterList.size
 
-    fun addTodoItem(todoItem: TodoItem) {
-        todoList.add(todoItem)
-        sortTodoItem()
+    fun setTodoList(list: List<TodoItem>) {
+        this.todoList = list as MutableList<TodoItem>
+        filterList = todoList
+        notifyDataSetChanged()
     }
 
-    private fun sortTodoItem() {
-        todoList = todoList.sortedWith(compareBy(
-            { if (it.complete) 1 else 0 },
-            { -it.time }
-        )).toMutableList()
+    private fun afterSortTodoItem() {
         filterList = todoList
         notifyDataSetChanged()
     }
@@ -52,7 +54,11 @@ class TodoAdapter(private var todoList: MutableList<TodoItem>) :
     }
 
     fun setModifyTodoItemListener(listener: (todoItem: TodoItem) -> Unit) {
-        this.listener = listener
+        this.modifyListener = listener
+    }
+
+    fun setSortTodoItemListener(listener: () -> Unit) {
+        this.sortListener = listener
     }
 
     override fun getFilter(): Filter = object : Filter() {
@@ -94,10 +100,11 @@ class TodoAdapter(private var todoList: MutableList<TodoItem>) :
             }
         }
 
-        fun checkBoxEventProcess(todoItem: TodoItem, sort: () -> Unit) {
+        fun checkBoxEventProcess(todoItem: TodoItem, listener: () -> Unit, afterSort: () -> Unit) {
             binding.cbCompleteTodo.setOnClickListener {
                 if (binding.cbCompleteTodo.isChecked) todoItem.complete = !todoItem.complete
-                sort.invoke()
+                listener.invoke()
+                afterSort.invoke()
             }
         }
 
