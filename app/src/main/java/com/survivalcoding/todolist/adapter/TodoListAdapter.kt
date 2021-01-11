@@ -9,7 +9,7 @@ import com.survivalcoding.todolist.model.TodoItem
 import java.util.*
 
 
-class TodoListAdapter : ListAdapter<TodoItem, TodoListViewHolder>(TodoCallback) {
+class TodoListAdapter(private val _clickListener: (todo: TodoItem) -> Unit) : ListAdapter<TodoItem, TodoListViewHolder>(TodoCallback) {
     val currentTime = Calendar.getInstance()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoListViewHolder {
         val binding = TodoItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -31,10 +31,14 @@ class TodoListAdapter : ListAdapter<TodoItem, TodoListViewHolder>(TodoCallback) 
             }
             completeCheck.isChecked = currentItem.isComplete
             completeCheck.setOnClickListener { currentItem.isComplete = completeCheck.isChecked }
+            modifyButton.setOnClickListener{
+                _clickListener.invoke(getItem(holder.adapterPosition))
+            }
         }
     }
 
     fun getDay(calendar: Calendar): Long = calendar.timeInMillis / (24 * 60 * 60 * 1000)
+
 
 
 }
