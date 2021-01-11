@@ -10,8 +10,4 @@ data class TodoItem(
         val date: Calendar,
         var isComplete: Boolean,
         var isMark: Boolean,
-        var id: Int?) : Parcelable {
-    constructor(title: String, date: Calendar, isComplete: Boolean, isMark: Boolean) : this(title, date, isComplete, isMark, null)
-
-}
-
+        var id: Int? = null) : Parcelable

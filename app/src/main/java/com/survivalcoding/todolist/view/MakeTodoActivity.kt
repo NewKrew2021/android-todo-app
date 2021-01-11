@@ -22,6 +22,17 @@ class MakeTodoActivity : AppCompatActivity() {
         val binding = ActivityMakeTodoBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        val mode = intent.extras?.get(MainActivity.MODE)
+        lateinit var oldItem: TodoItem
+        if (mode == MainActivity.ACTIVITY_EDIT_MODE) {
+            oldItem = intent.extras?.get(MainActivity.ITEM) as TodoItem
+            binding.apply {
+                titleEdit.setText(oldItem.title)
+                dateView.text = String.format("%d-%02d-%02d", oldItem.date.get(Calendar.YEAR), oldItem.date.get(Calendar.MONTH) + 1, oldItem.date.get(Calendar.DAY_OF_MONTH))
+                addTodoButton.text = "수정"
+            }
+            //modify mode 인 경우
+        }
 
         binding.apply {
             dateView.setOnClickListener {
@@ -35,12 +46,23 @@ class MakeTodoActivity : AppCompatActivity() {
                         Toast.makeText(this@MakeTodoActivity, "기한을 선택해주세요", Toast.LENGTH_SHORT).show()
                     } else {
                         val calendar = Calendar.getInstance()
-                        calendar.time = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).parse(dateView.text.toString())
-                        val data = Intent().apply {
-                            putExtra("TodoItem", TodoItem(title = titleEdit.text.toString(),
-                                    date = calendar,
-                                    isComplete = false,
-                                    isMark = false))
+                        calendar.time = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA).parse(dateView.text.toString())?: Date(Calendar.getInstance().timeInMillis)
+                        lateinit var data: Intent
+                        if (mode == MainActivity.ACTIVITY_EDIT_MODE) {
+                            data = Intent().apply {
+                                putExtra("TodoItem", TodoItem(title = titleEdit.text.toString(),
+                                        date = calendar,
+                                        isComplete = false,
+                                        isMark = oldItem.isMark,
+                                        id = oldItem.id))
+                            }
+                        } else {
+                            data = Intent().apply {
+                                putExtra("TodoItem", TodoItem(title = titleEdit.text.toString(),
+                                        date = calendar,
+                                        isComplete = false,
+                                        isMark = true))
+                            }
                         }
                         setResult(Activity.RESULT_OK, data)
                         finish()
