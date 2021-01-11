@@ -1,4 +1,4 @@
-package com.survivalcoding.todolist.view.main
+package com.survivalcoding.todolist.ui.view.main
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,7 +8,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.survivalcoding.todolist.adapter.TodoAdapter
+import com.survivalcoding.todolist.ui.adapter.TodoAdapter
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import com.survivalcoding.todolist.extension.intentActionResult
 import com.survivalcoding.todolist.extension.intentActionResultWithBundle
@@ -16,8 +16,8 @@ import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.util.TODO_ITEM
 import com.survivalcoding.todolist.util.TODO_ITEM_CONTENTS
 import com.survivalcoding.todolist.util.TODO_ITEM_TIME
-import com.survivalcoding.todolist.view.add.AddTodoActivity
-import com.survivalcoding.todolist.view.base.BaseActivity
+import com.survivalcoding.todolist.ui.view.add.AddTodoActivity
+import com.survivalcoding.todolist.ui.view.base.BaseActivity
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
 

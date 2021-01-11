@@ -1,4 +1,4 @@
-package com.survivalcoding.todolist.view.base
+package com.survivalcoding.todolist.ui.view.base
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

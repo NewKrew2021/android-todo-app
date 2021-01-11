@@ -1,14 +1,14 @@
-package com.survivalcoding.todolist.view.add
+package com.survivalcoding.todolist.ui.view.add
 
 import android.app.Activity
 import android.content.Intent
 import android.text.Editable
 import com.survivalcoding.todolist.databinding.ActivityAddTodoBinding
 import com.survivalcoding.todolist.model.TodoItem
+import com.survivalcoding.todolist.ui.view.base.BaseActivity
 import com.survivalcoding.todolist.util.TODO_ITEM
 import com.survivalcoding.todolist.util.TODO_ITEM_CONTENTS
 import com.survivalcoding.todolist.util.TODO_ITEM_TIME
-import com.survivalcoding.todolist.view.base.BaseActivity
 import java.util.*
 
 class AddTodoActivity : BaseActivity<ActivityAddTodoBinding>() {

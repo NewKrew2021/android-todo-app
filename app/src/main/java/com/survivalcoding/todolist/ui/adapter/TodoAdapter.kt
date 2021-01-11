@@ -1,4 +1,4 @@
-package com.survivalcoding.todolist.adapter
+package com.survivalcoding.todolist.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
