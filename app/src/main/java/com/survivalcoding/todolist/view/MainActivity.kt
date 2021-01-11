@@ -137,10 +137,24 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.about_app -> {
-                startActivity(Intent(this, AppInfoActivity::class.java))
+                startActivityForResult(
+                    Intent(this, AppInfoActivity::class.java),
+                    GO_TO_APP_INFO_ACTIVITY
+                )
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == GO_TO_APP_INFO_ACTIVITY && resultCode == RESULT_OK) {
+            Toast.makeText(
+                this,
+                data?.getStringExtra(AppInfoActivity.INFO_KEY),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -155,6 +169,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val SAVE_INSTANCE_TODO_ITEM_KEY = "todoList"
+        const val GO_TO_APP_INFO_ACTIVITY = 123
         const val NEW_TODO_TASK = -1
     }
 }
