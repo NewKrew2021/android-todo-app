@@ -3,6 +3,7 @@
 
     <dimen name="match_constraint">0dp</dimen>
     <dimen name="input_height">48dp</dimen>
+    <dimen name="title_height">56dp</dimen>
     <dimen name="todo_item_height">56dp</dimen>
     <dimen name="margin_small">8dp</dimen>
 

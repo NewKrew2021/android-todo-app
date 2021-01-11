@@ -8,7 +8,7 @@ import com.survivalcoding.todolist.model.TodoItem
 
 class TodoListAdapter(
     private val sort: () -> Unit,
-    private val remove: (Int) -> Unit,
+    private val remove: (TodoItem) -> Unit,
     private val update: () -> Unit
 ) : ListAdapter<TodoItem, TodoViewHolder>(TodoDiffCallback) {
 

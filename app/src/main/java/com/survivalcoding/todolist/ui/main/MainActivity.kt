@@ -1,12 +1,16 @@
 package com.survivalcoding.todolist.ui.main
 
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
+import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.adapter.TodoListAdapter
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import com.survivalcoding.todolist.model.TodoItem
+import com.survivalcoding.todolist.ui.add.AddActivity
 import com.survivalcoding.todolist.viewmodel.MainViewModel
 import java.util.*
 
@@ -22,14 +26,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.add.setOnClickListener {
-            addItem()
+        binding.search.setOnClickListener {
+            updateUi(viewModel.getFilteredItems(binding.input.text.toString()))
         }
 
         adapter = TodoListAdapter(
-            { viewModel.sortItems() },
-            { target -> viewModel.removeItem(target) },
-            { updateUi() }
+            sort = { viewModel.sortItems() },
+            remove = { targetItem -> viewModel.removeItem(targetItem) },
+            update = { updateUi() }
         )
 
         binding.list.apply {
@@ -39,6 +43,34 @@ class MainActivity : AppCompatActivity() {
                 changeDuration = 100
                 moveDuration = 100
             }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == ADD_REQUEST_CODE) {
+            data?.let { resultIntent ->
+                resultIntent.extras?.getParcelable<TodoItem>(AddActivity.NEW_TODO)?.let {
+                    viewModel.addItem(it)
+                    updateUi()
+                }
+            }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_actionbar, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.search -> {
+                startActivityForResult(Intent(this, AddActivity::class.java), ADD_REQUEST_CODE)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -61,24 +93,14 @@ class MainActivity : AppCompatActivity() {
         adapter.submitList(viewModel.list.toList())
     }
 
-    private fun addItem() {
-
-        if (binding.input.text.toString().isNotEmpty()) {
-            viewModel.addItem(binding.input.text.toString())
-                .also {
-                    binding.input.text = null
-                    binding.list.layoutManager?.scrollToPosition(0)
-                }
-            updateUi()
-        } else {
-            Toast.makeText(this, NO_CONTENT_MESSAGE, Toast.LENGTH_SHORT).show()
-        }
+    private fun updateUi(list: List<TodoItem>) {
+        adapter.submitList(list)
     }
 
     companion object {
         private const val ITEM_VERTICAL_INTERVAL = 12
-        private const val NO_CONTENT_MESSAGE = "내용을 입력해주세요."
         private const val SAVED_LIST_KEY = "SAVED_LIST_KEY"
+        private const val ADD_REQUEST_CODE = 100
     }
 
 }
