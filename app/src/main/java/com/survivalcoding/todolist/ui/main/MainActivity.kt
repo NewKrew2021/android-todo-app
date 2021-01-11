@@ -27,9 +27,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         adapter = TodoListAdapter(
-            { viewModel.sortItems() },
-            { target -> viewModel.removeItem(target) },
-            { updateUi() }
+            sort = { viewModel.sortItems() },
+            remove = { targetItem -> viewModel.removeItem(targetItem) },
+            update = { updateUi() }
         )
 
         binding.list.apply {

@@ -9,7 +9,8 @@ class MainViewModel {
     val list: List<TodoItem> = _list
 
     fun addItem(title: String) {
-        _list.add(0,
+        _list.add(
+            0,
             TodoItem(
                 title,
                 false,
@@ -23,12 +24,8 @@ class MainViewModel {
         _list.addAll(items)
     }
 
-    fun removeItem(targetPosition: Int) {
-        targetPosition
-            .takeIf { it in 0 until _list.size }
-            ?.let {
-                _list.removeAt(it)
-            }
+    fun removeItem(targetItem: TodoItem) {
+        _list.takeIf { it.contains(targetItem) }?.remove(targetItem)
     }
 
     fun sortItems() {
