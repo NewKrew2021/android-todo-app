@@ -16,14 +16,13 @@ import com.survivalcoding.todolist.util.dateToString
 import com.survivalcoding.todolist.view.edit.EditActivity
 import com.survivalcoding.todolist.view.main.adapter.TodoAdapter
 import com.survivalcoding.todolist.view.main.model.Todo
-import com.survivalcoding.todolist.view.main.model.TodoActionMode
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     private val viewModel = MainViewModel()
 
-    private var actionMode = TodoActionMode.NORMAL
+    private var actionMode: ActionMode? = null
 
     private lateinit var binding: ActivityMainBinding
 
@@ -45,6 +44,7 @@ class MainActivity : AppCompatActivity() {
                 startActivityForResult(intent, EDIT_ACTIVITY_REQ_CODE)
             },
             getActionMode = { getActionMode() },
+            setActionBarTitle = { setActionBarTitle() },
         )
 
         with(binding) {
@@ -114,8 +114,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_mode_remove -> {
-                actionMode = TodoActionMode.REMOVE
-                startSupportActionMode(removeModeCallback)
+                actionMode = startSupportActionMode(removeModeCallback)
                 adapter.notifyDataSetChanged()
                 true
             }
@@ -153,7 +152,11 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun getActionMode(): TodoActionMode = actionMode
+    private fun getActionMode(): ActionMode? = actionMode
+
+    private fun setActionBarTitle() {
+        actionMode?.title = "${viewModel.getRemovablesCount()}개 선택"
+    }
 
     private val removeModeCallback = object : ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
@@ -162,6 +165,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            mode?.title = "${viewModel.getRemovablesCount()}개 선택"
             return false
         }
 
@@ -181,7 +185,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onDestroyActionMode(mode: ActionMode?) {
-            actionMode = TodoActionMode.NORMAL
+            actionMode = null
+            viewModel.clearAllRemovable()
             adapter.notifyDataSetChanged()
         }
     }

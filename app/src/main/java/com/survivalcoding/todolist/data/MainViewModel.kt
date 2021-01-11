@@ -55,6 +55,12 @@ class MainViewModel {
         return false
     }
 
+    fun getRemovablesCount(): Int = _items.count { it.isRemovable }
+
+    fun clearAllRemovable() {
+        _items.forEach { it.isRemovable = false }
+    }
+
     fun edit(todo: Todo): Boolean {
         _items.withIndex().find { it.value.id == todo.id }?.let {
             _items[it.index] = todo
