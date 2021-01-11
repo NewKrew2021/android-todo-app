@@ -1,17 +1,21 @@
-package com.survivalcoding.todolist.view.add
+package com.survivalcoding.todolist.ui.view.add
 
 import android.app.Activity
 import android.content.Intent
 import android.text.Editable
 import com.survivalcoding.todolist.databinding.ActivityAddTodoBinding
 import com.survivalcoding.todolist.model.TodoItem
+import com.survivalcoding.todolist.ui.view.base.BaseActivity
+import com.survivalcoding.todolist.ui.viewmodel.AddTodoViewModel
 import com.survivalcoding.todolist.util.TODO_ITEM
 import com.survivalcoding.todolist.util.TODO_ITEM_CONTENTS
 import com.survivalcoding.todolist.util.TODO_ITEM_TIME
-import com.survivalcoding.todolist.view.base.BaseActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
-class AddTodoActivity : BaseActivity<ActivityAddTodoBinding>() {
+class AddTodoActivity : BaseActivity<ActivityAddTodoBinding, AddTodoViewModel>() {
+
+    override val viewModel: AddTodoViewModel by viewModel()
 
     override fun initStartView() {
         binding = ActivityAddTodoBinding.inflate(layoutInflater)
@@ -50,9 +54,11 @@ class AddTodoActivity : BaseActivity<ActivityAddTodoBinding>() {
                 if (todoItem != null) {
                     putExtra(TODO_ITEM_CONTENTS, todoItem.contents)
                     putExtra(TODO_ITEM_TIME, todoItem.time)
+                    setResult(Activity.RESULT_OK, this)
+                } else {
+                    setResult(Activity.RESULT_OK)
                 }
             }
-            setResult(Activity.RESULT_OK, cancelIntent)
             finish()
         }
     }

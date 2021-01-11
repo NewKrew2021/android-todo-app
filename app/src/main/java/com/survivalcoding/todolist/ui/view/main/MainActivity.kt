@@ -1,28 +1,38 @@
-package com.survivalcoding.todolist.view.main
+package com.survivalcoding.todolist.ui.view.main
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.view.Menu
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.survivalcoding.todolist.adapter.TodoAdapter
+import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import com.survivalcoding.todolist.extension.intentActionResult
 import com.survivalcoding.todolist.extension.intentActionResultWithBundle
 import com.survivalcoding.todolist.model.TodoItem
-import com.survivalcoding.todolist.util.ADD_TODO_REQUEST_CODE
+import com.survivalcoding.todolist.ui.adapter.TodoAdapter
+import com.survivalcoding.todolist.ui.view.add.AddTodoActivity
+import com.survivalcoding.todolist.ui.view.base.BaseActivity
+import com.survivalcoding.todolist.ui.viewmodel.MainViewModel
 import com.survivalcoding.todolist.util.TODO_ITEM
 import com.survivalcoding.todolist.util.TODO_ITEM_CONTENTS
 import com.survivalcoding.todolist.util.TODO_ITEM_TIME
-import com.survivalcoding.todolist.view.add.AddTodoActivity
-import com.survivalcoding.todolist.view.base.BaseActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : BaseActivity<ActivityMainBinding>() {
+class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
+
+    companion object {
+        const val ADD_TODO_REQUEST_CODE = 1000
+    }
+
+    override val viewModel: MainViewModel by viewModel()
 
     lateinit var todoAdapter: TodoAdapter
+    lateinit var searchView: SearchView
 
     override fun initStartView() {
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -33,7 +43,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun afterStartView() {
         eventProcess()
         setRecyclerView()
-        setSearchView()
+        setToolbar()
     }
 
     private fun eventProcess() {
@@ -44,9 +54,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setRecyclerView() {
-        val todoList = mutableListOf<TodoItem>()
-
-        todoAdapter = TodoAdapter(todoList).apply {
+        todoAdapter = TodoAdapter().apply {
+            setTodoList(viewModel.todoList)
             setModifyTodoItemListener {
                 intentActionResultWithBundle(
                     AddTodoActivity::class,
@@ -54,10 +63,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                     ADD_TODO_REQUEST_CODE
                 )
             }
+            setSortTodoItemListener {
+                viewModel.sortTodoItem()
+                todoAdapter.setTodoList(viewModel.todoList)
+            }
         }
 
         binding.rvTodolistMain.apply {
             adapter = todoAdapter
+            setHasFixedSize(true)
             addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
             setOnTouchListener { _, event ->
                 when (event.action) {
@@ -73,7 +87,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     private fun setSearchView() {
-        binding.svSearchMain.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 todoAdapter.filter.filter(query)
                 return true
@@ -86,10 +100,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         })
     }
 
+    private fun setToolbar() {
+        setSupportActionBar(binding.toolbarMain)
+    }
+
     private fun hideKeyboard() {
-        binding.svSearchMain.clearFocus()
+        searchView.clearFocus()
         val im = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        im.hideSoftInputFromWindow(binding.svSearchMain.windowToken, 0)
+        im.hideSoftInputFromWindow(searchView.windowToken, 0)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -97,17 +115,24 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         when (requestCode) {
             ADD_TODO_REQUEST_CODE -> {
                 if (data != null) {
-                    todoAdapter.addTodoItem(
+                    viewModel.addTodoItem(
                         TodoItem(
                             time = data.getLongExtra(TODO_ITEM_TIME, 0),
                             contents = data.getStringExtra(TODO_ITEM_CONTENTS),
                             complete = false
                         )
                     )
-                    todoAdapter.notifyDataSetChanged()
+                    todoAdapter.setTodoList(viewModel.todoList)
                 }
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_search, menu)
+        searchView = menu.findItem(R.id.action_search).actionView as SearchView
+        setSearchView()
+        return true
     }
 
 

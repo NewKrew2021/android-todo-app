@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
 import java.util.*
 
-const val ADD_TODO_REQUEST_CODE = 1000
 const val TODO_ITEM_TIME = "time"
 const val TODO_ITEM_CONTENTS = "contents"
 const val TODO_ITEM = "todoItem"
