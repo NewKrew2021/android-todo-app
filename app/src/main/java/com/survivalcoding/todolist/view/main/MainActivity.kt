@@ -3,20 +3,27 @@ package com.survivalcoding.todolist.view.main
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
+import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.data.MainViewModel
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import com.survivalcoding.todolist.util.dateToString
 import com.survivalcoding.todolist.view.edit.EditActivity
 import com.survivalcoding.todolist.view.main.adapter.TodoAdapter
 import com.survivalcoding.todolist.view.main.model.Todo
+import com.survivalcoding.todolist.view.main.model.TodoActionMode
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     private val viewModel = MainViewModel()
+
+    private var actionMode = TodoActionMode.NORMAL
 
     private lateinit var binding: ActivityMainBinding
 
@@ -37,6 +44,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 startActivityForResult(intent, EDIT_ACTIVITY_REQ_CODE)
             },
+            getActionMode = { getActionMode() },
         )
 
         with(binding) {
@@ -98,6 +106,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_mode_remove -> {
+                actionMode = TodoActionMode.REMOVE
+                startSupportActionMode(removeModeCallback)
+                adapter.notifyDataSetChanged()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
@@ -126,6 +151,29 @@ class MainActivity : AppCompatActivity() {
             if (query.isEmpty()) viewModel.getOrderedItems()
             else viewModel.getOrderedWithFilteredItems(query)
         )
+    }
+
+    private fun getActionMode(): TodoActionMode = actionMode
+
+    private val removeModeCallback = object : ActionMode.Callback {
+        override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            mode?.menuInflater?.inflate(R.menu.main_menu_remove, menu)
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            return false
+        }
+
+        override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+            mode?.finish()
+            return true
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode?) {
+            actionMode = TodoActionMode.NORMAL
+            adapter.notifyDataSetChanged()
+        }
     }
 
     companion object {

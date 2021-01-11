@@ -14,4 +14,7 @@
     <string name="todo_list_text_view_title_text_tools">할 일 제목</string>
     <string name="todo_list_text_view_times_text_tools">2021.01.01 오전 10:00:00</string>
 
+    <!-- main_menu -->
+    <string name="main_menu_mode_remove_title">삭제 모드</string>
+    <string name="main_menu_remove_title">삭제</string>
 </resources>
