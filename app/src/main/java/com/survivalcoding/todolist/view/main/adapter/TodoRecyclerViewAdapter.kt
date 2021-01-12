@@ -9,11 +9,13 @@ import com.survivalcoding.todolist.viewmodel.TodoRepository
 import kotlin.reflect.KFunction1
 
 
-class TodoRecyclerViewAdapter(val itemClickListener: KFunction1<TodoData, Unit>) :
+class TodoRecyclerViewAdapter(
+    private var model: TodoRepository,
+    val itemClickListener: KFunction1<TodoData, Unit>
+) :
     ListAdapter<TodoData, TodoRecyclerViewHolder>(TodoDiffCallback) {
 
     lateinit var holder: TodoRecyclerViewHolder
-    private var model = TodoRepository()
     val items: List<TodoData>
         get() = model.items
 
