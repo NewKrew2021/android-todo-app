@@ -8,12 +8,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.adapter.TodoListAdapter
 import com.survivalcoding.todolist.databinding.FragmentTodoBinding
 import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.util.getCurrentTime
+import com.survivalcoding.todolist.util.replaceTransactionWithAnimation
 import com.survivalcoding.todolist.viewmodel.TodoViewModel
 
 class TodoFragment : Fragment() {
@@ -84,17 +84,7 @@ class TodoFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.about_app -> {
-                parentFragmentManager.commit {
-                    setReorderingAllowed(true)
-                    addToBackStack(null)
-                    setCustomAnimations(
-                        R.anim.enter_from_right,
-                        R.anim.exit_to_right,
-                        R.anim.enter_from_right,
-                        R.anim.exit_to_right
-                    )
-                    replace(R.id.fragment_container_view, AppInfoFragment())
-                }
+                replaceTransactionWithAnimation<AppInfoFragment>(R.id.fragment_container_view)
                 true
             }
             else -> super.onOptionsItemSelected(item)
