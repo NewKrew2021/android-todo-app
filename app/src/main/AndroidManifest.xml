@@ -10,7 +10,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TodoList">
-        <activity android:name="com.survivalcoding.todolist.ui.view.add.AddTodoActivity" />
         <activity android:name="com.survivalcoding.todolist.ui.view.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

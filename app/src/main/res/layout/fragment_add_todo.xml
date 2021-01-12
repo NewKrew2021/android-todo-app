@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.view.add.AddTodoActivity">
-
+    tools:context=".ui.view.add.AddTodoFragment">
 
     <EditText
         android:id="@+id/edt_contents_add_todo"

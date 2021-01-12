@@ -9,9 +9,21 @@ class MainViewModel : ViewModel() {
     val todoList: List<TodoItem>
         get() = _todoList
 
+    fun clearAllTodoItem() {
+        _todoList.clear()
+    }
+
+    fun addAllTodoItem(list: ArrayList<TodoItem>) {
+        _todoList.addAll(list)
+    }
+
     fun addTodoItem(todoItem: TodoItem) {
         _todoList.add(todoItem)
         sortTodoItem()
+    }
+
+    fun setTodoList(list: ArrayList<TodoItem>) {
+        _todoList = list
     }
 
     fun sortTodoItem() {
@@ -20,4 +32,5 @@ class MainViewModel : ViewModel() {
             { -it.time }
         )).toMutableList()
     }
+
 }

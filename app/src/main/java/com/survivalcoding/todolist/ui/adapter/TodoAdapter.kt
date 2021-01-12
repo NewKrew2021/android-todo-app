@@ -15,8 +15,8 @@ class TodoAdapter :
     private var todoList: MutableList<TodoItem> = ArrayList()
     private var filterList: MutableList<TodoItem> = todoList
 
-    private var modifyListener: ((todoItem: TodoItem) -> Unit)? = null
-    private var sortListener: (() -> Unit)? = null
+    private lateinit var modifyListener: ((todoItem: TodoItem) -> Unit)
+    private lateinit var sortListener: (() -> Unit)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         val inflater: LayoutInflater = LayoutInflater.from(parent.context)
@@ -26,11 +26,11 @@ class TodoAdapter :
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
         holder.bindView(filterList[position])
-        holder.checkBoxEventProcess(filterList[position], sortListener!!, { afterSortTodoItem() })
+        holder.checkBoxEventProcess(filterList[position], sortListener, { afterSortTodoItem() })
         holder.removeEventProcess { removeTodoItem(position) }
         holder.modifyEventProcess(
             filterList[position],
-            modifyListener!!,
+            modifyListener,
             { removeTodoItem((position)) })
     }
 
