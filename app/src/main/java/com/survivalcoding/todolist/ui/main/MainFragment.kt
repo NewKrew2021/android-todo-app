@@ -30,7 +30,7 @@ class MainFragment(private val todoRepository: TodoRepository) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.search.setOnClickListener {
+        binding.searchButton.setOnClickListener {
             updateUi(todoRepository.getFilteredItems(binding.input.text.toString()))
         }
 
