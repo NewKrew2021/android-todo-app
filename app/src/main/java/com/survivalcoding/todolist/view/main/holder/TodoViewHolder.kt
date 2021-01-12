@@ -1,8 +1,8 @@
 package com.survivalcoding.todolist.view.main.holder
 
 import android.graphics.Paint
+import android.view.ActionMode
 import android.view.View
-import androidx.appcompat.view.ActionMode
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.todolist.R

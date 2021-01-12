@@ -1,8 +1,8 @@
 package com.survivalcoding.todolist.view.main.adapter
 
+import android.view.ActionMode
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.ListAdapter
 import com.survivalcoding.todolist.databinding.ItemTodoListBinding
 import com.survivalcoding.todolist.view.main.holder.TodoViewHolder

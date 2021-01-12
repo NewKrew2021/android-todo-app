@@ -4,7 +4,7 @@ import com.survivalcoding.todolist.util.stringToDate
 import com.survivalcoding.todolist.view.main.model.Todo
 import java.util.concurrent.atomic.AtomicInteger
 
-class MainViewModel {
+class TodoViewModel {
     val id = AtomicInteger(0)
 
     private val _items = mutableListOf<Todo>()
