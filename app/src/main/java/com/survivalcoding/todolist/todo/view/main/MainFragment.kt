@@ -70,7 +70,7 @@ class MainFragment(private var model: TodoData) : Fragment() {
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         savedInstanceState?.let {
-
+            // ?
         }
         updateUI()
     }

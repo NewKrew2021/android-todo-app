@@ -33,7 +33,7 @@ class TodoAdapter(
         itemTodoBinding.apply {
             todoText.text = todo.text
             isDoneButton.isChecked = todo.isDone
-            val dueDate = todo.dueDate - currentTime / MainActivity.ONE_DAY_MILLISECONDS
+            val dueDate = (todo.dueDate - currentTime) / MainActivity.ONE_DAY_MILLISECONDS
             dueDateText.text = "D - $dueDate"
 
             deleteTodoButton.setOnClickListener {
