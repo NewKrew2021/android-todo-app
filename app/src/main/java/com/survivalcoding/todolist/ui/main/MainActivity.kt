@@ -13,9 +13,10 @@ class MainActivity : AppCompatActivity() {
     private val todoRepository by lazy { (application as TodoApp).todoRepository }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
         supportFragmentManager.fragmentFactory = MainFragmentFactory(todoRepository)
+        super.onCreate(savedInstanceState)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -23,4 +24,9 @@ class MainActivity : AppCompatActivity() {
             NavigationUtil.openMainFragment(supportFragmentManager)
         }
     }
+
+    companion object {
+        const val SAVED_LIST_KEY = "SAVED_LIST_KEY"
+    }
+
 }

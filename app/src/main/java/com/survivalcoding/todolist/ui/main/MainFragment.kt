@@ -70,10 +70,18 @@ class MainFragment(private val todoRepository: TodoRepository) : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+
+        outState.putParcelableArrayList(MainActivity.SAVED_LIST_KEY, ArrayList(todoRepository.list))
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
+
+        savedInstanceState?.getParcelableArrayList<TodoItem>(MainActivity.SAVED_LIST_KEY)?.let {
+            todoRepository.resetItems(it)
+        }
+        updateUi()
+
     }
 
     override fun onDestroyView() {
