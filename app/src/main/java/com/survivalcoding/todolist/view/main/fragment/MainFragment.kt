@@ -48,7 +48,11 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
             editClickListener = { todo ->
                 parentFragmentManager.commit {
                     setReorderingAllowed(true)
-                    replace(R.id.fragment_container_view, EditFragment::class.java, bundleOf(MainActivity.TODO_KEY to todo))
+                    replace(
+                        R.id.fragment_container_view,
+                        EditFragment::class.java,
+                        bundleOf(MainActivity.TODO_KEY to todo)
+                    )
                     addToBackStack(null)
                 }
             },
@@ -106,6 +110,7 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.main_menu, menu)
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_mode_remove -> {
@@ -121,7 +126,10 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
         super.onSaveInstanceState(outState)
 
         outState.putInt(MainActivity.TODO_ID_KEY, viewModel.id.get())
-        outState.putParcelableArrayList(MainActivity.TODO_STATE_KEY, viewModel.items as ArrayList<out Todo>)
+        outState.putParcelableArrayList(
+            MainActivity.TODO_STATE_KEY,
+            viewModel.items as ArrayList<out Todo>
+        )
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -129,10 +137,11 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
 
         savedInstanceState?.let {
             viewModel.id.set(savedInstanceState.getInt(MainActivity.TODO_ID_KEY))
-            savedInstanceState.getParcelableArrayList<Todo>(MainActivity.TODO_STATE_KEY)?.let { items ->
-                viewModel.addAll(items)
-                updateUI()
-            }
+            savedInstanceState.getParcelableArrayList<Todo>(MainActivity.TODO_STATE_KEY)
+                ?.let { items ->
+                    viewModel.addAll(items)
+                    updateUI()
+                }
         }
     }
 
@@ -174,11 +183,13 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
         override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
             return when (item?.itemId) {
                 R.id.menu_remove -> {
-                    val isRemoved = viewModel.removeAllRemovable()
-
-                    if (isRemoved) {
-                        updateUI()
-                        mode?.finish()
+                    val itemCount = viewModel.getRemovablesCount()
+                    if (itemCount > 0) {
+                        RemoveConfirmationDialogFragment(itemCount) {
+                            viewModel.removeAllRemovable()
+                            updateUI()
+                            mode?.finish()
+                        }.show(childFragmentManager, RemoveConfirmationDialogFragment.TAG)
                     }
                     true
                 }

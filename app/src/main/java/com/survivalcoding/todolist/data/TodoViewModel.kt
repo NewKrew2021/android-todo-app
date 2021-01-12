@@ -45,14 +45,8 @@ class TodoViewModel {
         _items.remove(todo)
     }
 
-    fun removeAllRemovable(): Boolean {
-        val removables = _items.filter { it.isRemovable }
-
-        if (removables.isNotEmpty()) {
-            _items.removeAll(removables)
-            return true
-        }
-        return false
+    fun removeAllRemovable() {
+        _items.removeAll(_items.filter { it.isRemovable })
     }
 
     fun getRemovablesCount(): Int = _items.count { it.isRemovable }
