@@ -11,6 +11,7 @@ import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.data.TodoViewModel
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
 import com.survivalcoding.todolist.util.dateToString
+import com.survivalcoding.todolist.view.main.MainActivity
 import com.survivalcoding.todolist.view.main.adapter.TodoAdapter
 import com.survivalcoding.todolist.view.main.model.Todo
 import java.util.*
@@ -110,6 +111,25 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putInt(MainActivity.TODO_ID_KEY, viewModel.id.get())
+        outState.putParcelableArrayList(MainActivity.TODO_STATE_KEY, viewModel.items as ArrayList<out Todo>)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+
+        savedInstanceState?.let {
+            viewModel.id.set(savedInstanceState.getInt(MainActivity.TODO_ID_KEY))
+            savedInstanceState.getParcelableArrayList<Todo>(MainActivity.TODO_STATE_KEY)?.let { items ->
+                viewModel.addAll(items)
+                updateUI()
+            }
         }
     }
 
