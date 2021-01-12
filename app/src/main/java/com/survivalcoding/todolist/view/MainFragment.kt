@@ -158,6 +158,20 @@ class MainFragment : Fragment() {
             )
         }
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelableArrayList("todoList", todoViewModel.items as ArrayList<TodoItem>)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        val todoList = savedInstanceState?.getParcelableArrayList<TodoItem>("todoList")
+        todoList?.let {
+            todoViewModel.items = it
+        }
+        updateList()
+    }
 }
 
 object dataId {
