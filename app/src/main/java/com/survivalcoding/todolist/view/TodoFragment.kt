@@ -143,9 +143,11 @@ class TodoFragment : Fragment() {
                 viewModel.updateTodo(todoItem, newTodoTitle)
                 updateTodoList()
             },
-            removeTodoListener = {
-                viewModel.removeTodo(it)
-                updateTodoList()
+            removeTodoListener = { item ->
+                RemoveCheckDialog(item) {
+                    viewModel.removeTodo(item)
+                    updateTodoList()
+                }.show(childFragmentManager, RemoveCheckDialog.TAG)
             }
         )
         binding.toDoList.adapter = adapter
