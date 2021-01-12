@@ -2,7 +2,7 @@ package com.survivalcoding.todolist.viewmodel
 
 import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.util.getCurrentTime
-import com.survivalcoding.todolist.view.MainActivity
+import com.survivalcoding.todolist.view.TodoFragment
 import java.util.*
 
 class TodoViewModel {
@@ -17,7 +17,7 @@ class TodoViewModel {
 
     fun addTodo(todoItem: TodoItem) {
         // id 값이 NEW_TODO_TASK 인 경우 새로 id 값 할당
-        if (todoItem.id == MainActivity.NEW_TODO_TASK) {
+        if (todoItem.id == TodoFragment.NEW_TODO_TASK) {
             todoItem.id = itemId++
         }
         _todoList.add(todoItem)

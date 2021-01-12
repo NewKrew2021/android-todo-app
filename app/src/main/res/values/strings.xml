@@ -5,6 +5,9 @@
     <string name="empty_title_warning_message">내용을 입력해주세요</string>
     <string name="empty_search_bar_message">검색어을 입력해주세요</string>
     <string name="app_info">정보</string>
+    <string name="check_remove_message">정말로 삭제하시겠습니까?</string>
+    <string name="yes">예</string>
+    <string name="no">아니오</string>
     <string name="developer_name">Tony</string>
     <string name="developer_email">tony.mb@kakaocorp.com</string>
 </resources>
