@@ -10,23 +10,22 @@ import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
 import com.survivalcoding.todolist.view.main.adapter.TodoRecyclerViewAdapter
 import com.survivalcoding.todolist.view.main.model.TodoData
+import com.survivalcoding.todolist.viewmodel.TodoRepository
 import java.util.*
 
 
-class MainFragment : Fragment() {
+class MainFragment(private val repository: TodoRepository) : Fragment() {
 
     private fun itemClickListener(item: TodoData) {
         // todo click시 로직 변경 필요
     }
 
     private var _binding: FragmentMainBinding? = null
-
     private val binding get() = _binding!!
     var pid = 0
-    var isEdit = false
 
     private val todoRecyclerViewAdapter by lazy {
-        TodoRecyclerViewAdapter(itemClickListener = ::itemClickListener)
+        TodoRecyclerViewAdapter(repository, itemClickListener = ::itemClickListener)
     }
 
     override fun onCreateView(
