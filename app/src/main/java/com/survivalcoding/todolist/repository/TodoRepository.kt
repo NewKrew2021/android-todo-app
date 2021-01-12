@@ -1,8 +1,8 @@
-package com.survivalcoding.todolist.viewmodel
+package com.survivalcoding.todolist.repository
 
 import com.survivalcoding.todolist.model.TodoItem
 
-class MainViewModel {
+class TodoRepository {
 
     private val _list = mutableListOf<TodoItem>()
     val list: List<TodoItem> = _list

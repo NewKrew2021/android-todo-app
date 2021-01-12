@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/search"
+        android:id="@+id/add_button"
         android:icon="@drawable/ic_baseline_edit_24"
         android:title="add"
         app:showAsAction="always" />
