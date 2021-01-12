@@ -60,6 +60,8 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
             buttonEdit.setOnClickListener {
                 todo.isOption = false
                 editClickListener.invoke(todo)
+
+                updateViews(getActionMode, todo.isOption, todo.isDone)
             }
 
             buttonDelete.setOnClickListener {
