@@ -29,7 +29,6 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
     fun searching(pattern: String) {
 
         makeSearchData(pattern)
-        //dataUpdate()
         notifyDataSetChanged()
         //dataUpdate()
     }
@@ -61,7 +60,7 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
         makeSearchData(pattern)
     }
 
-    fun checkingComplete(dataList: MutableList<searchItem>) {
+    private fun checkingComplete(dataList: MutableList<searchItem>) {
         var tmp_size = dataList.size
         var index = 0
         for (i in 0..tmp_size - 1) {
@@ -85,7 +84,7 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
     }
 
     fun checkedRemove(pattern: String) {
-        var tmp = mutableListOf<Int>()
+        val tmp = mutableListOf<Int>()
         for (i in searchData.size - 1 downTo 0) {
             if (searchData[i].item.check == true) {
                 tmp.add(searchData[i].index)

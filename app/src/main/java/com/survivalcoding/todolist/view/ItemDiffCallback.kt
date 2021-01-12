@@ -6,7 +6,7 @@ import com.survivalcoding.todolist.viewModel.searchItem
 
 object ItemDiffCallback : DiffUtil.ItemCallback<searchItem>() {
     override fun areItemsTheSame(oldItem: searchItem, newItem: searchItem): Boolean {
-        return oldItem.item.time == newItem.item.time
+        return oldItem.hashCode() == newItem.hashCode()
     }
 
     override fun areContentsTheSame(oldItem: searchItem, newItem: searchItem): Boolean {
