@@ -75,9 +75,11 @@ class AddTodoFragment : Fragment(R.layout.fragment_add_todo) {
 
         binding.btnCancelAddTodo.setOnClickListener {
             val result = arguments?.getParcelableArrayList<TodoItem>(TODO_LIST)
-            result?.add(
-                arguments?.getParcelable(TODO_ITEM)
-            )
+            if(arguments?.getParcelable<TodoItem>(TODO_ITEM) != null) {
+                result?.add(
+                    arguments?.getParcelable(TODO_ITEM)
+                )
+            }
             parentFragmentManager.commit {
                 setReorderingAllowed(true)
                 replace(
