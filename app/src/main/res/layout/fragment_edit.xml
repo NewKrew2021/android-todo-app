@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.edit.EditActivity">
+    android:background="@color/white"
+    tools:context=".view.main.fragment.EditFragment">
 
     <EditText
         android:id="@+id/edit_text_title"
@@ -37,4 +38,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/button_ok" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

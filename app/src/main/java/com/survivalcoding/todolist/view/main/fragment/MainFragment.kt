@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.*
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.todolist.R
@@ -44,10 +46,11 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
             removeClickListener = { todo -> viewModel.remove(todo) },
             updateListener = { updateUI() },
             editClickListener = { todo ->
-//                val intent = Intent(this, EditActivity::class.java).apply {
-//                    putExtra(TODO_KEY, todo)
-//                }
-//                startActivityForResult(intent, EDIT_ACTIVITY_REQ_CODE)
+                parentFragmentManager.commit {
+                    setReorderingAllowed(true)
+                    replace(R.id.fragment_container_view, EditFragment::class.java, bundleOf(MainActivity.TODO_KEY to todo))
+                    addToBackStack(null)
+                }
             },
             getActionMode = { getActionMode() },
             setActionBarTitle = { setActionBarTitle() },
