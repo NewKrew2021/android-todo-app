@@ -3,6 +3,7 @@ package com.survivalcoding.todolist.view
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -10,10 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.FragmentFactory
-import androidx.fragment.app.add
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
+import androidx.fragment.app.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.ActivityListBinding
@@ -41,22 +39,19 @@ class ListActivity : AppCompatActivity() {
 
         imm = getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as InputMethodManager?
 
-        val builder = AlertDialog.Builder(this)
         adapter =
             RecyclerAdapter() { adapter: RecyclerAdapter, position: Int ->
 
-                val dialogView = layoutInflater.inflate(R.layout.dialog1, null)
+                EditDialogFragment({ dialogView: View ->
+                    dialogSetting(
+                        dialogView,
+                        adapter,
+                        position
+                    )
+                }).show(
+                    supportFragmentManager, EditDialogFragment.TAG
+                )
 
-                builder.setView(dialogView).setTitle("수정사항을 입력하세요")
-                    .setPositiveButton("확인") { dialogInterface, i ->
-
-                        dialogSetting(dialogView, adapter, position)
-
-                    }
-                    .setNegativeButton("취소") { dialogInterface, i ->
-
-                    }
-                    .show()
             }
 
         binding.RecyclerView.adapter = adapter
