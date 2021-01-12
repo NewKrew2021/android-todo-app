@@ -9,6 +9,8 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.data.MainViewModel
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
@@ -49,6 +51,12 @@ class MainActivity : AppCompatActivity() {
 
         with(binding) {
             recyclerView.adapter = adapter
+            recyclerView.addItemDecoration(
+                DividerItemDecoration(
+                    this@MainActivity,
+                    LinearLayoutManager.VERTICAL
+                )
+            )
 
             buttonAdd.setOnClickListener {
                 if (editTextTitle.text.trim().isNotEmpty()) {
