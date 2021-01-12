@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.data.TodoViewModel
 import com.survivalcoding.todolist.databinding.FragmentEditBinding
 import com.survivalcoding.todolist.util.dateToString
@@ -35,7 +36,7 @@ class EditFragment(private val viewModel: TodoViewModel) : Fragment() {
             buttonOk.setOnClickListener {
                 if (editTextTitle.text.trim().isNotEmpty()) {
                     if (todo == null) {
-                        showToastMessage("일시적인 오류로 수정할 수 없습니다.")
+                        showToastMessage(getString(R.string.fragment_edit_todo_edit_error_text))
                     } else {
                         viewModel.edit(todo.apply {
                             title = editTextTitle.text.toString()

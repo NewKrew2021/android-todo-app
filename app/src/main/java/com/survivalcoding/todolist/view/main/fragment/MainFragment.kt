@@ -161,7 +161,7 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
     private fun getActionMode(): ActionMode? = actionMode
 
     private fun setActionBarTitle() {
-        actionMode?.title = "${viewModel.getRemovablesCount()}개 선택"
+        actionMode?.title = getString(R.string.fragment_main_action_bar_mode_remove_title, viewModel.getRemovablesCount())
     }
 
     override fun onDestroyView() {
@@ -176,7 +176,7 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
         }
 
         override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-            mode?.title = "${viewModel.getRemovablesCount()}개 선택"
+            mode?.title = getString(R.string.fragment_main_action_bar_mode_remove_title, viewModel.getRemovablesCount())
             return false
         }
 
