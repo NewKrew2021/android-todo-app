@@ -10,15 +10,16 @@ import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.adapter.TodoListAdapter
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import com.survivalcoding.todolist.model.TodoItem
+import com.survivalcoding.todolist.repository.TodoRepository
 import com.survivalcoding.todolist.ui.add.AddActivity
-import com.survivalcoding.todolist.viewmodel.MainViewModel
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var adapter: TodoListAdapter
     private lateinit var binding: ActivityMainBinding
-    private val viewModel = MainViewModel()
+    private val todoRepository =
+        TodoRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,12 +28,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.search.setOnClickListener {
-            updateUi(viewModel.getFilteredItems(binding.input.text.toString()))
+            updateUi(todoRepository.getFilteredItems(binding.input.text.toString()))
         }
 
         adapter = TodoListAdapter(
-            sort = { viewModel.sortItems() },
-            remove = { targetItem -> viewModel.removeItem(targetItem) },
+            sort = { todoRepository.sortItems() },
+            remove = { targetItem -> todoRepository.removeItem(targetItem) },
             update = { updateUi() }
         )
 
@@ -52,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == ADD_REQUEST_CODE) {
             data?.let { resultIntent ->
                 resultIntent.extras?.getParcelable<TodoItem>(AddActivity.NEW_TODO)?.let {
-                    viewModel.addItem(it)
+                    todoRepository.addItem(it)
                     updateUi()
                 }
             }
@@ -77,20 +78,20 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        outState.putParcelableArrayList(SAVED_LIST_KEY, viewModel.list as ArrayList<TodoItem>)
+        outState.putParcelableArrayList(SAVED_LIST_KEY, todoRepository.list as ArrayList<TodoItem>)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
 
         savedInstanceState.getParcelableArrayList<TodoItem>(SAVED_LIST_KEY)?.let {
-            viewModel.resetItems(it)
+            todoRepository.resetItems(it)
             updateUi()
         }
     }
 
     private fun updateUi() {
-        adapter.submitList(viewModel.list.toList())
+        adapter.submitList(todoRepository.list.toList())
     }
 
     private fun updateUi(list: List<TodoItem>) {
