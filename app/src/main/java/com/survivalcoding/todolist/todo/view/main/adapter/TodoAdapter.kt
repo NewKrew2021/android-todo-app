@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.survivalcoding.todolist.databinding.ItemTodoBinding
-import com.survivalcoding.todolist.todo.view.main.MainActivity
+import com.survivalcoding.todolist.todo.view.MainActivity
 import com.survivalcoding.todolist.todo.view.model.Todo
 import java.util.*
 

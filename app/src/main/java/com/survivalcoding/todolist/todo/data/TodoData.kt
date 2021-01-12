@@ -1,12 +1,12 @@
 package com.survivalcoding.todolist.todo.data
 
-import com.survivalcoding.todolist.todo.view.main.MainActivity
+import com.survivalcoding.todolist.todo.view.MainActivity
 import com.survivalcoding.todolist.todo.view.model.Todo
 import java.util.concurrent.atomic.AtomicInteger
 
 // TodoList에 해당하는 데이터가 존재하는 클래스
 // 데이터의 삽입, 삭제, 수정, 정렬을 위한 메소드가 존재한다.
-class TodoData(var data : MutableList<Todo> = mutableListOf()) {
+class TodoData(var data: MutableList<Todo> = mutableListOf()) {
     private val id = AtomicInteger(0)
 
     val todoList: List<Todo>    // getter
