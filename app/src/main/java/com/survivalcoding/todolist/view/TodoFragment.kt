@@ -85,9 +85,15 @@ class TodoFragment : Fragment() {
         return when (item.itemId) {
             R.id.about_app -> {
                 parentFragmentManager.commit {
-                    replace(R.id.fragment_container_view, AppInfoFragment())
                     setReorderingAllowed(true)
                     addToBackStack(null)
+                    setCustomAnimations(
+                        R.anim.enter_from_right,
+                        R.anim.exit_to_right,
+                        R.anim.enter_from_right,
+                        R.anim.exit_to_right
+                    )
+                    replace(R.id.fragment_container_view, AppInfoFragment())
                 }
                 true
             }
