@@ -118,6 +118,11 @@ class TodoFragment : Fragment() {
 
                 override fun onQueryTextChange(newText: String): Boolean {
                     adapter.submitList(viewModel.searchTodoItem(newText))
+                    /*
+                    * 검색어 하이라이팅을 위해 호출.
+                    * 윗 줄에서 submitList 하고 함수 내부에서 notifyDataSetChanged 도 호출하기 때문에 좋은 방식은 아닌 것 같음.
+                    */
+                    adapter.setSearchKeyword(newText)
                     return true
                 }
             })
