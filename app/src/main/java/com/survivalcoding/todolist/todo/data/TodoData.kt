@@ -1,66 +1,47 @@
 package com.survivalcoding.todolist.todo.data
 
-import com.survivalcoding.todolist.todo.view.main.MainActivity
+import com.survivalcoding.todolist.todo.view.MainActivity
 import com.survivalcoding.todolist.todo.view.model.Todo
 import java.util.concurrent.atomic.AtomicInteger
 
-object TodoData {
-    private var data = mutableListOf<Todo>()
+// TodoList에 해당하는 데이터가 존재하는 클래스
+// 데이터의 삽입, 삭제, 수정, 정렬을 위한 메소드가 존재한다.
+class TodoData(var data: MutableList<Todo> = mutableListOf()) {
     private val id = AtomicInteger(0)
 
-    val todoList: List<Todo>
+    val todoList: List<Todo>    // getter
         get() = data
 
-    fun addTodo(item: Todo) {
+    fun addTodo(item: Todo) {   // 데이터 추가
         item.id = id.getAndIncrement()
         data.add(item)
     }
 
-    fun updateTodo(item: ArrayList<Todo>) {
-        val _list = item.toList()   // 이유는 모르겠지만, data.clear()시에 item도 clear가 되서 임시로 저장.
-        data.clear()
-        data.addAll(_list)
-    }
-
-    fun deleteTodo(item: Todo) {
+    fun deleteTodo(item: Todo) {    // 데이터 삭제
         data.remove(item)
     }
 
-    fun doneTodo(pos: Int) {
-        data[pos].isDone = !data[pos].isDone
-    }
-
-    fun editTodo(item: Todo) {
-        val changeData = data.map { e ->
-            if (e.id == item.id) {
-                item
+    fun updateTodo(item: Todo) {    // 데이터 수정, todo완료시에 사용
+        val updatedData = data.map {
+            if (it.id == item.id) {
+                item    // 수정하려는 item이면 해당 item을 넣는다.
             } else {
-                e
+                it
             }
         }
         data.apply {
             clear()
-            addAll(changeData)
+            addAll(updatedData)
         }
     }
 
-    fun sortByDate(order: Int) {
-        if (order == MainActivity.ASCENDING) {
-            data.sortBy { it.dueDate }
-        } else if (order == MainActivity.DESCENDING) {
-            data.sortByDescending { it.dueDate }
+    // sortingBase : 정렬 기준(제목..), order : 오름/내림차순 정렬
+    fun sorting(sortingBase: Int, order: Int) {
+        when (sortingBase + order) {
+            MainActivity.SORT_BY_TITLE + MainActivity.ASCENDING -> data.sortBy { it.text }
+            MainActivity.SORT_BY_TITLE + MainActivity.DESCENDING -> data.sortByDescending { it.text }
+            MainActivity.SORT_BY_D_DAY + MainActivity.ASCENDING -> data.sortBy { it.dueDate }
+            MainActivity.SORT_BY_D_DAY + MainActivity.DESCENDING -> data.sortByDescending { it.dueDate }
         }
-    }
-
-    fun sortByTitle(order: Int) {
-        if (order == MainActivity.ASCENDING) {
-            data.sortBy { it.text }
-        } else if (order == MainActivity.DESCENDING) {
-            data.sortByDescending { it.text }
-        }
-    }
-
-    fun getDataSize(): Int {
-        return data.size
     }
 }
