@@ -1,8 +1,8 @@
 package com.survivalcoding.todolist.view.main.holder
 
 import android.graphics.Paint
+import android.view.ActionMode
 import android.view.View
-import androidx.appcompat.view.ActionMode
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.todolist.R
@@ -60,6 +60,8 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
             buttonEdit.setOnClickListener {
                 todo.isOption = false
                 editClickListener.invoke(todo)
+
+                updateViews(getActionMode, todo.isOption, todo.isDone)
             }
 
             buttonDelete.setOnClickListener {
