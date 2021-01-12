@@ -1,14 +1,16 @@
 package com.survivalcoding.todolist.viewmodel
 
+import androidx.lifecycle.ViewModel
 import com.survivalcoding.todolist.model.TodoItem
 
-class TodoViewModel {
+class TodoViewModel : ViewModel() {
 
     var items = mutableListOf<TodoItem>()
+    fun getItemList() = items
 
-    fun getItemList() = items.toMutableList()
-
-    fun add(item: TodoItem) = items.add(item)
+    fun add(item: TodoItem) {
+        items.add(item)
+    }
 
     fun remove(item: TodoItem) = items.remove(item)
 
