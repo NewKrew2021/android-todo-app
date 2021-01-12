@@ -7,4 +7,6 @@
     <string name="app_info">정보</string>
     <string name="developer_name">Tony</string>
     <string name="developer_email">tony.mb@kakaocorp.com</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

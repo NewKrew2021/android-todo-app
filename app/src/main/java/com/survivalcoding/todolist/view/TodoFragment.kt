@@ -1,15 +1,14 @@
 package com.survivalcoding.todolist.view
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.adapter.TodoListAdapter
 import com.survivalcoding.todolist.databinding.FragmentTodoBinding
@@ -23,6 +22,11 @@ class TodoFragment : Fragment() {
     private lateinit var adapter: TodoListAdapter
     private val viewModel by lazy {
         TodoViewModel()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -43,14 +47,14 @@ class TodoFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelableArrayList(
-            MainActivity.SAVE_INSTANCE_TODO_ITEM_KEY,
+            SAVE_INSTANCE_TODO_ITEM_KEY,
             viewModel.todoList as ArrayList<TodoItem>
         )
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        savedInstanceState?.getParcelableArrayList<TodoItem>(MainActivity.SAVE_INSTANCE_TODO_ITEM_KEY)
+        savedInstanceState?.getParcelableArrayList<TodoItem>(SAVE_INSTANCE_TODO_ITEM_KEY)
             ?.let {
                 viewModel.clearTodoList()
                 it.forEach { todo ->
@@ -73,28 +77,35 @@ class TodoFragment : Fragment() {
         adapter.submitList(viewModel.todoList.toList())
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.actions, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.about_app -> {
+                parentFragmentManager.commit {
+                    replace(R.id.fragment_container_view, AppInfoFragment())
+                    setReorderingAllowed(true)
+                    addToBackStack(null)
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun setOnListener() {
         binding.apply {
             registerButton.setOnClickListener {
                 toDoEditText.text.apply {
                     // 내용 없이 버튼을 눌렀을 때
                     if (isNullOrEmpty()) {
-                        Toast.makeText(
-                            context,
-                            getString(R.string.empty_title_warning_message),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        showToast(getString(R.string.empty_title_warning_message))
                         return@setOnClickListener
                     }
                     // id 값을 ViewModel 에서 관리해주기 때문에 처음에 등록할 때는 NEW_TODO_TASK 로 지정
-                    viewModel.addTodo(
-                        TodoItem(
-                            NEW_TODO_TASK,
-                            false,
-                            toString(),
-                            getCurrentTime()
-                        )
-                    )
+                    viewModel.addTodo(TodoItem(NEW_TODO_TASK, false, toString(), getCurrentTime()))
                     clear()
                     hideKeyboard()
                 }
@@ -131,9 +142,8 @@ class TodoFragment : Fragment() {
                 updateTodoList()
             }
         )
-        binding.toDoList.apply {
-            this.adapter = this@TodoFragment.adapter
-        }
+        binding.toDoList.adapter = adapter
+
         // Spinner 생성
         ArrayAdapter.createFromResource(
             requireContext(),
@@ -159,7 +169,12 @@ class TodoFragment : Fragment() {
         _binding = null
     }
 
+    private fun showToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
     companion object {
+        const val SAVE_INSTANCE_TODO_ITEM_KEY = "todoList"
         const val NEW_TODO_TASK = -1
     }
 }
