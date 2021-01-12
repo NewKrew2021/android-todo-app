@@ -9,6 +9,6 @@ object TodoDiffCallback : DiffUtil.ItemCallback<Todo>() {
     }
 
     override fun areContentsTheSame(oldItem: Todo, newItem: Todo): Boolean {
-        return oldItem.hashCode() == newItem.hashCode()
+        return oldItem == newItem
     }
 }

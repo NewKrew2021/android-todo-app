@@ -2,20 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:id="@+id/sortStandard">
         <item
-            android:id="@+id/sortToDate"
-            android:title="날짜순" />
+            android:id="@+id/sortToDDay"
+            android:title="@string/menu_sort_by_d_day" />
         <item
             android:id="@+id/sortToTitle"
-            android:title="가나다순" />
+            android:title="@string/menu_sort_by_title" />
     </group>
     <group
         android:id="@+id/order"
         android:checkableBehavior="single">
         <item
             android:id="@+id/ascending"
-            android:title="오름차순" />
+            android:title="@string/menu_ascending" />
         <item
             android:id="@+id/descending"
-            android:title="내림차순" />
+            android:title="@string/menu_descending" />
     </group>
 </menu>

@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.survivalcoding.todolist.databinding.ActivityAddBinding
-import com.survivalcoding.todolist.todo.util.Util
 import com.survivalcoding.todolist.todo.view.main.MainActivity
 import com.survivalcoding.todolist.todo.view.model.Todo
 import java.text.SimpleDateFormat
+import java.util.*
 
 class AddActivity : AppCompatActivity() {
     private lateinit var addBinding: ActivityAddBinding
@@ -18,7 +18,7 @@ class AddActivity : AppCompatActivity() {
         addBinding = ActivityAddBinding.inflate(layoutInflater)
         setContentView(addBinding.root)
 
-        var dueDate = Util.getPresentDate()
+        var dueDate = Date().time
         val format = SimpleDateFormat(MainActivity.DATE_FORMAT)
 
         addBinding.cancelButton.setOnClickListener { finish() }

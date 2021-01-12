@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuCompat
 import com.survivalcoding.todolist.R
@@ -17,9 +16,11 @@ import com.survivalcoding.todolist.todo.view.model.Todo
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
-    var orderMethod = ASCENDING
+    private var orderMethod = ASCENDING
+    private var sortingBase = SORT_BY_TITLE
+
     lateinit var todoAdapter: TodoAdapter
-    private val model = TodoData
+    private val model = TodoData()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,13 +28,13 @@ class MainActivity : AppCompatActivity() {
         val listBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(listBinding.root)
 
-        // edit button으로 사용 예정
-        val textClickEvent: (Todo) -> (Unit) = {
-            val intent = Intent(this, EditActivity::class.java)
-            startActivityForResult(intent, EDIT_REQUEST_QUEUE)
-        }
+        todoAdapter = TodoAdapter(
+            deleteOnClick = { model.deleteTodo(it) },
+            textOnClick = { textOnClick(it) },
+            update = { updateUI() },
+            isDoneUpdate = { model.updateTodo(it) },
+        )
 
-        todoAdapter = TodoAdapter(textClickEvent = textClickEvent)
         listBinding.todoList.adapter = todoAdapter
         listBinding.addTodoButton.setOnClickListener {
             val intent = Intent(this, AddActivity::class.java)
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         val list = savedInstanceState.getParcelableArrayList<Todo>(ROTATION_RESTORE_KEY)
-        list?.let { todoAdapter.updateTodo(list) }
+        list?.let { model.data = list }
     }
 
     // resultCode = AddActivity에서 setResult메소드로 넣어준 값
@@ -61,13 +62,12 @@ class MainActivity : AppCompatActivity() {
             when (requestCode) {
                 ADD_REQUEST_QUEUE -> {
                     data?.getParcelableExtra<Todo>(INTENT_KEY)?.let {
-                        todoAdapter.addTodo(it)
+//                        todoAdapter.addTodo(it)
                     }
                 }
                 EDIT_REQUEST_QUEUE -> {
                     data?.getParcelableExtra<Todo>(INTENT_KEY)?.let {
-                        model.editTodo(it)
-
+//                        model.editTodo(it)
                     }
                 }
             }
@@ -84,36 +84,52 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.sortToDate -> {
-                todoAdapter.sortByDueDate(orderMethod)
-                Toast.makeText(this, "날짜순 정렬", Toast.LENGTH_SHORT).show()
+            R.id.sortToDDay -> {
+                sortingBase = SORT_BY_D_DAY
+                model.sorting(sortingBase = SORT_BY_D_DAY, order = orderMethod)
+                updateUI()
                 return true
             }
             R.id.sortToTitle -> {
-                todoAdapter.sortByTitle(orderMethod)
-                Toast.makeText(this, "가나다순 정렬", Toast.LENGTH_SHORT).show()
+                sortingBase = SORT_BY_TITLE
+                model.sorting(sortingBase = SORT_BY_TITLE, order = orderMethod)
+                updateUI()
                 return true
             }
             R.id.ascending -> {
-                Toast.makeText(this, "오름차순 정렬", Toast.LENGTH_SHORT).show()
                 item.isChecked = true
                 orderMethod = ASCENDING
+                model.sorting(sortingBase, order = ASCENDING)
+                updateUI()
                 return true
             }
             R.id.descending -> {
-                Toast.makeText(this, "내림차순 정렬", Toast.LENGTH_SHORT).show()
                 item.isChecked = true
                 orderMethod = DESCENDING
+                model.sorting(sortingBase, order = DESCENDING)
+                updateUI()
                 return true
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
+    private fun updateUI() {
+        todoAdapter.submitList(model.todoList.toList())
+    }
+
+    private fun textOnClick(item: Todo) {
+        val intent = Intent(this, EditActivity::class.java)
+        startActivityForResult(intent, EDIT_REQUEST_QUEUE)
+    }
+
     companion object {
         const val ROTATION_RESTORE_KEY = "listData"
-        const val ASCENDING = 123456    // 1, 2이면 다른 값과 중복되지 않을까 해서 임의의 값을 넣었다.
-        const val DESCENDING = 654321
+        const val ASCENDING = 123    // 1, 2이면 다른 값과 중복되지 않을까 해서 임의의 값을 넣었다.
+        const val DESCENDING = 321
+        const val SORT_BY_TITLE = 1000     // 제목순 정렬
+        const val SORT_BY_D_DAY = 2000     // 남은 D-day순으로 정렬
+        const val SORT_BY_DATE = 3000      // 등록한 날짜순으로 정렬
         const val DATE_FORMAT = "yyyy-mm-dd"
         const val INTENT_KEY = "todo"
         const val ADD_REQUEST_QUEUE = 100

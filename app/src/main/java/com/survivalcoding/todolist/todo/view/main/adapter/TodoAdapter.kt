@@ -2,21 +2,24 @@ package com.survivalcoding.todolist.todo.view.main.adapter
 
 import android.graphics.Color
 import android.graphics.Paint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.survivalcoding.todolist.databinding.ItemTodoBinding
-import com.survivalcoding.todolist.todo.data.TodoData
-import com.survivalcoding.todolist.todo.util.Util
 import com.survivalcoding.todolist.todo.view.main.MainActivity
 import com.survivalcoding.todolist.todo.view.model.Todo
+import java.util.*
 
-class TodoAdapter(private final val textClickEvent: (Todo) -> Unit) :
-    ListAdapter<Todo, TodoAdapterViewHolder>(TodoDiffCallback) {
+// model을 제거하는 코드 리팩토링
+class TodoAdapter(
+    private val deleteOnClick: (Todo) -> Unit,
+    private val textOnClick: (Todo) -> Unit,
+    private val update: (Unit) -> Unit,
+    private val isDoneUpdate: (Todo) -> Unit,
+) : ListAdapter<Todo, TodoAdapterViewHolder>(TodoDiffCallback) {
+
     lateinit var itemTodoBinding: ItemTodoBinding
-    private val model = TodoData
-    private val currentTime = Util.getPresentDate()
+    private val currentTime = Date().time
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): TodoAdapterViewHolder {
         itemTodoBinding =
@@ -25,48 +28,28 @@ class TodoAdapter(private final val textClickEvent: (Todo) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: TodoAdapterViewHolder, position: Int) {
-        val todoList = model.todoList
+        val todo = getItem(holder.adapterPosition)
 
         itemTodoBinding.apply {
-            todoText.text = todoList[holder.adapterPosition].text
-            isDoneButton.isChecked = todoList[holder.adapterPosition].isDone
-            val dueDate =
-                (todoList[holder.adapterPosition].dueDate - currentTime) / MainActivity.ONE_DAY_MILLISECONDS
+            todoText.text = todo.text
+            isDoneButton.isChecked = todo.isDone
+            val dueDate = todo.dueDate - currentTime / MainActivity.ONE_DAY_MILLISECONDS
             dueDateText.text = "D - $dueDate"
 
             deleteTodoButton.setOnClickListener {
-                model.deleteTodo(todoList[holder.adapterPosition])
-                Log.d("TAG", "onBindViewHolder: after delete list : ${model.todoList}")
-                submitList(model.todoList.toList())
+                deleteOnClick.invoke(todo)
+                update.invoke(Unit) // ???
             }
             isDoneButton.setOnClickListener {
-                model.doneTodo(holder.adapterPosition)
-                drawCancelLine(this, todoList[holder.adapterPosition].isDone)
+                todo.isDone = !todo.isDone
+                drawCancelLine(this, todo.isDone)
+                isDoneUpdate.invoke(todo)   // model의 데이터를 변경시킨다.
+                update.invoke(Unit)
             }
-            todoText.setOnClickListener { _ ->
-                textClickEvent.invoke(todoList[holder.adapterPosition])
+            todoText.setOnClickListener {
+                textOnClick.invoke(todo)
             }
         }
-    }
-
-    fun addTodo(todo: Todo) {
-        model.addTodo(todo)
-        submitList(model.todoList.toList())
-    }
-
-    fun sortByTitle(order: Int) {
-        model.sortByTitle(order)
-        submitList(model.todoList.toList())
-    }
-
-    fun sortByDueDate(order: Int) {
-        model.sortByDate(order)
-        submitList(model.todoList.toList())
-    }
-
-    fun updateTodo(item: ArrayList<Todo>) {
-        model.updateTodo(item)
-        submitList(model.todoList.toList())
     }
 
     private fun drawCancelLine(binding: ItemTodoBinding, isDone: Boolean) {
