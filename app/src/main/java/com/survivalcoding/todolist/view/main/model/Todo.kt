@@ -5,7 +5,7 @@ import android.os.Parcelable
 @kotlinx.android.parcel.Parcelize
 data class Todo (
     var title: String,
-    var times: String,
+    var times: Long,
     var isDone: Boolean = false,
     var isOption: Boolean = false,  // true : 수정 삭제 Visible, false : 수정 삭제 Invisible
     var isRemovable: Boolean = false, // true : 선택 삭제 목록에 포함, false : 포함되지 않음
