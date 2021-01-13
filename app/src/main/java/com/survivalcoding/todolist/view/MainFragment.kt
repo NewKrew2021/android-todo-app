@@ -6,25 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.adapter.TodoListAdapter
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
 import com.survivalcoding.todolist.extension.afterTextChanged
-import com.survivalcoding.todolist.model.TodoItem
-import com.survivalcoding.todolist.viewmodel.SharedViewModel
-import com.survivalcoding.todolist.viewmodel.TodoViewModel
+import com.survivalcoding.todolist.repository.DefaultTodoRepository
 
 
-class MainFragment : Fragment() {
+class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
     private var _binding: FragmentMainBinding? = null
     lateinit var todoListAdapter: TodoListAdapter
-    val todoViewModel: TodoViewModel = TodoViewModel()
-    lateinit var sharedViewModel: SharedViewModel
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -46,22 +39,24 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         todoListAdapter = TodoListAdapter(
                 _completeListener = {
-                    todoViewModel.complete(it)
+                    it.isComplete = !it.isComplete
+                    repository.update(it)
                     updateList()
                 },
                 _modifyListener = {
                     parentFragmentManager.commit {
                         setReorderingAllowed(true)
-                        replace(R.id.fragmentContainerView, MakeTodoFragment(FRAGMENT_EDIT_MODE, it))
+                        replace(R.id.fragmentContainerView, MakeTodoFragment(repository, it))
                         addToBackStack(null)
                     }
                 },
                 _deleteListener = {
-                    todoViewModel.remove(it)
+                    repository.remove(it)
                     updateList()
                 },
                 _markListener = {
-                    todoViewModel.mark(it)
+                    it.isMark = !it.isMark
+                    repository.update(it)
                     updateList()
                 })
         binding.apply {
@@ -74,12 +69,12 @@ class MainFragment : Fragment() {
             addButton.setOnClickListener {
                 parentFragmentManager.commit {
                     setReorderingAllowed(true)
-                    replace(R.id.fragmentContainerView, MakeTodoFragment(FRAGMENT_ADD_MODE))
+                    replace(R.id.fragmentContainerView, MakeTodoFragment(repository))
                     addToBackStack(null)
                 }
             }
-            searchEdit.afterTextChanged{ text ->
-                val searchList = todoViewModel.getItemList().filter {
+            searchEdit.afterTextChanged { text ->
+                val searchList = repository.getOrderedItems().filter {
                     it.title.contains(text)
                 }
                 searchList.sortedWith(
@@ -91,75 +86,15 @@ class MainFragment : Fragment() {
                 todoListAdapter.submitList(searchList)
             }
         }
-        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
-        sharedViewModel.getLiveData().observe(
-                viewLifecycleOwner,
-                object : Observer<TodoItem?> {
-                    override fun onChanged(item: TodoItem?) {
-                        if (item == null) {
-                            Toast.makeText(
-                                    requireActivity(),
-                                    "취소 되었습니다.",
-                                    Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
-                            dataProcess(item)
-                        }
-                    }
-
-                })
-    }
-
-    fun dataProcess(item: TodoItem) {
-        val result = todoViewModel.getItemList().filter { it.id == item.id }.size
-        if (result == 0) {// add
-            item.id = dataId.id
-            dataId.id += 1
-            todoViewModel.add(item)
-        } else {
-            todoViewModel.modify(item)
-        }
         updateList()
     }
-    
 
-    companion object {
-        const val FRAGMENT_ADD_MODE = "add"
-        const val FRAGMENT_EDIT_MODE = "edit"
-        var id: Int = 0
-    }
 
     private fun updateList() {
-        if (binding.searchEdit.text.isEmpty()) {
-            todoListAdapter.submitList(todoViewModel.sort())
-        } else { // 검색이 되어 있는 결과로
-            todoListAdapter.submitList(
-                    todoListAdapter.currentList.sortedWith(
-                            compareBy(
-                                    { it.isComplete },
-                                    { it.isMark },
-                                    { it.date })
-                    )
-            )
-        }
+        todoListAdapter.submitList(repository.getOrderedItems())
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelableArrayList("todoList", todoViewModel.items as ArrayList<TodoItem>)
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        val todoList = savedInstanceState?.getParcelableArrayList<TodoItem>("todoList")
-        todoList?.let {
-            todoViewModel.items = it
-        }
-        updateList()
-    }
 }
 
-object dataId {
-    var id: Int = 0
-}
+
 

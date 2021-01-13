@@ -7,6 +7,8 @@ import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.repository.DefaultTodoRepository
 
 class TodoSQLiteRepository(context: Context) : DefaultTodoRepository {
+
+
     private val dbHelper = TodoDbHelper(context)
 
     override fun getOrderedItems(): List<TodoItem> {
@@ -16,12 +18,12 @@ class TodoSQLiteRepository(context: Context) : DefaultTodoRepository {
                 arrayOf(
                         BaseColumns._ID,
                         TodoContract.TodoEntry.COLUMN_NAME_TITLE,
-                        TodoContract.TodoEntry.COLUMN_NAME_DONE,
+                        TodoContract.TodoEntry.COLUMN_NAME_DATE,
                         TodoContract.TodoEntry.COLUMN_NAME_DONE,
                         TodoContract.TodoEntry.COLUMN_NAME_MARK,
-                        )
+                )
 
-        val sortOrder = "${TodoContract.TodoEntry.COLUMN_NAME_DONE} DESC ${TodoContract.TodoEntry.COLUMN_NAME_MARK} DESC ${TodoContract.TodoEntry.COLUMN_NAME_DONE} ASC"
+        val sortOrder = "${TodoContract.TodoEntry.COLUMN_NAME_DONE} ASC, ${TodoContract.TodoEntry.COLUMN_NAME_MARK} DESC, ${TodoContract.TodoEntry.COLUMN_NAME_DATE} ASC"
 
         val cursor = db.query(
                 TodoContract.TodoEntry.TABLE_NAME,
@@ -33,9 +35,9 @@ class TodoSQLiteRepository(context: Context) : DefaultTodoRepository {
                 sortOrder
         )
         val todoList = mutableListOf<TodoItem>()
-        with(cursor){
-            while (moveToNext()){
-                val id = getInt(getInt(getColumnIndexOrThrow(BaseColumns._ID)))
+        with(cursor) {
+            while (moveToNext()) {
+                val id = getInt(getColumnIndexOrThrow(BaseColumns._ID))
                 val title = getString(getColumnIndexOrThrow(TodoContract.TodoEntry.COLUMN_NAME_TITLE))
                 val date = getLong(getColumnIndexOrThrow(TodoContract.TodoEntry.COLUMN_NAME_DATE))
                 val isComplete = getInt(getColumnIndexOrThrow(TodoContract.TodoEntry.COLUMN_NAME_DONE))
@@ -83,4 +85,5 @@ class TodoSQLiteRepository(context: Context) : DefaultTodoRepository {
 
         db.update(TodoContract.TodoEntry.TABLE_NAME, values, selection, selectionArgs)
     }
+
 }
