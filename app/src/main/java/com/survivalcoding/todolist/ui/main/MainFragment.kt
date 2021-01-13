@@ -6,12 +6,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.adapter.TodoListAdapter
+import com.survivalcoding.todolist.data.database.TodoSqliteRepository
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
-import com.survivalcoding.todolist.model.TodoItem
-import com.survivalcoding.todolist.data.repository.TodoRepository
 import com.survivalcoding.todolist.utils.NavigationUtil
 
-class MainFragment(private val todoRepository: TodoRepository) : Fragment() {
+class MainFragment(private val todoRepository: TodoSqliteRepository) : Fragment() {
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
@@ -31,13 +30,13 @@ class MainFragment(private val todoRepository: TodoRepository) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.searchButton.setOnClickListener {
-            updateUi(todoRepository.getFilteredItems(binding.input.text.toString()))
+            updateUi()
         }
 
         adapter = TodoListAdapter(
-            sort = { todoRepository.sortItems() },
             remove = { targetItem -> todoRepository.removeItem(targetItem) },
-            update = { updateUi() }
+            updateUi = { updateUi() },
+            updateItem = { todoItem -> todoRepository.updateItem(todoItem) }
         )
 
         binding.list.apply {
@@ -68,22 +67,6 @@ class MainFragment(private val todoRepository: TodoRepository) : Fragment() {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        outState.putParcelableArrayList(MainActivity.SAVED_LIST_KEY, ArrayList(todoRepository.list))
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-
-        savedInstanceState?.getParcelableArrayList<TodoItem>(MainActivity.SAVED_LIST_KEY)?.let {
-            todoRepository.resetItems(it)
-        }
-        updateUi()
-
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -91,15 +74,13 @@ class MainFragment(private val todoRepository: TodoRepository) : Fragment() {
 
     private fun updateUi() {
 
-        if (binding.input.text.toString().isNotBlank()) {
-            updateUi(todoRepository.getFilteredItems(binding.input.text.toString()))
-        } else {
-            adapter.submitList(todoRepository.list.toList())
-        }
-    }
+        val keyword = binding.input.text.toString()
 
-    private fun updateUi(list: List<TodoItem>) {
-        adapter.submitList(list)
+        if (keyword.isNotBlank()) {
+            adapter.submitList(todoRepository.getFilteredItemsBy(keyword))
+        } else {
+            adapter.submitList(todoRepository.getOrderedItems())
+        }
     }
 
     companion object {
