@@ -69,9 +69,8 @@ class MainFragment(private var model: TodoData) : Fragment() {
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        savedInstanceState?.let {
-            // ?
-        }
+        val list = savedInstanceState?.getParcelableArrayList<Todo>(MainActivity.ROTATION_RESTORE_KEY)
+        list?.let { model.updateTodo(it.toList()) }
         updateUI()
     }
 

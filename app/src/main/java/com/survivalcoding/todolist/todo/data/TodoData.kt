@@ -35,6 +35,11 @@ class TodoData(var data: MutableList<Todo> = mutableListOf()) {
         }
     }
 
+    fun updateTodo(_item: List<Todo>) {
+        data.clear()
+        data.addAll(_item)
+    }
+
     // sortingBase : 정렬 기준(제목..), order : 오름/내림차순 정렬
     fun sorting(sortingBase: Int, order: Int) {
         when (sortingBase + order) {

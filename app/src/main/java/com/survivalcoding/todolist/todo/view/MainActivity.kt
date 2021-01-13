@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         if (savedInstanceState == null) {
+            // 내가 굳이 한번 더 factory를? 만들 필요는 엉ㅂㅅ다.
             val fragment = supportFragmentManager.fragmentFactory.instantiate(
                 classLoader,
                 MainFragment::class.java.name
