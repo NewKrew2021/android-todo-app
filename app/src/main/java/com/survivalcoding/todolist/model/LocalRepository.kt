@@ -1,11 +1,10 @@
-package com.survivalcoding.todolist.viewmodel
+package com.survivalcoding.todolist.model
 
-import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.util.getCurrentTime
 import com.survivalcoding.todolist.view.TodoFragment
 import java.util.*
 
-class TodoViewModel {
+class LocalRepository {
     private val _todoList = mutableListOf<TodoItem>()
     var itemId = 0
     val todoList: List<TodoItem>

@@ -14,7 +14,7 @@ import com.survivalcoding.todolist.databinding.FragmentTodoBinding
 import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.util.getCurrentTime
 import com.survivalcoding.todolist.util.replaceTransactionWithAnimation
-import com.survivalcoding.todolist.viewmodel.TodoViewModel
+import com.survivalcoding.todolist.model.LocalRepository
 
 class TodoFragment : Fragment() {
     private var _binding: FragmentTodoBinding? = null
@@ -22,7 +22,7 @@ class TodoFragment : Fragment() {
     private lateinit var adapter: TodoListAdapter
     private val viewModel by lazy {
         // DB 를 도입해서 임시로 주석처리
-        TodoViewModel()
+        LocalRepository()
 //        DbRepository(requireContext())
     }
 
