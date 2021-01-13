@@ -5,14 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
-import com.survivalcoding.todolist.todo.data.TodoData
+import com.survivalcoding.todolist.todo.data.database.TodoSQLiteData
 import com.survivalcoding.todolist.todo.factory.MainFragmentFactory
 import com.survivalcoding.todolist.todo.view.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-    private var model = TodoData()
-
+    private var model = TodoSQLiteData(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // fragmentFactory : 데이터를 bundle이 아닌, 생성자로 넘기기 위해 사용한다.
@@ -22,14 +21,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         if (savedInstanceState == null) {
-            val fragment = supportFragmentManager.fragmentFactory.instantiate(
-                classLoader,
-                MainFragment::class.java.name
-            )
-
             supportFragmentManager.commit {
                 setReorderingAllowed(true)
-                add(R.id.fragment_container_view, fragment, FRAGMENT_KEY)
+                add(R.id.fragment_container_view, MainFragment(model))
             }
         }
     }
@@ -43,8 +37,17 @@ class MainActivity : AppCompatActivity() {
         const val SORT_BY_TITLE = 1000     // 제목순 정렬
         const val SORT_BY_D_DAY = 2000     // 남은 D-day순으로 정렬
         const val SORT_BY_DATE = 3000      // 등록한 날짜순으로 정렬
-        const val ADD_REQUEST_QUEUE = 100
-        const val EDIT_REQUEST_QUEUE = 200
         const val ONE_DAY_MILLISECONDS = 24 * 60 * 60 * 1000 // 86_400_000
     }
+}
+
+enum class SortingBase(val value: Int) {
+    SORT_BY_DATE(MainActivity.SORT_BY_DATE),
+    SORT_BY_TITLE(MainActivity.SORT_BY_TITLE),
+    SORT_BY_D_DAY(MainActivity.SORT_BY_D_DAY),
+}
+
+enum class OrderMethod(val value: Int) {
+    ASCENDING(MainActivity.ASCENDING),
+    DESCENDING(MainActivity.DESCENDING),
 }

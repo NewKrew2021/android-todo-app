@@ -5,14 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.FragmentAddBinding
-import com.survivalcoding.todolist.todo.data.TodoData
+import com.survivalcoding.todolist.todo.data.DefaultTodoData
 import com.survivalcoding.todolist.todo.view.MainActivity
+import com.survivalcoding.todolist.todo.view.dialog.AlertDialogFragment
 import com.survivalcoding.todolist.todo.view.model.Todo
 import java.text.SimpleDateFormat
 import java.util.*
 
-class EditFragment(private val model: TodoData) : Fragment() {
+class EditFragment(private val model: DefaultTodoData) : Fragment() {
     private var _binding: FragmentAddBinding? = null
 
     private val binding get() = _binding!!
@@ -23,8 +25,8 @@ class EditFragment(private val model: TodoData) : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentAddBinding.inflate(inflater, container, false)
-//        requireActivity().title = "Modify Todo"
-        binding.addTodo.text = "수정"
+        requireActivity().title = getString(R.string.edit_todo_actionbar_title)
+        binding.addTodo.text = getString(R.string.edit_todo_confirm_button_title)
         return binding.root
     }
 
@@ -49,9 +51,14 @@ class EditFragment(private val model: TodoData) : Fragment() {
         binding.addTodo.setOnClickListener {
             val todoText = binding.todoEditText.text.toString()
             if (todoText.trim().isEmpty()) {
-                // nothing! add alertDialog
+                AlertDialogFragment(getString(R.string.alert_dialog_confirm)).show(
+                    parentFragmentManager,
+                    AlertDialogFragment.TAG
+                )
             } else {
-                model.addTodo(Todo(false, todoText, dueDate))
+                val today = Date().time
+                model.addTodo(Todo(false, todoText, dueDate, today))
+//                model.todoList = model.sorting()
                 parentFragmentManager.popBackStack()
             }
         }
