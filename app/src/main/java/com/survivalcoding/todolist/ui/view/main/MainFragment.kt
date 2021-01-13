@@ -8,17 +8,16 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
-import com.survivalcoding.todolist.model.TodoItem
+import com.survivalcoding.todolist.extension.replaceFragment
+import com.survivalcoding.todolist.extension.replaceFragmentWithBundle
 import com.survivalcoding.todolist.ui.adapter.TodoAdapter
 import com.survivalcoding.todolist.ui.view.add.AddTodoFragment
 import com.survivalcoding.todolist.ui.viewmodel.MainViewModel
 import com.survivalcoding.todolist.util.TODO_ITEM
-import com.survivalcoding.todolist.util.TODO_LIST
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainFragment : Fragment(R.layout.fragment_main) {
@@ -51,27 +50,15 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         eventProcess()
         setRecyclerView()
         setToolbar()
-
     }
 
     private fun getData() {
-        val result = arguments?.getParcelableArrayList<TodoItem>(TODO_LIST)
-        if (result != null) {
-            viewModel.setTodoList(result)
-            viewModel.sortTodoItem()
-        }
+        viewModel.getTodoList()
     }
 
     private fun eventProcess() {
         binding.btnAddMain.setOnClickListener {
-            parentFragmentManager.commit {
-                setReorderingAllowed(true)
-                replace(
-                    R.id.fragment_container,
-                    AddTodoFragment::class.java,
-                    bundleOf(TODO_LIST to viewModel.todoList)
-                )
-            }
+            replaceFragment<AddTodoFragment>(R.id.fragment_container)
         }
     }
 
@@ -80,22 +67,21 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         todoAdapter = TodoAdapter().apply {
             setTodoList(viewModel.todoList)
             setModifyTodoItemListener {
-                parentFragmentManager.commit {
-                    setReorderingAllowed(true)
-                    replace(
-                        R.id.fragment_container,
-                        AddTodoFragment::class.java,
-                        bundleOf(
-                            TODO_LIST to viewModel.todoList,
-                            TODO_ITEM to it
-                        )
-                    )
-                }
+                replaceFragmentWithBundle(
+                    R.id.fragment_container,
+                    AddTodoFragment::class,
+                    bundleOf(TODO_ITEM to it)
+                )
             }
 
-            setSortTodoItemListener {
-                viewModel.sortTodoItem()
+            setCompleteTodoItemListener {
+                viewModel.updateTodoItem(it)
+                viewModel.getTodoList()
                 todoAdapter.setTodoList(viewModel.todoList)
+            }
+
+            setRemoveTodoItemListener {
+                viewModel.removeTodoItem(it)
             }
         }
 

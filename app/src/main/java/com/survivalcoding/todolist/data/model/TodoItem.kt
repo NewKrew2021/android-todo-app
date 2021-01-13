@@ -1,4 +1,4 @@
-package com.survivalcoding.todolist.model
+package com.survivalcoding.todolist.data.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
@@ -7,5 +7,6 @@ import kotlinx.android.parcel.Parcelize
 data class TodoItem(
     var time: Long,
     var contents: String?,
-    var complete: Boolean,
+    var complete: Boolean = false,
+    var id: Int = 0,
 ) : Parcelable
