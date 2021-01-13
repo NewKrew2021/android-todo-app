@@ -26,7 +26,6 @@ class FirstFragment(val data: String) : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,7 +41,7 @@ class FirstFragment(val data: String) : Fragment() {
 
         binding.dataTextView.text = data
         binding.backButton.setOnClickListener {
-            fragmentManager?.beginTransaction()?.remove(this)?.commit()
+            parentFragmentManager.popBackStack()
 
         }
     }

@@ -18,85 +18,20 @@ import com.survivalcoding.todolist.viewModel.searchItem
 class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
     ListAdapter<searchItem, Holder>(ItemDiffCallback) {
 
-    var data = mutableListOf<listItem>()
-    var searchData = mutableListOf<searchItem>()
-
+    /*
     fun dataUpdate() {
-        searchData = searchData.toMutableList()
+        searchData.clear()
+        for(i in 0..data.size-1){
+            searchData.add(searchItem(data[i],i))
+        }
         submitList(searchData)
     }
-
-    fun searching(pattern: String) {
-
-        makeSearchData(pattern)
-        notifyDataSetChanged()
-        //dataUpdate()
+     */
+    var searchData = mutableListOf<searchItem>()
+    fun getSearchData(data: MutableList<searchItem>) {
+        searchData = data
     }
 
-    fun makeSearchData(pattern: String) {
-        searchData.clear()
-
-        for (i in 0..data.size - 1) {
-            if (data[i].toDo.contains(pattern)) {
-                searchData.add(searchItem(data[i], i))
-            }
-        }
-    }
-
-    fun checkedComplete(pattern: String) {
-
-        checkingComplete(searchData)
-
-        var last_index = data.size - 1
-        var index = 0
-        for (i in 0..last_index) {
-            if (data[index].complete == true) {
-                data.add(last_index + 1, data[index])
-                data.removeAt(index)
-            } else {
-                index += 1
-            }
-        }
-        makeSearchData(pattern)
-    }
-
-    private fun checkingComplete(dataList: MutableList<searchItem>) {
-        var tmp_size = dataList.size
-        var index = 0
-        for (i in 0..tmp_size - 1) {
-            if (dataList[index].item.check == true) {
-
-                dataList[index].item.check = false
-                dataList[index].item.complete = true
-                data[dataList[index].index].complete = true
-
-                dataList.add(
-                    dataList[index]
-                )
-                dataList.removeAt(index)
-                notifyItemRemoved(index)
-
-            } else {
-                index += 1
-            }
-        }
-        notifyItemRangeChanged(0, dataList.size)
-    }
-
-    fun checkedRemove(pattern: String) {
-        val tmp = mutableListOf<Int>()
-        for (i in searchData.size - 1 downTo 0) {
-            if (searchData[i].item.check == true) {
-                tmp.add(searchData[i].index)
-                notifyItemRemoved(i)
-            }
-        }
-        tmp.sortBy { it }
-        for (i in tmp.size - 1 downTo 0) {
-            data.removeAt(tmp[i])
-        }
-        makeSearchData(pattern)
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val itemBinding = ItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -116,7 +51,6 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
         holder.setData(searchData[holder.adapterPosition].item)
         holder.checkBoxClickListener(searchData[holder.adapterPosition].item)
         holder.itemClickListener(holder.adapterPosition, this)
-
     }
 }
 
@@ -126,11 +60,10 @@ class Holder(
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
-
     fun setData(data: listItem) {
         binding.checkBox.text = data.toDo
         binding.textView.text = data.time
-        binding.checkBox.isChecked = false
+        binding.checkBox.isChecked = data.check
         if (data.complete == true) {
             binding.ConstraintLayout.setBackgroundColor(Color.RED)
             binding.checkBox.isClickable = false
