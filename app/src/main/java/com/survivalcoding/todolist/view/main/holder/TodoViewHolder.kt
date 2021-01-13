@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.ItemTodoListBinding
+import com.survivalcoding.todolist.util.timesToString
 import com.survivalcoding.todolist.view.main.model.Todo
 
 class TodoViewHolder(private val binding: ItemTodoListBinding) :
@@ -16,14 +17,15 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
         todo: Todo,
         showToastMessageListener: (String) -> Unit,
         removeClickListener: (Todo) -> Unit,
+        checkChangeListener: (Todo) -> Unit,
         updateListener: () -> Unit,
         editClickListener: (Todo) -> Unit,
         getActionMode: () -> ActionMode?,
-        setActionBarTitle: () -> Unit,
+        setActionBarTitle: (Todo) -> Unit,
     ) {
         binding.apply {
             textViewTitle.text = todo.title
-            textViewTimes.text = todo.times
+            textViewTimes.text = timesToString(todo.times)
             checkBox.isChecked = todo.isDone
 
             updateViews(getActionMode, todo)
@@ -33,6 +35,8 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
                 todo.isDone = checkBox.isChecked
                 updateViews(getActionMode, todo)
                 updateTextPaintFlags(todo.isDone)
+
+                checkChangeListener.invoke(todo)
                 updateListener.invoke()
             }
 
@@ -42,13 +46,15 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
                         todo.isOption = false
                         updateViews(getActionMode, todo)
                     }
-                }
-                else {
+                } else {
                     todo.isRemovable = !todo.isRemovable
-                    layoutItem.setBackgroundColor(ContextCompat.getColor(binding.root.context,
-                        if (todo.isRemovable) R.color.teal_200 else R.color.white))
-
-                    setActionBarTitle.invoke()
+                    layoutItem.setBackgroundColor(
+                        ContextCompat.getColor(
+                            binding.root.context,
+                            if (todo.isRemovable) R.color.teal_200 else R.color.white
+                        )
+                    )
+                    setActionBarTitle.invoke(todo)
                 }
             }
 
@@ -68,7 +74,12 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
                 removeClickListener.invoke(todo)
                 updateListener.invoke()
 
-                showToastMessageListener.invoke(root.context.getString(R.string.fragment_main_message_after_todo_remove, todo.title))
+                showToastMessageListener.invoke(
+                    root.context.getString(
+                        R.string.fragment_main_message_after_todo_remove,
+                        todo.title
+                    )
+                )
             }
         }
     }
@@ -79,19 +90,29 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
         if (actionMode == null) {
             binding.apply {
                 buttonMenus.visibility = if (todo.isOption) View.INVISIBLE else View.VISIBLE
-                buttonEdit.visibility = if (todo.isOption && !todo.isDone) View.VISIBLE else View.INVISIBLE
+                buttonEdit.visibility =
+                    if (todo.isOption && !todo.isDone) View.VISIBLE else View.INVISIBLE
                 buttonDelete.visibility = if (todo.isOption) View.VISIBLE else View.INVISIBLE
                 checkBox.isEnabled = true
-                layoutItem.setBackgroundColor(ContextCompat.getColor(binding.root.context, R.color.white))
+                layoutItem.setBackgroundColor(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.white
+                    )
+                )
             }
-        }
-        else {
+        } else {
             binding.apply {
                 buttonMenus.visibility = View.INVISIBLE
                 buttonEdit.visibility = View.INVISIBLE
                 buttonDelete.visibility = View.INVISIBLE
                 checkBox.isEnabled = false
-                layoutItem.setBackgroundColor(ContextCompat.getColor(binding.root.context, if (todo.isRemovable) R.color.teal_200 else R.color.white))
+                layoutItem.setBackgroundColor(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        if (todo.isRemovable) R.color.teal_200 else R.color.white
+                    )
+                )
             }
         }
     }

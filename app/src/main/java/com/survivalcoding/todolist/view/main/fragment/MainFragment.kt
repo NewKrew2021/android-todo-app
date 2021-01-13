@@ -10,15 +10,14 @@ import androidx.fragment.app.commit
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.todolist.R
-import com.survivalcoding.todolist.data.TodoViewModel
+import com.survivalcoding.todolist.data.DefaultTodoRepository
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
-import com.survivalcoding.todolist.util.dateToString
 import com.survivalcoding.todolist.view.main.MainActivity
 import com.survivalcoding.todolist.view.main.adapter.TodoAdapter
 import com.survivalcoding.todolist.view.main.model.Todo
 import java.util.*
 
-class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
+class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding
         get() = _binding!!
@@ -48,7 +47,8 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
 
         adapter = TodoAdapter(
             showToastMessageListener = { message: String -> showToastMessage(message) },
-            removeClickListener = { todo -> viewModel.remove(todo) },
+            removeClickListener = { todo -> repository.remove(todo) },
+            checkChangeListener = { todo -> repository.update(todo) },
             updateListener = { updateUI() },
             editClickListener = { todo ->
                 parentFragmentManager.commit {
@@ -62,7 +62,7 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
                 }
             },
             getActionMode = { getActionMode() },
-            setActionBarTitle = { setActionBarTitle() },
+            setActionBarTitle = { todo -> setActionBarTitle(todo) },
         )
 
         with(binding) {
@@ -76,10 +76,10 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
 
             buttonAdd.setOnClickListener {
                 if (editTextTitle.text.trim().isNotEmpty()) {
-                    viewModel.add(
+                    repository.add(
                         Todo(
                             editTextTitle.text.toString(),
-                            dateToString(Calendar.getInstance().time)
+                            Calendar.getInstance().timeInMillis
                         )
                     )
                     updateUI()
@@ -93,14 +93,10 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
                 searchView.isIconified = false
             }
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                // Called when the user submits the query.
-                // Keyboard Key press (enter key) or press submit button.
-                // return false to let the SearchView handle the submission by launching any associated intent.
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     return true
                 }
 
-                // Called when the query text is changed by the user.
                 override fun onQueryTextChange(newText: String?): Boolean {
                     newText?.let {
                         updateUI()
@@ -109,6 +105,7 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
                 }
             })
         }
+        updateUI()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -130,25 +127,13 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        with(outState) {
-            putInt(MainActivity.TODO_ID_KEY, viewModel.id.get())
-            putParcelableArrayList(
-                MainActivity.TODO_STATE_KEY,
-                viewModel.items as ArrayList<out Todo>
-            )
-            putBoolean(IS_IN_ACTION_MODE_KEY, actionMode != null)
-        }
+        outState.putBoolean(IS_IN_ACTION_MODE_KEY, actionMode != null)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
 
         savedInstanceState?.let {
-            viewModel.id.set(it.getInt(MainActivity.TODO_ID_KEY))
-            it.getParcelableArrayList<Todo>(MainActivity.TODO_STATE_KEY)?.let { items ->
-                viewModel.addAll(items)
-                updateUI()
-            }
             onActionModeStateRestored(savedInstanceState)
         }
     }
@@ -168,15 +153,16 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
         val query = binding.searchView.query.toString()
 
         adapter.submitList(
-            if (query.isEmpty()) viewModel.getOrderedItems()
-            else viewModel.getOrderedWithFilteredItems(query)
+            if (query.isEmpty()) repository.getOrderedItems()
+            else repository.getOrderedWithFilteredItems(query)
         )
     }
 
     private fun getActionMode(): ActionMode? = actionMode
 
-    private fun setActionBarTitle() {
-        actionMode?.title = getString(R.string.fragment_main_action_bar_mode_remove_title, viewModel.getRemovablesCount())
+    private fun setActionBarTitle(todo: Todo) {
+        repository.update(todo)
+        actionMode?.title = getString(R.string.fragment_main_action_bar_mode_remove_title, repository.getRemovablesCount())
     }
 
     private val removeModeCallback = object : ActionMode.Callback {
@@ -186,17 +172,17 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
         }
 
         override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-            mode?.title = getString(R.string.fragment_main_action_bar_mode_remove_title, viewModel.getRemovablesCount())
+            mode?.title = getString(R.string.fragment_main_action_bar_mode_remove_title, repository.getRemovablesCount())
             return false
         }
 
         override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
             return when (item?.itemId) {
                 R.id.menu_remove -> {
-                    val itemCount = viewModel.getRemovablesCount()
+                    val itemCount = repository.getRemovablesCount()
                     if (itemCount > 0) {
                         RemoveConfirmationDialogFragment(itemCount) {
-                            viewModel.removeAllRemovable()
+                            repository.removeAllRemovable()
                             updateUI()
                             mode?.finish()
                         }.show(childFragmentManager, RemoveConfirmationDialogFragment.TAG)
@@ -209,7 +195,6 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
 
         override fun onDestroyActionMode(mode: ActionMode?) {
             actionMode = null
-            viewModel.clearAllRemovable()
             adapter.notifyDataSetChanged()
         }
     }
