@@ -16,7 +16,7 @@ import com.survivalcoding.todolist.model.TodoItem
 import java.util.*
 
 class TodoListAdapter(
-    private val checkTodoListener: () -> Unit,
+    private val checkTodoListener: (TodoItem, Boolean) -> Unit,
     private val editTodoListener: (TodoItem, String) -> Unit,
     private val removeTodoListener: (TodoItem) -> Unit
 ) :
@@ -67,7 +67,7 @@ class TodoListAdapter(
 
     class TodoViewHolder(
         val binding: ToDoListBinding,
-        private val checkTodoListener: () -> Unit,
+        private val checkTodoListener: (TodoItem, Boolean) -> Unit,
         private val editTodoListener: (TodoItem, String) -> Unit,
         private val removeTodoListener: (TodoItem) -> Unit
     ) :
@@ -89,7 +89,7 @@ class TodoListAdapter(
                     item.isChecked = checkBox.isChecked
                     drawCancelLine(item, item.isChecked)
                     showEditButton(!checkBox.isChecked)
-                    checkTodoListener()
+                    checkTodoListener(item, checkBox.isChecked)
                 }
                 toDoTitle.setOnClickListener {
                     checkBox.isChecked.apply {
@@ -97,8 +97,8 @@ class TodoListAdapter(
                         checkBox.isChecked = !this
                         showEditButton(this)
                         drawCancelLine(item, !this)
+                        checkTodoListener(item, !this)
                     }
-                    checkTodoListener()
                 }
                 editButton.setOnClickListener {
                     setLayoutVisibility(true)

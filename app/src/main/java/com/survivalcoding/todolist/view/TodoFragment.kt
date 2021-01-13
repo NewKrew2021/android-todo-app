@@ -11,17 +11,19 @@ import androidx.fragment.app.Fragment
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.adapter.TodoListAdapter
 import com.survivalcoding.todolist.databinding.FragmentTodoBinding
+import com.survivalcoding.todolist.model.DbRepository
 import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.util.getCurrentTime
 import com.survivalcoding.todolist.util.replaceTransactionWithAnimation
-import com.survivalcoding.todolist.viewmodel.TodoViewModel
 
 class TodoFragment : Fragment() {
     private var _binding: FragmentTodoBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: TodoListAdapter
     private val viewModel by lazy {
-        TodoViewModel()
+        // DB 를 도입해서 임시로 주석처리
+//        TodoViewModel()
+        DbRepository(requireContext())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,14 +44,16 @@ class TodoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initializeView()
         setOnListener()
+        updateTodoList()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelableArrayList(
-            SAVE_INSTANCE_TODO_ITEM_KEY,
-            viewModel.todoList as ArrayList<TodoItem>
-        )
+        // DB에 저장하면서 필요없어짐. 삭제 예정
+//        outState.putParcelableArrayList(
+//            SAVE_INSTANCE_TODO_ITEM_KEY,
+//            viewModel.todoList as ArrayList<TodoItem>
+//        )
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -68,13 +72,12 @@ class TodoFragment : Fragment() {
         val sortOptions = resources.getStringArray(R.array.sort_options)
         // 시간 순으로 정렬
         if (binding.sortOptionSpinner.selectedItem.toString() == sortOptions[0]) {
-            viewModel.sortByTime()
+            adapter.submitList(viewModel.getTodoListSortedByTime())
         }
         // 사전 순으로 정렬
         else if (binding.sortOptionSpinner.selectedItem.toString() == sortOptions[1]) {
-            viewModel.sortByTitle()
+            adapter.submitList(viewModel.getTodoListSortedByTitle())
         }
-        adapter.submitList(viewModel.todoList.toList())
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -131,7 +134,8 @@ class TodoFragment : Fragment() {
 
     private fun initializeView() {
         adapter = TodoListAdapter(
-            checkTodoListener = {
+            checkTodoListener = { item, isChecked ->
+                viewModel.checkTodo(item, isChecked)
                 updateTodoList()
             },
             editTodoListener = { todoItem, newTodoTitle ->
@@ -170,6 +174,7 @@ class TodoFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        viewModel.closeDb()
     }
 
     private fun showToast(message: String) {
