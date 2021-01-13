@@ -8,4 +8,5 @@ data class TodoItem(
     var time: Long,
     var contents: String?,
     var complete: Boolean,
+    val id: Int,
 ) : Parcelable

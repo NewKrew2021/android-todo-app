@@ -25,9 +25,9 @@ class TodoDbHelper(context: Context) :
         private const val SQL_CREATE_ENTRIES =
             """CREATE TABLE $TABLE_NAME (
                 ${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                ${TodoContract.TodoEntry.COLUMN_NAME_TODO} TEXT,
+                ${TodoContract.TodoEntry.COLUMN_NAME_CONTENTS} TEXT,
                 ${TodoContract.TodoEntry.COLUMN_NAME_TIME} INTEGER,
-                ${TodoContract.TodoEntry.COLUMN_NAME_COMPLETE} INTEGER)"""
+                ${TodoContract.TodoEntry.COLUMN_NAME_COMPLETE} TEXT)"""
 
         private const val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS $TABLE_NAME"
     }

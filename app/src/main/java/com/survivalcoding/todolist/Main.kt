@@ -51,4 +51,7 @@ fun main() {
                 println("7번 : ${it.maxOrNull()}")
                 println("8번 : ${it.minOrNull()}")
             }
+
+    println("true")
+
 }
