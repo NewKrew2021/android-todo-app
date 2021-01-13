@@ -63,7 +63,7 @@ class Holder(
     fun setData(data: listItem) {
         binding.checkBox.text = data.toDo
         binding.textView.text = data.time
-        binding.checkBox.isChecked = false
+        binding.checkBox.isChecked = data.check
         if (data.complete == true) {
             binding.ConstraintLayout.setBackgroundColor(Color.RED)
             binding.checkBox.isClickable = false
