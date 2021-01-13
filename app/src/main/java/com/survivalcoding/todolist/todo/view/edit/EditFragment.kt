@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.survivalcoding.todolist.databinding.FragmentAddBinding
 import com.survivalcoding.todolist.todo.data.TodoData
 import com.survivalcoding.todolist.todo.view.MainActivity
+import com.survivalcoding.todolist.todo.view.dialog.AlertDialogFragment
 import com.survivalcoding.todolist.todo.view.model.Todo
 import java.text.SimpleDateFormat
 import java.util.*
@@ -49,7 +50,10 @@ class EditFragment(private val model: TodoData) : Fragment() {
         binding.addTodo.setOnClickListener {
             val todoText = binding.todoEditText.text.toString()
             if (todoText.trim().isEmpty()) {
-                // nothing! add alertDialog
+                AlertDialogFragment("할 일을 입력해 주세요").show(
+                    parentFragmentManager,
+                    AlertDialogFragment.TAG
+                )
             } else {
                 model.addTodo(Todo(false, todoText, dueDate))
                 parentFragmentManager.popBackStack()
