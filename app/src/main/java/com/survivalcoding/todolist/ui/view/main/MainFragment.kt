@@ -12,8 +12,8 @@ import androidx.fragment.app.commit
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.todolist.R
+import com.survivalcoding.todolist.data.model.TodoItem
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
-import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.ui.adapter.TodoAdapter
 import com.survivalcoding.todolist.ui.view.add.AddTodoFragment
 import com.survivalcoding.todolist.ui.viewmodel.MainViewModel

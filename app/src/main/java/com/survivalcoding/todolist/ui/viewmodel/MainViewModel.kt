@@ -1,9 +1,10 @@
 package com.survivalcoding.todolist.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.survivalcoding.todolist.model.TodoItem
+import com.survivalcoding.todolist.data.model.TodoItem
+import com.survivalcoding.todolist.data.repository.TodoRepoImpl
 
-class MainViewModel : ViewModel() {
+class MainViewModel(val todoRepository: TodoRepoImpl) : ViewModel() {
 
     private var _todoList = mutableListOf<TodoItem>()
     val todoList: List<TodoItem>

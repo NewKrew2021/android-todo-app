@@ -9,8 +9,8 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.survivalcoding.todolist.R
+import com.survivalcoding.todolist.data.model.TodoItem
 import com.survivalcoding.todolist.databinding.FragmentAddTodoBinding
-import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.ui.view.main.MainFragment
 import com.survivalcoding.todolist.ui.viewmodel.AddTodoViewModel
 import com.survivalcoding.todolist.util.TODO_ITEM

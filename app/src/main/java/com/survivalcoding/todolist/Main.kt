@@ -52,4 +52,3 @@ fun main() {
                 println("8번 : ${it.minOrNull()}")
             }
 }
-

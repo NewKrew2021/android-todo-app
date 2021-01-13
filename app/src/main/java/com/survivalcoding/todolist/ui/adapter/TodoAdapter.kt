@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
+import com.survivalcoding.todolist.data.model.TodoItem
 import com.survivalcoding.todolist.databinding.ItemTodoBinding
-import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.util.convertToDate
 
 class TodoAdapter :
