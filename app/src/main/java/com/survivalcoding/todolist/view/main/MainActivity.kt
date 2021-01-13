@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val TODO_ID_KEY = "TODO_ID_KEY"
         const val TODO_STATE_KEY = "TODO_STATE_KEY"
-        const val TODO_TITLE_KEY = "TODO_TITLE_KEY"
         const val TODO_KEY = "TODO_KEY"
     }
 }

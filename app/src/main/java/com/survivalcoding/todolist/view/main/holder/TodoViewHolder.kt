@@ -68,7 +68,7 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
                 removeClickListener.invoke(todo)
                 updateListener.invoke()
 
-                showToastMessageListener.invoke("${todo.title} 삭제되었습니다.")
+                showToastMessageListener.invoke(root.context.getString(R.string.fragment_main_message_after_todo_remove, todo.title))
             }
         }
     }

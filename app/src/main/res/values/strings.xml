@@ -18,6 +18,7 @@
     <string name="fragment_main_action_bar_mode_remove_title">%1$d개 선택</string>
     <string name="fragment_main_edit_text_title_hint">할 일</string>
     <string name="fragment_main_button_add_text">Add</string>
+    <string name="fragment_main_message_after_todo_remove">%1$s 삭제되었습니다.</string>
 
     <!-- EditFragment -->
     <string name="fragment_edit_todo_edit_error_text">일시적인 오류로 수정할 수 없습니다.</string>

@@ -19,6 +19,6 @@ class RemoveConfirmationDialogFragment(
     }
 
     companion object {
-        const val TAG = "RemoveConfirmationDialog"
+        val TAG: String = RemoveConfirmationDialogFragment::class.java.simpleName
     }
 }
