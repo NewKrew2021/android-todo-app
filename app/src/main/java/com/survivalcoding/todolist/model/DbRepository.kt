@@ -7,11 +7,11 @@ import com.survivalcoding.todolist.model.db.TodoContract
 import com.survivalcoding.todolist.model.db.TodoDbHelper
 import com.survivalcoding.todolist.util.getCurrentTime
 
-class DbRepository(context: Context) {
+class DbRepository(context: Context) : TodoRepository {
     private val dbHelper = TodoDbHelper(context)
     private val db = dbHelper.writableDatabase
 
-    fun addTodo(todoItem: TodoItem) {
+    override fun addTodo(todoItem: TodoItem) {
         val newItem = ContentValues().apply {
             put(TodoContract.TodoEntry.COLUMN_NAME_TITLE, todoItem.todoTitle)
             put(TodoContract.TodoEntry.COLUMN_NAME_IS_CHECKED, todoItem.isChecked)
@@ -56,7 +56,7 @@ class DbRepository(context: Context) {
         return todoItems
     }
 
-    fun checkTodo(todoItem: TodoItem, isChecked: Boolean) {
+    override fun checkTodo(todoItem: TodoItem, isChecked: Boolean) {
         val db = dbHelper.writableDatabase
 
         val values = ContentValues().apply {
@@ -68,7 +68,7 @@ class DbRepository(context: Context) {
         val count = db.update(TodoContract.TodoEntry.TABLE_NAME, values, selection, selectionArgs)
     }
 
-    fun updateTodo(todoItem: TodoItem, newTodoTitle: String) {
+    override fun updateTodo(todoItem: TodoItem, newTodoTitle: String) {
         val db = dbHelper.writableDatabase
 
         val values = ContentValues().apply {
@@ -82,7 +82,7 @@ class DbRepository(context: Context) {
         val count = db.update(TodoContract.TodoEntry.TABLE_NAME, values, selection, selectionArgs)
     }
 
-    fun removeTodo(todoItem: TodoItem) {
+    override fun removeTodo(todoItem: TodoItem) {
         val db = dbHelper.writableDatabase
 
         val selection =
@@ -92,15 +92,15 @@ class DbRepository(context: Context) {
         db.delete(TodoContract.TodoEntry.TABLE_NAME, selection, selectionArgs)
     }
 
-    fun getTodoListSortedByTime(): List<TodoItem> {
+    override fun getTodoListSortedByTime(): List<TodoItem> {
         return getTodoItems().sortedWith(compareBy<TodoItem> { it.isChecked }.thenByDescending { it.timeStamp })
     }
 
-    fun getTodoListSortedByTitle(): List<TodoItem> {
+    override fun getTodoListSortedByTitle(): List<TodoItem> {
         return getTodoItems().sortedWith(compareBy<TodoItem> { it.isChecked }.thenBy { it.todoTitle })
     }
 
-    fun searchTodoItem(inputTitle: String): List<TodoItem> {
+    override fun searchTodoItem(inputTitle: String): List<TodoItem> {
         val db = dbHelper.readableDatabase
 
         val projection = arrayOf(
@@ -141,7 +141,7 @@ class DbRepository(context: Context) {
         return todoItems
     }
 
-    fun clearTodoList() {
+    override fun clearTodoList() {
         db.delete(TodoContract.TodoEntry.TABLE_NAME, null, null)
     }
 
