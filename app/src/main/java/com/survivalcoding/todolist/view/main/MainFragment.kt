@@ -6,26 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.survivalcoding.todolist.R
+import com.survivalcoding.todolist.data.TodoLocalRepository
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
 import com.survivalcoding.todolist.view.main.adapter.TodoRecyclerViewAdapter
 import com.survivalcoding.todolist.view.main.model.TodoData
-import com.survivalcoding.todolist.viewmodel.TodoRepository
 import java.util.*
 
 
-class MainFragment(private val repository: TodoRepository) : Fragment() {
-
-    private fun itemClickListener(item: TodoData) {
-        // todo click시 로직 변경 필요
-    }
+class MainFragment(private val repository: TodoLocalRepository) : Fragment() {
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
-    var pid = 0
-
-    private val todoRecyclerViewAdapter by lazy {
-        TodoRecyclerViewAdapter(repository, itemClickListener = ::itemClickListener)
+    private val adapter by lazy {
+        TodoRecyclerViewAdapter(repository,
+            deleteClickListener = { todo ->
+                repository.delItem(todo)
+                updateUi()
+            },
+            editClickListener = { todo -> })
     }
 
     override fun onCreateView(
@@ -40,55 +38,34 @@ class MainFragment(private val repository: TodoRepository) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        with(binding.recyclerView) {
-            adapter = todoRecyclerViewAdapter
-        }
-        var isMarked = false
-        binding.markBox.setOnClickListener {
-            isMarked = !isMarked
-            if (isMarked) binding.markBox.setImageResource(R.drawable.ic_baseline_star_24)
-            else binding.markBox.setImageResource(R.drawable.ic_baseline_star_outline_24)
-        }
-        fun clickAction() {
+        binding.recyclerView.adapter = adapter
+        binding.buttonAdd.setOnClickListener {
             //To-Do 항목 추가
             if (binding.editTodo.text.isEmpty()) {
                 Toast.makeText(view.context, ALERT_RENAME, Toast.LENGTH_SHORT).show()
             } else {
-                todoRecyclerViewAdapter.addItem(
-                    TodoData(
-                        binding.editTodo.text.toString(),
-                        Calendar.getInstance().timeInMillis,
-                        isMarked = isMarked,
-                        pid = pid++,
-                    )
-                )
+                repository.addItem(TodoData(binding.editTodo.text.toString()))
                 binding.editTodo.text.clear()
-                binding.markBox.setImageResource(R.drawable.ic_baseline_star_outline_24)
-                isMarked = false
+                updateUi()
 
             }
         }
-        binding.buttonAdd.setOnClickListener {
-            clickAction()
-        }
+        updateUi()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelableArrayList(
             DATA_SAVE,
-            todoRecyclerViewAdapter.items as ArrayList<TodoData>
+            repository.items as ArrayList<TodoData>
         )
-        outState.putInt(PID_SAVE, pid)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         savedInstanceState?.let {
-            pid = savedInstanceState.getInt(PID_SAVE)
             val savedData = savedInstanceState.getParcelableArrayList<TodoData>(DATA_SAVE)
-            savedData?.let { todoRecyclerViewAdapter.addAllItems(savedData.toList()) }
+            savedData?.let { repository.addAllItems(savedData.toList()) }
 
         }
     }
@@ -98,10 +75,13 @@ class MainFragment(private val repository: TodoRepository) : Fragment() {
         _binding = null
     }
 
+    private fun updateUi() {
+        adapter.submitList(repository.items.toList())
+    }
+
 
     companion object {
         private const val DATA_SAVE = "todo"
-        private const val PID_SAVE = "pid"
         private const val ALERT_RENAME = "내용을 입력해주세요."
     }
 }
