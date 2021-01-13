@@ -7,13 +7,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.survivalcoding.todolist.R
-import com.survivalcoding.todolist.data.TodoViewModel
+import com.survivalcoding.todolist.data.DefaultTodoRepository
 import com.survivalcoding.todolist.databinding.FragmentEditBinding
-import com.survivalcoding.todolist.util.dateToString
+import com.survivalcoding.todolist.extension.finish
 import com.survivalcoding.todolist.view.main.MainActivity
 import com.survivalcoding.todolist.view.main.model.Todo
+import java.util.*
 
-class EditFragment(private val viewModel: TodoViewModel) : Fragment() {
+class EditFragment(private val repository: DefaultTodoRepository) : Fragment() {
     private var _binding: FragmentEditBinding? = null
     private val binding
         get() = _binding!!
@@ -27,6 +28,11 @@ class EditFragment(private val viewModel: TodoViewModel) : Fragment() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -34,28 +40,23 @@ class EditFragment(private val viewModel: TodoViewModel) : Fragment() {
 
         with(binding) {
             buttonOk.setOnClickListener {
-                if (editTextTitle.text.trim().isNotEmpty()) {
+                if (editTextTitle.text.isNotBlank()) {
                     if (todo == null) {
                         showToastMessage(getString(R.string.fragment_edit_todo_edit_error_text))
                     } else {
-                        viewModel.edit(todo.apply {
+                        repository.update(todo.apply {
                             title = editTextTitle.text.toString()
-                            times = dateToString(java.util.Calendar.getInstance().time)
+                            times = Calendar.getInstance().timeInMillis
                         })
-                        parentFragmentManager.popBackStack()
+                        finish()
                     }
                 }
             }
-            buttonCancel.setOnClickListener { parentFragmentManager.popBackStack() }
+            buttonCancel.setOnClickListener { finish() }
         }
     }
 
     private fun showToastMessage(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

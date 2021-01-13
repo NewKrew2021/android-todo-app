@@ -1,65 +1,51 @@
 package com.survivalcoding.todolist.data
 
-import com.survivalcoding.todolist.util.stringToDate
 import com.survivalcoding.todolist.view.main.model.Todo
 import java.util.concurrent.atomic.AtomicInteger
 
-class TodoViewModel {
+class TodoViewModel : DefaultTodoRepository {
     val id = AtomicInteger(0)
 
-    private val _items = mutableListOf<Todo>()
-    val items: List<Todo>
-        get() = _items
+    private val items = mutableListOf<Todo>()
 
-    fun getOrderedItems(): List<Todo> {
-        return _items.sortedWith(
-            compareBy {
-                if (!it.isDone) -stringToDate(it.times).time
-                else Long.MAX_VALUE
-            }
+    override fun getOrderedItems(): List<Todo> {
+        return items.sortedWith(
+            compareBy(
+                { it.isDone },
+                { -it.times },
+            )
         )
     }
 
-    fun getOrderedWithFilteredItems(query: String): List<Todo> {
-        return _items
+    override fun getOrderedWithFilteredItems(query: String): List<Todo> {
+        return items
             .filter { it.title.contains(query, true) }
             .sortedWith(
-                compareBy {
-                    if (!it.isDone) -stringToDate(it.times).time
-                    else Long.MAX_VALUE
-                }
+                compareBy(
+                    { it.isDone },
+                    { -it.times },
+                )
             )
     }
 
-    fun add(todo: Todo) {
+    override fun add(todo: Todo) {
         todo.id = id.getAndIncrement()
-        _items.add(0, todo)
+        items.add(0, todo)
     }
 
-    fun addAll(newItems: ArrayList<Todo>) {
-        _items.clear()
-        _items.addAll(newItems)
+    override fun remove(todo: Todo) {
+        items.remove(todo)
     }
 
-    fun remove(todo: Todo) {
-        _items.remove(todo)
+    override fun removeAllRemovable() {
+        items.removeAll(items.filter { it.isRemovable })
     }
 
-    fun removeAllRemovable() {
-        _items.removeAll(_items.filter { it.isRemovable })
-    }
+    override fun getRemovablesCount(): Int = items.count { it.isRemovable }
 
-    fun getRemovablesCount(): Int = _items.count { it.isRemovable }
-
-    fun clearAllRemovable() {
-        _items.forEach { it.isRemovable = false }
-    }
-
-    fun edit(todo: Todo): Boolean {
-        _items.withIndex().find { it.value.id == todo.id }?.let {
-            _items[it.index] = todo
-            return true
+    override fun update(todo: Todo) {
+        items.withIndex().find { it.value.id == todo.id }?.let {
+            items[it.index] = todo
         }
-        return false
     }
 }
