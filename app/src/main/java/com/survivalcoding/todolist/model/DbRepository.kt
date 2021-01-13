@@ -138,7 +138,9 @@ class DbRepository(context: Context) : TodoRepository {
                 }
             }
         }
-        return todoItems
+        return todoItems.apply {
+            sortBy { it.todoTitle.length }
+        }
     }
 
     override fun clearTodoList() {
