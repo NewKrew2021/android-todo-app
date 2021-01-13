@@ -3,6 +3,10 @@ package com.survivalcoding.todolist.data
 import com.survivalcoding.todolist.view.main.model.TodoData
 
 interface TodoDefaultRepository {
+    fun getItems(): List<TodoData> {
+        return listOf()
+    }
+
     fun addItem(data: TodoData) {
     }
 
@@ -10,8 +14,5 @@ interface TodoDefaultRepository {
     }
 
     fun addAllItems(data: List<TodoData>) {
-    }
-
-    fun sortItem() {
     }
 }

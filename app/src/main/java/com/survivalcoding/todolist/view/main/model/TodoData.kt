@@ -8,6 +8,5 @@ data class TodoData(
     var text: String,
     var time: Long = 0L,
     var isDone: Boolean = false,
-    var isMarked: Boolean = false,
     var pid: Int = 0,
 ) : Parcelable

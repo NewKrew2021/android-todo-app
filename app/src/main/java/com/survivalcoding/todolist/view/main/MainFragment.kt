@@ -6,14 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.survivalcoding.todolist.data.TodoLocalRepository
+import com.survivalcoding.todolist.data.TodoDefaultRepository
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
 import com.survivalcoding.todolist.view.main.adapter.TodoRecyclerViewAdapter
 import com.survivalcoding.todolist.view.main.model.TodoData
 import java.util.*
 
 
-class MainFragment(private val repository: TodoLocalRepository) : Fragment() {
+class MainFragment(private val repository: TodoDefaultRepository) : Fragment() {
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
@@ -57,7 +57,7 @@ class MainFragment(private val repository: TodoLocalRepository) : Fragment() {
         super.onSaveInstanceState(outState)
         outState.putParcelableArrayList(
             DATA_SAVE,
-            repository.items as ArrayList<TodoData>
+            repository.getItems() as ArrayList<TodoData>
         )
     }
 
@@ -76,7 +76,7 @@ class MainFragment(private val repository: TodoLocalRepository) : Fragment() {
     }
 
     private fun updateUi() {
-        adapter.submitList(repository.items.toList())
+        adapter.submitList(repository.getItems())
     }
 
 

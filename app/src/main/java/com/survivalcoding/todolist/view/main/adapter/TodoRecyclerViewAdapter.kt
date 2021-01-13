@@ -3,14 +3,14 @@ package com.survivalcoding.todolist.view.main.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.survivalcoding.todolist.data.TodoLocalRepository
+import com.survivalcoding.todolist.data.TodoDefaultRepository
 import com.survivalcoding.todolist.databinding.ListItemBinding
 import com.survivalcoding.todolist.view.main.holder.TodoViewHolder
 import com.survivalcoding.todolist.view.main.model.TodoData
 
 
 class TodoRecyclerViewAdapter(
-    private var repository: TodoLocalRepository,
+    private var repository: TodoDefaultRepository,
     val deleteClickListener: (TodoData) -> (Unit),
     val editClickListener: (TodoData) -> (Unit),
 ) :
