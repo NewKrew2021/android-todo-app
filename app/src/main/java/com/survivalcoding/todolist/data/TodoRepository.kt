@@ -9,14 +9,14 @@ class TodoRepository(val adapter: RecyclerAdapter) : DefaultTodoRepository {
     var data = mutableListOf<listItem>()
     var searchData = mutableListOf<searchItem>()
 
-    fun searching(pattern: String) {
+    override fun searching(pattern: String) {
 
         makeSearchData(pattern)
         adapter.notifyDataSetChanged()
         //dataUpdate()
     }
 
-    fun makeSearchData(pattern: String) {
+    override fun makeSearchData(pattern: String) {
         searchData.clear()
 
         for (i in 0..data.size - 1) {
@@ -26,7 +26,7 @@ class TodoRepository(val adapter: RecyclerAdapter) : DefaultTodoRepository {
         }
     }
 
-    fun checkedComplete(pattern: String) {
+    override fun checkedComplete(pattern: String) {
 
         checkingComplete(searchData)
 
@@ -43,7 +43,7 @@ class TodoRepository(val adapter: RecyclerAdapter) : DefaultTodoRepository {
         makeSearchData(pattern)
     }
 
-    private fun checkingComplete(dataList: MutableList<searchItem>) {
+    override fun checkingComplete(dataList: MutableList<searchItem>) {
         var tmp_size = dataList.size
         var index = 0
         for (i in 0..tmp_size - 1) {
@@ -66,7 +66,7 @@ class TodoRepository(val adapter: RecyclerAdapter) : DefaultTodoRepository {
         adapter.notifyItemRangeChanged(0, dataList.size)
     }
 
-    fun checkedRemove(pattern: String) {
+    override fun checkedRemove(pattern: String) {
         val tmp = mutableListOf<Int>()
         for (i in searchData.size - 1 downTo 0) {
             if (searchData[i].item.check == true) {
@@ -79,5 +79,9 @@ class TodoRepository(val adapter: RecyclerAdapter) : DefaultTodoRepository {
             data.removeAt(tmp[i])
         }
         makeSearchData(pattern)
+    }
+
+    override fun addItem(todo: String) {
+        TODO("Not yet implemented")
     }
 }
