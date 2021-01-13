@@ -7,14 +7,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
-import com.survivalcoding.todolist.todo.data.TodoData
+import com.survivalcoding.todolist.todo.data.DefaultTodoData
 import com.survivalcoding.todolist.todo.view.MainActivity
 import com.survivalcoding.todolist.todo.view.add.AddFragment
 import com.survivalcoding.todolist.todo.view.edit.EditFragment
 import com.survivalcoding.todolist.todo.view.main.adapter.TodoAdapter
 import com.survivalcoding.todolist.todo.view.model.Todo
 
-class MainFragment(private var model: TodoData) : Fragment() {
+class MainFragment(private var model: DefaultTodoData) : Fragment() {
     private val todoAdapter: TodoAdapter by lazy {
         TodoAdapter(
             deleteOnClick = { model.deleteTodo(it) },
@@ -26,6 +26,9 @@ class MainFragment(private var model: TodoData) : Fragment() {
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
+
+    var orderMethod = MainActivity.ASCENDING
+    var sortingBase = MainActivity.SORT_BY_TITLE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,23 +57,24 @@ class MainFragment(private var model: TodoData) : Fragment() {
                 }
             }
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelableArrayList(
-            MainActivity.ROTATION_RESTORE_KEY,
-            model.todoList as ArrayList<Todo>
-        )
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        val list =
-            savedInstanceState?.getParcelableArrayList<Todo>(MainActivity.ROTATION_RESTORE_KEY)
-        list?.let { model.updateTodo(it.toList()) }
         updateUI()
     }
+
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        outState.putParcelableArrayList(
+//            MainActivity.ROTATION_RESTORE_KEY,
+//            model.todoList as ArrayList<Todo>
+//        )
+//    }
+//
+//    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+//        super.onViewStateRestored(savedInstanceState)
+//        val list =
+//            savedInstanceState?.getParcelableArrayList<Todo>(MainActivity.ROTATION_RESTORE_KEY)
+//        list?.let { model.todoList = it }
+//        updateUI()
+//    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -86,28 +90,24 @@ class MainFragment(private var model: TodoData) : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.sortToDDay -> {
-                model.sortingBase = MainActivity.SORT_BY_D_DAY
-                model.sorting()
+                sortingBase = MainActivity.SORT_BY_D_DAY
                 updateUI()
                 return true
             }
             R.id.sortToTitle -> {
-                model.sortingBase = MainActivity.SORT_BY_TITLE
-                model.sorting()
+                sortingBase = MainActivity.SORT_BY_TITLE
                 updateUI()
                 return true
             }
             R.id.ascending -> {
                 item.isChecked = true
-                model.orderMethod = MainActivity.ASCENDING
-                model.sorting()
+                orderMethod = MainActivity.ASCENDING
                 updateUI()
                 return true
             }
             R.id.descending -> {
                 item.isChecked = true
-                model.orderMethod = MainActivity.DESCENDING
-                model.sorting()
+                orderMethod = MainActivity.DESCENDING
                 updateUI()
                 return true
             }
@@ -116,7 +116,7 @@ class MainFragment(private var model: TodoData) : Fragment() {
     }
 
     private fun updateUI() {
-        todoAdapter.submitList(model.todoList.toList())
+        todoAdapter.submitList(model.sorting(sortingBase, orderMethod))
     }
 
     private fun textOnClick(item: Todo) {
