@@ -23,6 +23,10 @@ class TodoViewModel {
         _todoList.add(todoItem)
     }
 
+    fun checkTodo(todoItem: TodoItem, isChecked: Boolean) {
+        todoItem.isChecked = isChecked
+    }
+
     fun updateTodo(todoItem: TodoItem, newTodoTitle: String) {
         todoItem.todoTitle = newTodoTitle
         todoItem.timeStamp = getCurrentTime()
@@ -32,12 +36,12 @@ class TodoViewModel {
         _todoList.remove(todoItem)
     }
 
-    fun sortByTime() {
-        _todoList.sortWith(compareBy<TodoItem> { it.isChecked }.thenByDescending { it.timeStamp })
+    fun getTodoListSortedByTime(): List<TodoItem> {
+        return _todoList.sortedWith(compareBy<TodoItem> { it.isChecked }.thenByDescending { it.timeStamp })
     }
 
-    fun sortByTitle() {
-        _todoList.sortWith(compareBy<TodoItem> { it.isChecked }.thenBy { it.todoTitle })
+    fun getTodoListSortedByTitle(): List<TodoItem> {
+        return _todoList.sortedWith(compareBy<TodoItem> { it.isChecked }.thenBy { it.todoTitle })
     }
 
     fun searchTodoItem(inputTitle: String): List<TodoItem> {

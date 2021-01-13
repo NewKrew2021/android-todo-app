@@ -11,10 +11,10 @@ import androidx.fragment.app.Fragment
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.adapter.TodoListAdapter
 import com.survivalcoding.todolist.databinding.FragmentTodoBinding
-import com.survivalcoding.todolist.model.DbRepository
 import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.util.getCurrentTime
 import com.survivalcoding.todolist.util.replaceTransactionWithAnimation
+import com.survivalcoding.todolist.viewmodel.TodoViewModel
 
 class TodoFragment : Fragment() {
     private var _binding: FragmentTodoBinding? = null
@@ -22,8 +22,8 @@ class TodoFragment : Fragment() {
     private lateinit var adapter: TodoListAdapter
     private val viewModel by lazy {
         // DB 를 도입해서 임시로 주석처리
-//        TodoViewModel()
-        DbRepository(requireContext())
+        TodoViewModel()
+//        DbRepository(requireContext())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -174,7 +174,6 @@ class TodoFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        viewModel.closeDb()
     }
 
     private fun showToast(message: String) {
