@@ -7,9 +7,9 @@ import com.survivalcoding.todolist.databinding.ItemTodoBinding
 import com.survivalcoding.todolist.model.TodoItem
 
 class TodoListAdapter(
-    private val remove: (TodoItem) -> Unit,
     private val updateUi: () -> Unit,
     private val updateItem: (TodoItem) -> Unit,
+    private val openTodoItem: (TodoItem) -> Unit,
 ) : ListAdapter<TodoItem, TodoViewHolder>(TodoDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
@@ -18,6 +18,6 @@ class TodoListAdapter(
     }
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
-        holder.bind(getItem(position), remove, updateUi, updateItem)
+        holder.bind(getItem(position), updateUi, updateItem, openTodoItem)
     }
 }

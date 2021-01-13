@@ -7,4 +7,6 @@
     <dimen name="todo_item_height">56dp</dimen>
     <dimen name="margin_small">8dp</dimen>
 
+    <dimen name="text_mid">24sp</dimen>
+
 </resources>

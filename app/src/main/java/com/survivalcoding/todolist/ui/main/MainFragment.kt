@@ -34,9 +34,14 @@ class MainFragment(private val todoRepository: TodoSqliteRepository) : Fragment(
         }
 
         adapter = TodoListAdapter(
-            remove = { targetItem -> todoRepository.removeItem(targetItem) },
             updateUi = { updateUi() },
-            updateItem = { todoItem -> todoRepository.updateItem(todoItem) }
+            updateItem = { todoItem -> todoRepository.updateItem(todoItem) },
+            openTodoItem = { todoItem ->
+                NavigationUtil.openTodoFragment(
+                    parentFragmentManager,
+                    todoItem
+                )
+            }
         )
 
         binding.list.apply {
@@ -60,7 +65,7 @@ class MainFragment(private val todoRepository: TodoSqliteRepository) : Fragment(
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.add_button -> {
-                NavigationUtil.openAddFragment(parentFragmentManager)
+                NavigationUtil.openEditFragment(parentFragmentManager)
                 true
             }
             else -> super.onOptionsItemSelected(item)

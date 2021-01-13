@@ -10,22 +10,21 @@ class TodoViewHolder(
 
     fun bind(
         item: TodoItem,
-        remove: (TodoItem) -> Unit,
         updateUi: () -> Unit,
         updateItem: (TodoItem) -> Unit,
+        openTodoItem: (TodoItem) -> Unit,
     ) {
         binding.apply {
             title.text = item.title
             checkbox.isChecked = item.isChecked
 
+            title.setOnClickListener {
+                openTodoItem(item)
+            }
+
             checkbox.setOnClickListener {
                 item.isChecked = item.isChecked xor true
                 updateItem(item)
-                updateUi()
-            }
-
-            delete.setOnClickListener {
-                remove(item)
                 updateUi()
             }
         }
