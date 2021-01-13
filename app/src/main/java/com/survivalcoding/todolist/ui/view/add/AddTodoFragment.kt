@@ -6,19 +6,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.data.model.TodoItem
 import com.survivalcoding.todolist.databinding.FragmentAddTodoBinding
-import com.survivalcoding.todolist.ui.viewmodel.AddTodoViewModel
+import com.survivalcoding.todolist.ui.view.main.MainFragment
+import com.survivalcoding.todolist.ui.viewmodel.MainViewModel
 import com.survivalcoding.todolist.util.TODO_ITEM
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
-class AddTodoFragment() : Fragment(R.layout.fragment_add_todo) {
+class AddTodoFragment : Fragment(R.layout.fragment_add_todo) {
 
     private var _binding: FragmentAddTodoBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: AddTodoViewModel by viewModel()
+    private val viewModel: MainViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,11 +53,34 @@ class AddTodoFragment() : Fragment(R.layout.fragment_add_todo) {
 
     private fun eventProcess() {
         binding.btnSaveAddTodo.setOnClickListener {
-
+            if (arguments == null) {
+                viewModel.addTodoItem(
+                    TodoItem(
+                        time = Calendar.getInstance().timeInMillis,
+                        contents = binding.edtContentsAddTodo.text.toString(),
+                    )
+                )
+            } else {
+                val todoItem = requireArguments().getParcelable<TodoItem>(TODO_ITEM)
+                if (todoItem != null) {
+                    viewModel.removeTodoItem(todoItem)
+                    viewModel.addTodoItem(
+                        TodoItem(
+                            time = Calendar.getInstance().timeInMillis,
+                            contents = binding.edtContentsAddTodo.text.toString(),
+                        )
+                    )
+                }
+            }
+            parentFragmentManager.commit {
+                replace<MainFragment>(R.id.fragment_container)
+            }
         }
 
         binding.btnCancelAddTodo.setOnClickListener {
-
+            parentFragmentManager.commit {
+                replace<MainFragment>(R.id.fragment_container)
+            }
         }
     }
 }

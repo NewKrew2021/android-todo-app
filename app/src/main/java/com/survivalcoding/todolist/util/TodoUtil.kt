@@ -5,6 +5,5 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 const val TODO_ITEM = "todoItem"
-const val TODO_LIST = "todoList"
 @SuppressLint("SimpleDateFormat")
 fun convertToDate(time: Long): String = SimpleDateFormat("yyyy-MM-DD HH:mm:ss").format(Date(time))

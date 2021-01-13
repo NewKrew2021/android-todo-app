@@ -7,6 +7,6 @@ import kotlinx.android.parcel.Parcelize
 data class TodoItem(
     var time: Long,
     var contents: String?,
-    var complete: Boolean,
-    val id: Int,
+    var complete: Boolean = false,
+    var id: Int = 0,
 ) : Parcelable

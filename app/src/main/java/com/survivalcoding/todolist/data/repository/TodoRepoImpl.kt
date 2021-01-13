@@ -12,7 +12,7 @@ class TodoRepoImpl(context: Context) : TodoRepo {
 
     private val dbHelper = TodoDbHelper(context)
 
-    override fun getAllTodoItem(): List<TodoItem> {
+    override fun getAllTodoItem(): MutableList<TodoItem> {
         val db = dbHelper.readableDatabase
 
         val projection =
@@ -66,13 +66,35 @@ class TodoRepoImpl(context: Context) : TodoRepo {
             put(TodoContract.TodoEntry.COLUMN_NAME_COMPLETE, "${todoItem.complete}")
         }
 
+        db.insert(TodoContract.TodoEntry.TABLE_NAME, null, values)
     }
 
     override fun updateTodo(todoItem: TodoItem) {
-        //
+        val db = dbHelper.writableDatabase
+
+        val values = ContentValues().apply {
+            put(TodoContract.TodoEntry.COLUMN_NAME_CONTENTS, todoItem.contents)
+            put(TodoContract.TodoEntry.COLUMN_NAME_TIME, todoItem.time)
+            put(TodoContract.TodoEntry.COLUMN_NAME_COMPLETE, "${todoItem.complete}")
+        }
+
+        val selection = "${BaseColumns._ID} = ?"
+        val selectionArgs = arrayOf("${todoItem.id}")
+
+        db.update(
+            TodoContract.TodoEntry.TABLE_NAME,
+            values,
+            selection,
+            selectionArgs
+        )
     }
 
     override fun removeTodo(todoItem: TodoItem) {
         val db = dbHelper.writableDatabase
+
+        val selection = "${BaseColumns._ID} = ?"
+        val selectionArgs = arrayOf("${todoItem.id}")
+
+        db.delete(TodoContract.TodoEntry.TABLE_NAME, selection, selectionArgs)
     }
 }

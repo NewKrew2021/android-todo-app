@@ -6,14 +6,18 @@ import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
 import com.survivalcoding.todolist.ui.adapter.TodoAdapter
+import com.survivalcoding.todolist.ui.view.add.AddTodoFragment
 import com.survivalcoding.todolist.ui.viewmodel.MainViewModel
+import com.survivalcoding.todolist.util.TODO_ITEM
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainFragment : Fragment(R.layout.fragment_main) {
@@ -46,17 +50,16 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         eventProcess()
         setRecyclerView()
         setToolbar()
-
     }
 
     private fun getData() {
-
+        viewModel.getTodoList()
     }
 
     private fun eventProcess() {
         binding.btnAddMain.setOnClickListener {
             parentFragmentManager.commit {
-
+                replace<AddTodoFragment>(R.id.fragment_container)
             }
         }
     }
@@ -67,13 +70,22 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             setTodoList(viewModel.todoList)
             setModifyTodoItemListener {
                 parentFragmentManager.commit {
-
+                    replace(
+                        R.id.fragment_container,
+                        AddTodoFragment::class.java,
+                        bundleOf(TODO_ITEM to it)
+                    )
                 }
             }
 
-            setSortTodoItemListener {
-                viewModel.sortTodoItem()
+            setCompleteTodoItemListener {
+                viewModel.updateTodoItem(it)
+                viewModel.getTodoList()
                 todoAdapter.setTodoList(viewModel.todoList)
+            }
+
+            setRemoveTodoItemListener {
+                viewModel.removeTodoItem(it)
             }
         }
 
