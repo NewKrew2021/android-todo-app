@@ -8,6 +8,8 @@ import java.util.concurrent.atomic.AtomicInteger
 // 데이터의 삽입, 삭제, 수정, 정렬을 위한 메소드가 존재한다.
 class TodoData(var data: MutableList<Todo> = mutableListOf()) {
     private val id = AtomicInteger(0)
+    var orderMethod = MainActivity.ASCENDING
+    var sortingBase = MainActivity.SORT_BY_TITLE
 
     val todoList: List<Todo>    // getter
         get() = data
@@ -15,6 +17,7 @@ class TodoData(var data: MutableList<Todo> = mutableListOf()) {
     fun addTodo(item: Todo) {   // 데이터 추가
         item.id = id.getAndIncrement()
         data.add(item)
+        sorting()
     }
 
     fun deleteTodo(item: Todo) {    // 데이터 삭제
@@ -33,6 +36,7 @@ class TodoData(var data: MutableList<Todo> = mutableListOf()) {
             clear()
             addAll(updatedData)
         }
+        sorting()
     }
 
     fun updateTodo(_item: List<Todo>) {
@@ -40,9 +44,9 @@ class TodoData(var data: MutableList<Todo> = mutableListOf()) {
         data.addAll(_item)
     }
 
-    // sortingBase : 정렬 기준(제목..), order : 오름/내림차순 정렬
-    fun sorting(sortingBase: Int, order: Int) {
-        when (sortingBase + order) {
+    // sortingBase : 정렬 기준(제목..), orderMethod : 오름/내림차순 정렬
+    fun sorting() {
+        when (sortingBase + orderMethod) {
             MainActivity.SORT_BY_TITLE + MainActivity.ASCENDING -> data.sortBy { it.text }
             MainActivity.SORT_BY_TITLE + MainActivity.DESCENDING -> data.sortByDescending { it.text }
             MainActivity.SORT_BY_D_DAY + MainActivity.ASCENDING -> data.sortBy { it.dueDate }

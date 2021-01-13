@@ -27,9 +27,6 @@ class MainFragment(private var model: TodoData) : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!  // !!....;;
 
-    private var orderMethod = MainActivity.ASCENDING
-    private var sortingBase = MainActivity.SORT_BY_TITLE
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -88,28 +85,28 @@ class MainFragment(private var model: TodoData) : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.sortToDDay -> {
-                sortingBase = MainActivity.SORT_BY_D_DAY
-                model.sorting(sortingBase = MainActivity.SORT_BY_D_DAY, order = orderMethod)
+                model.sortingBase = MainActivity.SORT_BY_D_DAY
+                model.sorting()
                 updateUI()
                 return true
             }
             R.id.sortToTitle -> {
-                sortingBase = MainActivity.SORT_BY_TITLE
-                model.sorting(sortingBase = MainActivity.SORT_BY_TITLE, order = orderMethod)
+                model.sortingBase = MainActivity.SORT_BY_TITLE
+                model.sorting()
                 updateUI()
                 return true
             }
             R.id.ascending -> {
                 item.isChecked = true
-                orderMethod = MainActivity.ASCENDING
-                model.sorting(sortingBase, order = MainActivity.ASCENDING)
+                model.orderMethod = MainActivity.ASCENDING
+                model.sorting()
                 updateUI()
                 return true
             }
             R.id.descending -> {
                 item.isChecked = true
-                orderMethod = MainActivity.DESCENDING
-                model.sorting(sortingBase, order = MainActivity.DESCENDING)
+                model.orderMethod = MainActivity.DESCENDING
+                model.sorting()
                 updateUI()
                 return true
             }
