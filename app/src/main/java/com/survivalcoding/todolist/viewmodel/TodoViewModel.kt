@@ -12,7 +12,9 @@ class TodoViewModel : ViewModel() {
         items.add(item)
     }
 
-    fun remove(item: TodoItem) = items.remove(item)
+    fun remove(item: TodoItem){
+        items.remove(item)
+    }
 
     fun modify(item: TodoItem) {
         val modifyItems = items.map {

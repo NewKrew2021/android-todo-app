@@ -11,19 +11,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.FragmentMakeTodoBinding
 import com.survivalcoding.todolist.model.TodoItem
-import com.survivalcoding.todolist.viewmodel.SharedViewModel
+import com.survivalcoding.todolist.repository.DefaultTodoRepository
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MakeTodoFragment(val mode: String, val oldItem: TodoItem? = null) : Fragment() {
+class MakeTodoFragment(private val repository: DefaultTodoRepository,private val oldItem: TodoItem? = null) : Fragment() {
     private var _binding: FragmentMakeTodoBinding? = null
     private val binding get() = _binding!!
     private lateinit var backPressCallback: OnBackPressedCallback
-    lateinit var sharedViewModel: SharedViewModel
+//    lateinit var sharedViewModel: SharedViewModel
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -43,7 +42,7 @@ class MakeTodoFragment(val mode: String, val oldItem: TodoItem? = null) : Fragme
         super.onAttach(context)
         backPressCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                sharedViewModel.setLiveData(null)
+                Toast.makeText(requireContext(), "취소 되었습니다.", Toast.LENGTH_SHORT).show()
                 finish()
             }
         }
@@ -57,15 +56,17 @@ class MakeTodoFragment(val mode: String, val oldItem: TodoItem? = null) : Fragme
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
-        if (mode == MainFragment.FRAGMENT_EDIT_MODE) {
+        if (oldItem != null) {
             binding.apply {
-                titleEdit.setText(oldItem?.title)
+                titleEdit.setText(oldItem.title)
+                val date = Date(oldItem.date);
+                val calendar =  Calendar.getInstance()
+                calendar.time = date
                 dateView.text = String.format(
                         "%d-%02d-%02d",
-                        oldItem?.date?.get(Calendar.YEAR),
-                        oldItem?.date?.get(Calendar.MONTH)?.plus(1),
-                        oldItem?.date?.get(Calendar.DAY_OF_MONTH)
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH)?.plus(1),
+                        calendar.get(Calendar.DAY_OF_MONTH)
                 )
                 addTodoButton.text = "수정"
             }
@@ -83,33 +84,31 @@ class MakeTodoFragment(val mode: String, val oldItem: TodoItem? = null) : Fragme
                     if (dateView.text.toString() == "yyyy - mm - dd") {
                         Toast.makeText(requireContext(), "기한을 선택해주세요", Toast.LENGTH_SHORT).show()
                     } else {
-                        val calendar = Calendar.getInstance()
-                        calendar.time = SimpleDateFormat(
+                        val date = SimpleDateFormat(
                                 "yyyy-MM-dd",
                                 Locale.KOREA
                         ).parse(dateView.text.toString())
                                 ?: Date(Calendar.getInstance().timeInMillis)
                         lateinit var data: TodoItem
-                        if (mode == MainFragment.FRAGMENT_EDIT_MODE) {
+                        if (oldItem != null) {
                             data = TodoItem(
                                     title = titleEdit.text.toString(),
-                                    date = calendar,
+                                    date = date.time,
                                     isComplete = false,
-                                    isMark = oldItem?.isMark ?: true,
-                                    id = oldItem?.id
+                                    isMark = oldItem.isMark,
+                                    id = oldItem.id
                             )
-
+                            repository.update(data)
 
                         } else {
                             data = TodoItem(
                                     title = titleEdit.text.toString(),
-                                    date = calendar,
+                                    date = date.time,
                                     isComplete = false,
-                                    isMark = true
+                                    isMark = false
                             )
-
+                            repository.add(data)
                         }
-                        sharedViewModel.setLiveData(data)
                         finish()
                     }
                 }
@@ -140,7 +139,6 @@ class MakeTodoFragment(val mode: String, val oldItem: TodoItem? = null) : Fragme
     }
 
     private fun finish() {
-        parentFragmentManager.beginTransaction().remove(this).commit()
         parentFragmentManager.popBackStack()
     }
 
