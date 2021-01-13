@@ -12,17 +12,14 @@ import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.adapter.TodoListAdapter
 import com.survivalcoding.todolist.databinding.FragmentTodoBinding
 import com.survivalcoding.todolist.model.TodoItem
+import com.survivalcoding.todolist.model.TodoRepository
 import com.survivalcoding.todolist.util.getCurrentTime
 import com.survivalcoding.todolist.util.replaceTransactionWithAnimation
-import com.survivalcoding.todolist.viewmodel.TodoViewModel
 
-class TodoFragment : Fragment() {
+class TodoFragment(private val repository: TodoRepository) : Fragment() {
     private var _binding: FragmentTodoBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: TodoListAdapter
-    private val viewModel by lazy {
-        TodoViewModel()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,23 +39,25 @@ class TodoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initializeView()
         setOnListener()
+        updateTodoList()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelableArrayList(
-            SAVE_INSTANCE_TODO_ITEM_KEY,
-            viewModel.todoList as ArrayList<TodoItem>
-        )
+        // DB에 저장하면서 필요없어짐. 삭제 예정
+//        outState.putParcelableArrayList(
+//            SAVE_INSTANCE_TODO_ITEM_KEY,
+//            viewModel.todoList as ArrayList<TodoItem>
+//        )
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         savedInstanceState?.getParcelableArrayList<TodoItem>(SAVE_INSTANCE_TODO_ITEM_KEY)
             ?.let {
-                viewModel.clearTodoList()
+                repository.clearTodoList()
                 it.forEach { todo ->
-                    viewModel.addTodo(todo)
+                    repository.addTodo(todo)
                 }
                 updateTodoList()
             }
@@ -68,13 +67,12 @@ class TodoFragment : Fragment() {
         val sortOptions = resources.getStringArray(R.array.sort_options)
         // 시간 순으로 정렬
         if (binding.sortOptionSpinner.selectedItem.toString() == sortOptions[0]) {
-            viewModel.sortByTime()
+            adapter.submitList(repository.getTodoListSortedByTime())
         }
         // 사전 순으로 정렬
         else if (binding.sortOptionSpinner.selectedItem.toString() == sortOptions[1]) {
-            viewModel.sortByTitle()
+            adapter.submitList(repository.getTodoListSortedByTitle())
         }
-        adapter.submitList(viewModel.todoList.toList())
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -101,7 +99,7 @@ class TodoFragment : Fragment() {
                         return@setOnClickListener
                     }
                     // id 값을 ViewModel 에서 관리해주기 때문에 처음에 등록할 때는 NEW_TODO_TASK 로 지정
-                    viewModel.addTodo(TodoItem(NEW_TODO_TASK, false, toString(), getCurrentTime()))
+                    repository.addTodo(TodoItem(NEW_TODO_TASK, false, toString(), getCurrentTime()))
                     clear()
                     hideKeyboard()
                 }
@@ -117,7 +115,16 @@ class TodoFragment : Fragment() {
                 }
 
                 override fun onQueryTextChange(newText: String): Boolean {
-                    adapter.submitList(viewModel.searchTodoItem(newText))
+                    if (newText.isEmpty()) {
+                        updateTodoList()
+                    } else {
+                        adapter.submitList(repository.searchTodoItem(newText))
+                        /*
+                         * 검색어 하이라이팅을 위해 호출.
+                         * 윗 줄에서 submitList 하고 함수 내부에서 notifyDataSetChanged 도 호출하기 때문에 좋은 방식은 아닌 것 같음.
+                         */
+                        adapter.setSearchKeyword(newText)
+                    }
                     return true
                 }
             })
@@ -126,16 +133,17 @@ class TodoFragment : Fragment() {
 
     private fun initializeView() {
         adapter = TodoListAdapter(
-            checkTodoListener = {
+            checkTodoListener = { item, isChecked ->
+                repository.checkTodo(item, isChecked)
                 updateTodoList()
             },
             editTodoListener = { todoItem, newTodoTitle ->
-                viewModel.updateTodo(todoItem, newTodoTitle)
+                repository.updateTodo(todoItem, newTodoTitle)
                 updateTodoList()
             },
             removeTodoListener = { item ->
                 RemoveCheckDialog(item) {
-                    viewModel.removeTodo(item)
+                    repository.removeTodo(item)
                     updateTodoList()
                 }.show(childFragmentManager, RemoveCheckDialog.TAG)
             }

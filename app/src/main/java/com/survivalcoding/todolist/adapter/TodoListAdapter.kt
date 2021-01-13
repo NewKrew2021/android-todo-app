@@ -1,6 +1,11 @@
 package com.survivalcoding.todolist.adapter
 
+import android.graphics.Color
 import android.graphics.Paint
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,14 +13,16 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.todolist.databinding.ToDoListBinding
 import com.survivalcoding.todolist.model.TodoItem
+import java.util.*
 
 class TodoListAdapter(
-    private val checkTodoListener: () -> Unit,
+    private val checkTodoListener: (TodoItem, Boolean) -> Unit,
     private val editTodoListener: (TodoItem, String) -> Unit,
     private val removeTodoListener: (TodoItem) -> Unit
 ) :
     ListAdapter<TodoItem, TodoListAdapter.TodoViewHolder>(TodoDiffUtilCallback()) {
     private lateinit var binding: ToDoListBinding
+    private var searchKeyword = "" // 검색창에 입력한 키워드
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         binding = ToDoListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -24,11 +31,43 @@ class TodoListAdapter(
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
         holder.bind(getItem(position))
+        holder.binding.toDoTitle.text = highlightSearchKeyword(getItem(position).todoTitle)
+    }
+
+    // Fragment 에서 입력한 검색어를 얻어오기 위한 함수
+    fun setSearchKeyword(searchKeyword: String) {
+        this.searchKeyword = searchKeyword
+        notifyDataSetChanged()
+    }
+
+    private fun highlightSearchKeyword(todoTitle: String): SpannableString {
+        val start = todoTitle.toLowerCase(Locale.getDefault()).indexOf(
+            searchKeyword.toLowerCase(
+                Locale.getDefault()
+            )
+        )
+        val end = start + searchKeyword.length
+        return if (start < 0) SpannableString(todoTitle) else {
+            SpannableString(todoTitle).apply {
+                setSpan(
+                    ForegroundColorSpan(Color.BLACK),
+                    start,
+                    end,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                setSpan(
+                    RelativeSizeSpan(HIGHLIGHT_FONT_SIZE),
+                    start,
+                    end,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+        }
     }
 
     class TodoViewHolder(
-        private val binding: ToDoListBinding,
-        private val checkTodoListener: () -> Unit,
+        val binding: ToDoListBinding,
+        private val checkTodoListener: (TodoItem, Boolean) -> Unit,
         private val editTodoListener: (TodoItem, String) -> Unit,
         private val removeTodoListener: (TodoItem) -> Unit
     ) :
@@ -50,7 +89,7 @@ class TodoListAdapter(
                     item.isChecked = checkBox.isChecked
                     drawCancelLine(item, item.isChecked)
                     showEditButton(!checkBox.isChecked)
-                    checkTodoListener()
+                    checkTodoListener(item, checkBox.isChecked)
                 }
                 toDoTitle.setOnClickListener {
                     checkBox.isChecked.apply {
@@ -58,8 +97,8 @@ class TodoListAdapter(
                         checkBox.isChecked = !this
                         showEditButton(this)
                         drawCancelLine(item, !this)
+                        checkTodoListener(item, !this)
                     }
-                    checkTodoListener()
                 }
                 editButton.setOnClickListener {
                     setLayoutVisibility(true)
@@ -101,5 +140,9 @@ class TodoListAdapter(
         private fun showEditButton(isEditable: Boolean) {
             binding.editButton.visibility = if (isEditable) View.VISIBLE else View.INVISIBLE
         }
+    }
+
+    companion object {
+        const val HIGHLIGHT_FONT_SIZE = 1.1f
     }
 }
