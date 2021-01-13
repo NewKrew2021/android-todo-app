@@ -140,7 +140,6 @@ class MakeTodoFragment(val mode: String, val oldItem: TodoItem? = null) : Fragme
     }
 
     private fun finish() {
-        parentFragmentManager.beginTransaction().remove(this).commit()
         parentFragmentManager.popBackStack()
     }
 

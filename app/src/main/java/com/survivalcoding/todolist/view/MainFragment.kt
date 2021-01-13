@@ -2,8 +2,6 @@ package com.survivalcoding.todolist.view
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.adapter.TodoListAdapter
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
+import com.survivalcoding.todolist.extension.afterTextChanged
 import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.viewmodel.SharedViewModel
 import com.survivalcoding.todolist.viewmodel.TodoViewModel
@@ -79,7 +78,18 @@ class MainFragment : Fragment() {
                     addToBackStack(null)
                 }
             }
-            searchEdit.addTextChangedListener(getTextWatcher())
+            searchEdit.afterTextChanged{ text ->
+                val searchList = todoViewModel.getItemList().filter {
+                    it.title.contains(text)
+                }
+                searchList.sortedWith(
+                        compareBy(
+                                { it.isComplete },
+                                { it.isMark },
+                                { it.date })
+                )
+                todoListAdapter.submitList(searchList)
+            }
         }
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
         sharedViewModel.getLiveData().observe(
@@ -111,32 +121,7 @@ class MainFragment : Fragment() {
         }
         updateList()
     }
-
-    fun getTextWatcher(): TextWatcher {
-        return object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                val searchList = todoViewModel.getItemList().filter {
-                    it.title.contains(s.toString())
-                }
-                searchList.sortedWith(
-                        compareBy(
-                                { it.isComplete },
-                                { it.isMark },
-                                { it.date })
-                )
-                todoListAdapter.submitList(searchList)
-            }
-
-        }
-    }
+    
 
     companion object {
         const val FRAGMENT_ADD_MODE = "add"
