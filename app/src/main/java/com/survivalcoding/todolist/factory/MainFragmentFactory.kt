@@ -2,7 +2,7 @@ package com.survivalcoding.todolist.factory
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
-import com.survivalcoding.todolist.repository.TodoRepository
+import com.survivalcoding.todolist.data.repository.TodoRepository
 import com.survivalcoding.todolist.ui.add.AddFragment
 import com.survivalcoding.todolist.ui.main.MainFragment
 

@@ -1,8 +1,9 @@
 package com.survivalcoding.todolist
 
 import android.app.Application
-import com.survivalcoding.todolist.repository.TodoRepository
+import com.survivalcoding.todolist.data.repository.TodoRepository
 
 class TodoApp : Application() {
-    val todoRepository = TodoRepository()
+    val todoRepository =
+        TodoRepository()
 }

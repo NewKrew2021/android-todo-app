@@ -8,7 +8,7 @@ import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.adapter.TodoListAdapter
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
 import com.survivalcoding.todolist.model.TodoItem
-import com.survivalcoding.todolist.repository.TodoRepository
+import com.survivalcoding.todolist.data.repository.TodoRepository
 import com.survivalcoding.todolist.utils.NavigationUtil
 
 class MainFragment(private val todoRepository: TodoRepository) : Fragment() {

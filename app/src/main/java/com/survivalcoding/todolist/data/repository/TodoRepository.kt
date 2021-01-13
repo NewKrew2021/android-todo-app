@@ -1,4 +1,4 @@
-package com.survivalcoding.todolist.repository
+package com.survivalcoding.todolist.data.repository
 
 import com.survivalcoding.todolist.model.TodoItem
 

@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.survivalcoding.todolist.data.repository.TodoRepository
 import com.survivalcoding.todolist.databinding.FragmentAddBinding
 import com.survivalcoding.todolist.model.TodoItem
-import com.survivalcoding.todolist.repository.TodoRepository
 import com.survivalcoding.todolist.utils.NavigationUtil
 import java.util.*
 
