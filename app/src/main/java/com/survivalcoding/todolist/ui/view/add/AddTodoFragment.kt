@@ -6,11 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.data.model.TodoItem
 import com.survivalcoding.todolist.databinding.FragmentAddTodoBinding
+import com.survivalcoding.todolist.extension.replaceFragment
 import com.survivalcoding.todolist.ui.view.main.MainFragment
 import com.survivalcoding.todolist.ui.viewmodel.MainViewModel
 import com.survivalcoding.todolist.util.TODO_ITEM
@@ -72,15 +71,11 @@ class AddTodoFragment : Fragment(R.layout.fragment_add_todo) {
                     )
                 }
             }
-            parentFragmentManager.commit {
-                replace<MainFragment>(R.id.fragment_container)
-            }
+            replaceFragment<MainFragment>(R.id.fragment_container)
         }
 
         binding.btnCancelAddTodo.setOnClickListener {
-            parentFragmentManager.commit {
-                replace<MainFragment>(R.id.fragment_container)
-            }
+            replaceFragment<MainFragment>(R.id.fragment_container)
         }
     }
 }

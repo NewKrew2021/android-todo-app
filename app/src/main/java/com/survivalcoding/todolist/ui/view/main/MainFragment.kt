@@ -8,12 +8,12 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
+import com.survivalcoding.todolist.extension.replaceFragment
+import com.survivalcoding.todolist.extension.replaceFragmentWithBundle
 import com.survivalcoding.todolist.ui.adapter.TodoAdapter
 import com.survivalcoding.todolist.ui.view.add.AddTodoFragment
 import com.survivalcoding.todolist.ui.viewmodel.MainViewModel
@@ -58,9 +58,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
     private fun eventProcess() {
         binding.btnAddMain.setOnClickListener {
-            parentFragmentManager.commit {
-                replace<AddTodoFragment>(R.id.fragment_container)
-            }
+            replaceFragment<AddTodoFragment>(R.id.fragment_container)
         }
     }
 
@@ -69,13 +67,11 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         todoAdapter = TodoAdapter().apply {
             setTodoList(viewModel.todoList)
             setModifyTodoItemListener {
-                parentFragmentManager.commit {
-                    replace(
-                        R.id.fragment_container,
-                        AddTodoFragment::class.java,
-                        bundleOf(TODO_ITEM to it)
-                    )
-                }
+                replaceFragmentWithBundle(
+                    R.id.fragment_container,
+                    AddTodoFragment::class,
+                    bundleOf(TODO_ITEM to it)
+                )
             }
 
             setCompleteTodoItemListener {

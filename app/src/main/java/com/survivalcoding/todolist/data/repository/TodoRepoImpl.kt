@@ -6,6 +6,9 @@ import android.provider.BaseColumns
 import com.survivalcoding.todolist.data.contract.TodoContract
 import com.survivalcoding.todolist.data.db.TodoDbHelper
 import com.survivalcoding.todolist.data.model.TodoItem
+import com.survivalcoding.todolist.extension.selection
+import com.survivalcoding.todolist.extension.selectionArgs
+import com.survivalcoding.todolist.extension.setValues
 
 
 class TodoRepoImpl(context: Context) : TodoRepo {
@@ -59,42 +62,33 @@ class TodoRepoImpl(context: Context) : TodoRepo {
     }
 
     override fun addTodo(todoItem: TodoItem) {
-        val db = dbHelper.writableDatabase
-        val values = ContentValues().apply {
-            put(TodoContract.TodoEntry.COLUMN_NAME_CONTENTS, todoItem.contents)
-            put(TodoContract.TodoEntry.COLUMN_NAME_TIME, todoItem.time)
-            put(TodoContract.TodoEntry.COLUMN_NAME_COMPLETE, "${todoItem.complete}")
+        dbHelper.writableDatabase.run {
+            insert(
+                TodoContract.TodoEntry.TABLE_NAME,
+                null,
+                ContentValues().setValues(todoItem)
+            )
         }
-
-        db.insert(TodoContract.TodoEntry.TABLE_NAME, null, values)
     }
 
     override fun updateTodo(todoItem: TodoItem) {
-        val db = dbHelper.writableDatabase
-
-        val values = ContentValues().apply {
-            put(TodoContract.TodoEntry.COLUMN_NAME_CONTENTS, todoItem.contents)
-            put(TodoContract.TodoEntry.COLUMN_NAME_TIME, todoItem.time)
-            put(TodoContract.TodoEntry.COLUMN_NAME_COMPLETE, "${todoItem.complete}")
+        dbHelper.writableDatabase.run {
+            update(
+                TodoContract.TodoEntry.TABLE_NAME,
+                ContentValues().setValues(todoItem),
+                selection(),
+                selectionArgs(todoItem)
+            )
         }
-
-        val selection = "${BaseColumns._ID} = ?"
-        val selectionArgs = arrayOf("${todoItem.id}")
-
-        db.update(
-            TodoContract.TodoEntry.TABLE_NAME,
-            values,
-            selection,
-            selectionArgs
-        )
     }
 
     override fun removeTodo(todoItem: TodoItem) {
-        val db = dbHelper.writableDatabase
-
-        val selection = "${BaseColumns._ID} = ?"
-        val selectionArgs = arrayOf("${todoItem.id}")
-
-        db.delete(TodoContract.TodoEntry.TABLE_NAME, selection, selectionArgs)
+        dbHelper.writableDatabase.run {
+            delete(
+                TodoContract.TodoEntry.TABLE_NAME,
+                selection(),
+                selectionArgs(todoItem)
+            )
+        }
     }
 }
