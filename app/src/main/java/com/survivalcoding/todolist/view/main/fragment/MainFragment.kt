@@ -38,6 +38,11 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -125,23 +130,33 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        outState.putInt(MainActivity.TODO_ID_KEY, viewModel.id.get())
-        outState.putParcelableArrayList(
-            MainActivity.TODO_STATE_KEY,
-            viewModel.items as ArrayList<out Todo>
-        )
+        with(outState) {
+            putInt(MainActivity.TODO_ID_KEY, viewModel.id.get())
+            putParcelableArrayList(
+                MainActivity.TODO_STATE_KEY,
+                viewModel.items as ArrayList<out Todo>
+            )
+            putBoolean(IS_IN_ACTION_MODE_KEY, actionMode != null)
+        }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
 
         savedInstanceState?.let {
-            viewModel.id.set(savedInstanceState.getInt(MainActivity.TODO_ID_KEY))
-            savedInstanceState.getParcelableArrayList<Todo>(MainActivity.TODO_STATE_KEY)
-                ?.let { items ->
-                    viewModel.addAll(items)
-                    updateUI()
-                }
+            viewModel.id.set(it.getInt(MainActivity.TODO_ID_KEY))
+            it.getParcelableArrayList<Todo>(MainActivity.TODO_STATE_KEY)?.let { items ->
+                viewModel.addAll(items)
+                updateUI()
+            }
+            onActionModeStateRestored(savedInstanceState)
+        }
+    }
+
+    private fun onActionModeStateRestored(savedInstanceState: Bundle) {
+        if (savedInstanceState.getBoolean(IS_IN_ACTION_MODE_KEY)) {
+            actionMode = activity?.startActionMode(removeModeCallback)
+            adapter.notifyDataSetChanged()
         }
     }
 
@@ -162,11 +177,6 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
 
     private fun setActionBarTitle() {
         actionMode?.title = getString(R.string.fragment_main_action_bar_mode_remove_title, viewModel.getRemovablesCount())
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private val removeModeCallback = object : ActionMode.Callback {
@@ -202,5 +212,9 @@ class MainFragment(private val viewModel: TodoViewModel) : Fragment() {
             viewModel.clearAllRemovable()
             adapter.notifyDataSetChanged()
         }
+    }
+
+    companion object {
+        const val IS_IN_ACTION_MODE_KEY = "IS_IN_ACTION_MODE_KEY"
     }
 }

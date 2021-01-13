@@ -26,12 +26,12 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
             textViewTimes.text = todo.times
             checkBox.isChecked = todo.isDone
 
-            updateViews(getActionMode, todo.isOption, todo.isDone)
+            updateViews(getActionMode, todo)
             updateTextPaintFlags(todo.isDone)
 
             checkBox.setOnClickListener {
                 todo.isDone = checkBox.isChecked
-                updateViews(getActionMode, todo.isOption, todo.isDone)
+                updateViews(getActionMode, todo)
                 updateTextPaintFlags(todo.isDone)
                 updateListener.invoke()
             }
@@ -40,7 +40,7 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
                 if (getActionMode() == null) {
                     if (todo.isOption) {
                         todo.isOption = false
-                        updateViews(getActionMode, todo.isOption, todo.isDone)
+                        updateViews(getActionMode, todo)
                     }
                 }
                 else {
@@ -54,14 +54,14 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
 
             buttonMenus.setOnClickListener {
                 todo.isOption = true
-                updateViews(getActionMode, todo.isOption, todo.isDone)
+                updateViews(getActionMode, todo)
             }
 
             buttonEdit.setOnClickListener {
                 todo.isOption = false
                 editClickListener.invoke(todo)
 
-                updateViews(getActionMode, todo.isOption, todo.isDone)
+                updateViews(getActionMode, todo)
             }
 
             buttonDelete.setOnClickListener {
@@ -73,14 +73,14 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
         }
     }
 
-    private fun updateViews(getActionMode: () -> ActionMode?, isOption: Boolean, isDone: Boolean) {
+    private fun updateViews(getActionMode: () -> ActionMode?, todo: Todo) {
         val actionMode = getActionMode.invoke()
 
         if (actionMode == null) {
             binding.apply {
-                buttonMenus.visibility = if (isOption) View.INVISIBLE else View.VISIBLE
-                buttonEdit.visibility = if (isOption && !isDone) View.VISIBLE else View.INVISIBLE
-                buttonDelete.visibility = if (isOption) View.VISIBLE else View.INVISIBLE
+                buttonMenus.visibility = if (todo.isOption) View.INVISIBLE else View.VISIBLE
+                buttonEdit.visibility = if (todo.isOption && !todo.isDone) View.VISIBLE else View.INVISIBLE
+                buttonDelete.visibility = if (todo.isOption) View.VISIBLE else View.INVISIBLE
                 checkBox.isEnabled = true
                 layoutItem.setBackgroundColor(ContextCompat.getColor(binding.root.context, R.color.white))
             }
@@ -91,6 +91,7 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
                 buttonEdit.visibility = View.INVISIBLE
                 buttonDelete.visibility = View.INVISIBLE
                 checkBox.isEnabled = false
+                layoutItem.setBackgroundColor(ContextCompat.getColor(binding.root.context, if (todo.isRemovable) R.color.teal_200 else R.color.white))
             }
         }
     }
