@@ -8,20 +8,25 @@ class TodoViewHolder(
     private val binding: ItemTodoBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: TodoItem, sort: () -> Unit, remove: (TodoItem) -> Unit, update: () -> Unit) {
+    fun bind(
+        item: TodoItem,
+        remove: (TodoItem) -> Unit,
+        updateUi: () -> Unit,
+        updateItem: (TodoItem) -> Unit,
+    ) {
         binding.apply {
             title.text = item.title
-            checkbox.isChecked = item.checked
+            checkbox.isChecked = item.isChecked
 
             checkbox.setOnClickListener {
-                item.checked = item.checked xor true
-                sort()
-                update()
+                item.isChecked = item.isChecked xor true
+                updateItem(item)
+                updateUi()
             }
 
             delete.setOnClickListener {
                 remove(item)
-                update()
+                updateUi()
             }
         }
     }
