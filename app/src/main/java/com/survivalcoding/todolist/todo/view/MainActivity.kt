@@ -40,3 +40,14 @@ class MainActivity : AppCompatActivity() {
         const val ONE_DAY_MILLISECONDS = 24 * 60 * 60 * 1000 // 86_400_000
     }
 }
+
+enum class SortingBase(val value: Int) {
+    SORT_BY_DATE(MainActivity.SORT_BY_DATE),
+    SORT_BY_TITLE(MainActivity.SORT_BY_TITLE),
+    SORT_BY_D_DAY(MainActivity.SORT_BY_D_DAY),
+}
+
+enum class OrderMethod(val value: Int) {
+    ASCENDING(MainActivity.ASCENDING),
+    DESCENDING(MainActivity.DESCENDING),
+}

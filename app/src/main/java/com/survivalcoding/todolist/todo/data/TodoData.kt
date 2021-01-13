@@ -1,6 +1,8 @@
 package com.survivalcoding.todolist.todo.data
 
 import com.survivalcoding.todolist.todo.view.MainActivity
+import com.survivalcoding.todolist.todo.view.OrderMethod
+import com.survivalcoding.todolist.todo.view.SortingBase
 import com.survivalcoding.todolist.todo.view.model.Todo
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -34,8 +36,8 @@ class TodoData(var data: MutableList<Todo> = mutableListOf()) : DefaultTodoData 
     }
 
     // sortingBase : 정렬 기준(제목..), orderMethod : 오름/내림차순 정렬
-    override fun sorting(sortingBase: Int, orderMethod: Int): MutableList<Todo> {
-        when (sortingBase + orderMethod) {
+    override fun sorting(sortingBase: SortingBase, orderMethod: OrderMethod): MutableList<Todo> {
+        when (sortingBase.value + orderMethod.value) {
             MainActivity.SORT_BY_TITLE + MainActivity.ASCENDING -> data.sortBy { it.text }
             MainActivity.SORT_BY_TITLE + MainActivity.DESCENDING -> data.sortByDescending { it.text }
             MainActivity.SORT_BY_D_DAY + MainActivity.ASCENDING -> data.sortBy { it.dueDate }

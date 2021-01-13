@@ -8,7 +8,8 @@ import androidx.fragment.app.commit
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
 import com.survivalcoding.todolist.todo.data.DefaultTodoData
-import com.survivalcoding.todolist.todo.view.MainActivity
+import com.survivalcoding.todolist.todo.view.OrderMethod
+import com.survivalcoding.todolist.todo.view.SortingBase
 import com.survivalcoding.todolist.todo.view.add.AddFragment
 import com.survivalcoding.todolist.todo.view.edit.EditFragment
 import com.survivalcoding.todolist.todo.view.main.adapter.TodoAdapter
@@ -27,8 +28,8 @@ class MainFragment(private var model: DefaultTodoData) : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
-    var orderMethod = MainActivity.ASCENDING
-    var sortingBase = MainActivity.SORT_BY_DATE
+    private var sortingBase = SortingBase.SORT_BY_DATE
+    private var orderMethod = OrderMethod.ASCENDING
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,29 +91,29 @@ class MainFragment(private var model: DefaultTodoData) : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.sortByWriteDate -> {
-                sortingBase = MainActivity.SORT_BY_DATE
+                sortingBase = SortingBase.SORT_BY_DATE
                 updateUI()
                 return true
             }
             R.id.sortToDDay -> {
-                sortingBase = MainActivity.SORT_BY_D_DAY
+                sortingBase = SortingBase.SORT_BY_D_DAY
                 updateUI()
                 return true
             }
             R.id.sortToTitle -> {
-                sortingBase = MainActivity.SORT_BY_TITLE
+                sortingBase = SortingBase.SORT_BY_TITLE
                 updateUI()
                 return true
             }
             R.id.ascending -> {
                 item.isChecked = true
-                orderMethod = MainActivity.ASCENDING
+                orderMethod = OrderMethod.ASCENDING
                 updateUI()
                 return true
             }
             R.id.descending -> {
                 item.isChecked = true
-                orderMethod = MainActivity.DESCENDING
+                orderMethod = OrderMethod.DESCENDING
                 updateUI()
                 return true
             }

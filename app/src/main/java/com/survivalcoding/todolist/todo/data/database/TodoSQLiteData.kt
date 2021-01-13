@@ -5,6 +5,8 @@ import android.content.Context
 import android.provider.BaseColumns
 import com.survivalcoding.todolist.todo.data.DefaultTodoData
 import com.survivalcoding.todolist.todo.view.MainActivity
+import com.survivalcoding.todolist.todo.view.OrderMethod
+import com.survivalcoding.todolist.todo.view.SortingBase
 import com.survivalcoding.todolist.todo.view.model.Todo
 
 class TodoSQLiteData(context: Context) : DefaultTodoData {
@@ -49,7 +51,7 @@ class TodoSQLiteData(context: Context) : DefaultTodoData {
 
     }
 
-    override fun sorting(sortingBase: Int, orderMethod: Int): MutableList<Todo> {
+    override fun sorting(sortingBase: SortingBase, orderMethod: OrderMethod): MutableList<Todo> {
         val db = dbHelper.readableDatabase
 
         val projection = arrayOf(
@@ -60,8 +62,8 @@ class TodoSQLiteData(context: Context) : DefaultTodoData {
             TodoContract.TodoEntry.COLUMN_NAME_WRITE_TIME
         )
 
-        val order = if (orderMethod == MainActivity.ASCENDING) "" else " DESC"
-        val sort = when (sortingBase) {
+        val order = if (orderMethod.value == MainActivity.ASCENDING) "" else " DESC"
+        val sort = when (sortingBase.value) {
             MainActivity.SORT_BY_TITLE -> "${TodoContract.TodoEntry.COLUMN_NAME_TITLE}"
             MainActivity.SORT_BY_D_DAY -> "${TodoContract.TodoEntry.COLUMN_NAME_DUE_DATE}"
             MainActivity.SORT_BY_DATE -> "${TodoContract.TodoEntry.COLUMN_NAME_WRITE_TIME}"
