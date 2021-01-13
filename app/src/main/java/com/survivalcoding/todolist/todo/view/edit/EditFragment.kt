@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.FragmentAddBinding
 import com.survivalcoding.todolist.todo.data.TodoData
 import com.survivalcoding.todolist.todo.view.MainActivity
@@ -24,8 +25,8 @@ class EditFragment(private val model: TodoData) : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentAddBinding.inflate(inflater, container, false)
-//        requireActivity().title = "Modify Todo"
-        binding.addTodo.text = "수정"
+        requireActivity().title = getString(R.string.edit_todo_actionbar_title)
+        binding.addTodo.text = getString(R.string.edit_todo_confirm_button_title)
         return binding.root
     }
 
@@ -50,7 +51,7 @@ class EditFragment(private val model: TodoData) : Fragment() {
         binding.addTodo.setOnClickListener {
             val todoText = binding.todoEditText.text.toString()
             if (todoText.trim().isEmpty()) {
-                AlertDialogFragment("할 일을 입력해 주세요").show(
+                AlertDialogFragment(getString(R.string.alert_dialog_confirm)).show(
                     parentFragmentManager,
                     AlertDialogFragment.TAG
                 )

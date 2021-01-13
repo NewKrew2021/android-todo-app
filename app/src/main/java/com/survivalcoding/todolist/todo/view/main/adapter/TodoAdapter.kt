@@ -32,13 +32,14 @@ class TodoAdapter(
 
         itemTodoBinding.apply {
             todoText.text = todo.text
+            drawCancelLine(this, todo.isDone)
             isDoneButton.isChecked = todo.isDone
             val dueDate = (todo.dueDate - currentTime) / MainActivity.ONE_DAY_MILLISECONDS
             dueDateText.text = "D - $dueDate"
 
             deleteTodoButton.setOnClickListener {
                 deleteOnClick.invoke(todo)
-                update.invoke(Unit) // ???
+                update.invoke(Unit)
             }
             isDoneButton.setOnClickListener {
                 todo.isDone = !todo.isDone

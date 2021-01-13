@@ -22,15 +22,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         if (savedInstanceState == null) {
-            // 내가 굳이 한번 더 factory를? 만들 필요는 엉ㅂㅅ다.
-            val fragment = supportFragmentManager.fragmentFactory.instantiate(
-                classLoader,
-                MainFragment::class.java.name
-            )
-
             supportFragmentManager.commit {
                 setReorderingAllowed(true)
-                add(R.id.fragment_container_view, fragment, FRAGMENT_KEY)
+                add(R.id.fragment_container_view, MainFragment(model))
             }
         }
     }
@@ -44,8 +38,6 @@ class MainActivity : AppCompatActivity() {
         const val SORT_BY_TITLE = 1000     // 제목순 정렬
         const val SORT_BY_D_DAY = 2000     // 남은 D-day순으로 정렬
         const val SORT_BY_DATE = 3000      // 등록한 날짜순으로 정렬
-        const val ADD_REQUEST_QUEUE = 100
-        const val EDIT_REQUEST_QUEUE = 200
         const val ONE_DAY_MILLISECONDS = 24 * 60 * 60 * 1000 // 86_400_000
     }
 }

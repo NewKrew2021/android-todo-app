@@ -1,13 +1,28 @@
 <resources>
+    <!--    Layout-->
     <string name="app_name">Todo List</string>
     <string name="todo_add_edit_hint">할 일을 작성해 주세요</string>
     <string name="todo_add_due_date_info">언제까지 해야할 일인가요?</string>
     <string name="add_button">추가</string>
     <string name="cancel_button">취소</string>
+
+    <!--    Sorting-->
     <string name="menu_sort_by_title">가나다순</string>
     <string name="menu_sort_by_d_day">남은 날짜순</string>
     <string name="menu_ascending">오름차순</string>
     <string name="menu_descending">내림차순</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--    Add Todo-->
+    <string name="add_todo_actionbar_title">Add Todo</string>
+
+    <!--    Edit Todo-->
+    <string name="edit_todo_actionbar_title">Edit Todo</string>
+    <string name="edit_todo_confirm_button_title">수정</string>
+
+    <!--    AlertDialog-->
+    <string name="alert_text">할 일을 입력하세요</string>
+    <string name="alert_dialog_confirm">확인</string>
+
+    <!--    TAG-->
+    <string name="alert_dialog_tag">AlertDialogFragment</string>
 </resources>

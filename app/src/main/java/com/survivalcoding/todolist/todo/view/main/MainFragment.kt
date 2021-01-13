@@ -25,7 +25,7 @@ class MainFragment(private var model: TodoData) : Fragment() {
     }
 
     private var _binding: FragmentMainBinding? = null
-    private val binding get() = _binding!!  // !!....;;
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +38,7 @@ class MainFragment(private var model: TodoData) : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentMainBinding.inflate(layoutInflater, container, false)
-        requireActivity().title = "Todo?"   // ActionBar
+        requireActivity().title = getString(R.string.app_name)   // ActionBar
         return binding.root
     }
 
@@ -66,7 +66,8 @@ class MainFragment(private var model: TodoData) : Fragment() {
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        val list = savedInstanceState?.getParcelableArrayList<Todo>(MainActivity.ROTATION_RESTORE_KEY)
+        val list =
+            savedInstanceState?.getParcelableArrayList<Todo>(MainActivity.ROTATION_RESTORE_KEY)
         list?.let { model.updateTodo(it.toList()) }
         updateUI()
     }
