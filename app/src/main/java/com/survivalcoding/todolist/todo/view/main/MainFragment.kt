@@ -28,7 +28,7 @@ class MainFragment(private var model: DefaultTodoData) : Fragment() {
     private val binding get() = _binding!!
 
     var orderMethod = MainActivity.ASCENDING
-    var sortingBase = MainActivity.SORT_BY_TITLE
+    var sortingBase = MainActivity.SORT_BY_DATE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,6 +89,11 @@ class MainFragment(private var model: DefaultTodoData) : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.sortByWriteDate -> {
+                sortingBase = MainActivity.SORT_BY_DATE
+                updateUI()
+                return true
+            }
             R.id.sortToDDay -> {
                 sortingBase = MainActivity.SORT_BY_D_DAY
                 updateUI()

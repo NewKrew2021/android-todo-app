@@ -2,6 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:id="@+id/sortStandard">
         <item
+            android:id="@+id/sortByWriteDate"
+            android:title="@string/menu_sort_by_write_date" />
+        <item
             android:id="@+id/sortToDDay"
             android:title="@string/menu_sort_by_d_day" />
         <item
