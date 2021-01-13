@@ -23,7 +23,7 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
         getActionMode: () -> ActionMode?,
         setActionBarTitle: (Todo) -> Unit,
     ) {
-        binding.apply {
+        with(binding) {
             textViewTitle.text = todo.title
             textViewTimes.text = timesToString(todo.times)
             checkBox.isChecked = todo.isDone
@@ -87,8 +87,8 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
     private fun updateViews(getActionMode: () -> ActionMode?, todo: Todo) {
         val actionMode = getActionMode.invoke()
 
-        if (actionMode == null) {
-            binding.apply {
+        with(binding) {
+            if (actionMode == null) {
                 buttonMenus.visibility = if (todo.isOption) View.INVISIBLE else View.VISIBLE
                 buttonEdit.visibility =
                     if (todo.isOption && !todo.isDone) View.VISIBLE else View.INVISIBLE
@@ -100,9 +100,7 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
                         R.color.white
                     )
                 )
-            }
-        } else {
-            binding.apply {
+            } else {
                 buttonMenus.visibility = View.INVISIBLE
                 buttonEdit.visibility = View.INVISIBLE
                 buttonDelete.visibility = View.INVISIBLE
@@ -118,7 +116,7 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
     }
 
     private fun updateTextPaintFlags(isDone: Boolean) {
-        binding.apply {
+        with(binding) {
             textViewTitle.paintFlags =
                 if (isDone) (textViewTitle.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG)
                 else (textViewTitle.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()) // Paint.STRIKE_THRU_TEXT_FLAG(0x10) 만 제거하기 위한 코드

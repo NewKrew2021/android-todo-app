@@ -6,12 +6,12 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.data.DefaultTodoRepository
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
+import com.survivalcoding.todolist.extension.replaceTransaction
 import com.survivalcoding.todolist.view.main.MainActivity
 import com.survivalcoding.todolist.view.main.adapter.TodoAdapter
 import com.survivalcoding.todolist.view.main.model.Todo
@@ -51,15 +51,10 @@ class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
             checkChangeListener = { todo -> repository.update(todo) },
             updateListener = { updateUI() },
             editClickListener = { todo ->
-                parentFragmentManager.commit {
-                    setReorderingAllowed(true)
-                    replace(
-                        R.id.fragment_container_view,
-                        EditFragment::class.java,
-                        bundleOf(MainActivity.TODO_KEY to todo)
-                    )
-                    addToBackStack(null)
-                }
+                replaceTransaction<EditFragment>(
+                    R.id.fragment_container_view,
+                    bundleOf(MainActivity.TODO_KEY to todo)
+                )
             },
             getActionMode = { getActionMode() },
             setActionBarTitle = { todo -> setActionBarTitle(todo) },
@@ -98,9 +93,7 @@ class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    newText?.let {
-                        updateUI()
-                    }
+                    newText?.let { updateUI() }
                     return true
                 }
             })
@@ -162,7 +155,10 @@ class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
 
     private fun setActionBarTitle(todo: Todo) {
         repository.update(todo)
-        actionMode?.title = getString(R.string.fragment_main_action_bar_mode_remove_title, repository.getRemovablesCount())
+        actionMode?.title = getString(
+            R.string.fragment_main_action_bar_mode_remove_title,
+            repository.getRemovablesCount()
+        )
     }
 
     private val removeModeCallback = object : ActionMode.Callback {
@@ -172,7 +168,10 @@ class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
         }
 
         override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-            mode?.title = getString(R.string.fragment_main_action_bar_mode_remove_title, repository.getRemovablesCount())
+            mode?.title = getString(
+                R.string.fragment_main_action_bar_mode_remove_title,
+                repository.getRemovablesCount()
+            )
             return false
         }
 
