@@ -14,6 +14,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.todolist.R
+import com.survivalcoding.todolist.data.db.TodoSqliteRepository
 import com.survivalcoding.todolist.databinding.ActivityListBinding
 import com.survivalcoding.todolist.databinding.Dialog1Binding
 import com.survivalcoding.todolist.factory.MyFragmentFactory
@@ -35,6 +36,7 @@ class ListActivity : AppCompatActivity() {
         setContentView(view)
 
 
+        TodoSqliteRepository(applicationContext)
 
 
         imm = getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as InputMethodManager?

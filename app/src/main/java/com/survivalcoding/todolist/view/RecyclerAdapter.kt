@@ -107,14 +107,11 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
         )
     }
 
-    override fun getItemCount(): Int {
-        return searchData.size
-    }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
 
-        holder.setData(searchData[holder.adapterPosition].item)
-        holder.checkBoxClickListener(searchData[holder.adapterPosition].item)
+        holder.setData(getItem(holder.adapterPosition).item)
+        holder.checkBoxClickListener(getItem(holder.adapterPosition).item)
         holder.itemClickListener(holder.adapterPosition, this)
 
     }
