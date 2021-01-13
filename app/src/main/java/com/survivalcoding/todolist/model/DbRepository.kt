@@ -138,9 +138,9 @@ class DbRepository(context: Context) : TodoRepository {
                 }
             }
         }
-        return todoItems.apply {
-            sortBy { it.todoTitle.length }
-        }
+        return todoItems.toList()
+            .sortedWith(compareBy<TodoItem> { it.isChecked }
+                .thenBy { it.todoTitle.length })
     }
 
     override fun clearTodoList() {
