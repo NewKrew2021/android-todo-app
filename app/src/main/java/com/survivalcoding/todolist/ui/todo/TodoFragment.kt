@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import com.survivalcoding.todolist.R
-import com.survivalcoding.todolist.data.database.TodoSqliteRepository
+import com.survivalcoding.todolist.data.DefaultTodoRepository
 import com.survivalcoding.todolist.databinding.FragmentTodoBinding
 import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.utils.NavigationUtil
 
-class TodoFragment(private val todoRepository: TodoSqliteRepository) : Fragment() {
+class TodoFragment(private val todoRepository: DefaultTodoRepository) : Fragment() {
 
     private var _binding: FragmentTodoBinding? = null
     private val binding get() = _binding!!

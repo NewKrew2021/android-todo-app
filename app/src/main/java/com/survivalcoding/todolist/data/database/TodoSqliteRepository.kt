@@ -10,7 +10,7 @@ class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
 
     private val dbHelper = TodoDatabaseHelper(context)
 
-    fun getFilteredItemsBy(keyword: String): List<TodoItem> {
+    override fun getFilteredItemsBy(keyword: String): List<TodoItem> {
         return getOrderedItems().filter { it.title.contains(keyword) }
     }
 
