@@ -2,12 +2,15 @@ package com.survivalcoding.todolist.todo.view.main
 
 import android.os.Bundle
 import android.view.*
+import androidx.core.os.bundleOf
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
 import com.survivalcoding.todolist.todo.data.DefaultTodoData
+import com.survivalcoding.todolist.todo.view.MainActivity
 import com.survivalcoding.todolist.todo.view.OrderMethod
 import com.survivalcoding.todolist.todo.view.SortingBase
 import com.survivalcoding.todolist.todo.view.add.AddFragment
@@ -53,18 +56,18 @@ class MainFragment(private var model: DefaultTodoData) : Fragment() {
             addTodoButton.setOnClickListener {
                 parentFragmentManager.commit {
                     setReorderingAllowed(true)
-                    replace(R.id.fragment_container_view, AddFragment(model))
+                    replace<AddFragment>(R.id.fragment_container_view)
                     addToBackStack(null)
                 }
             }
         }
-        updateUI()
+        updateUI()  // 이거덕분에 자동정렬되고있다.
     }
 
 //    override fun onSaveInstanceState(outState: Bundle) {
 //        super.onSaveInstanceState(outState)
 //        outState.putParcelableArrayList(
-//            MainActivity.ROTATION_RESTORE_KEY,
+//            MainActivity.BUNDLE_KEY,
 //            model.todoList as ArrayList<Todo>
 //        )
 //    }
@@ -122,13 +125,17 @@ class MainFragment(private var model: DefaultTodoData) : Fragment() {
     }
 
     private fun updateUI() {
-        todoAdapter.submitList(model.sorting(sortingBase, orderMethod))
+        model.sorting(sortingBase, orderMethod, { todoAdapter.submitList(it) })
     }
 
     private fun textOnClick(item: Todo) {
         parentFragmentManager.commit {
+            val data = bundleOf(MainActivity.BUNDLE_KEY to item)
+
             setReorderingAllowed(true)
-            replace(R.id.fragment_container_view, EditFragment(model))
+            // 왜 아래처럼 안되나 했는데 import를 안했네...
+            replace<EditFragment>(R.id.fragment_container_view, args = data)
+//            replace(R.id.fragment_container_view, EditFragment(model).javaClass, data)
             addToBackStack(null)
         }
     }

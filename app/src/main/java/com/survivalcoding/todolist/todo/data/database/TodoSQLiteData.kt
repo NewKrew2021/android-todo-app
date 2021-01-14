@@ -63,7 +63,7 @@ class TodoSQLiteData(context: Context) : DefaultTodoData {
     class DatabaseRemoveThread(private val db: SQLiteDatabase) : AsyncTask<Todo, Unit, Unit>() {
         override fun doInBackground(vararg params: Todo) {
             val item = params[0]
-            val selection = "${BaseColumns._ID} LIKE ?"
+            val selection = "${BaseColumns._ID} = ?"
             val selectionArgs = arrayOf("${item.id}")
             val deletedRows =
                 db?.delete(TodoContract.TodoEntry.TABLE_NAME, selection, selectionArgs)
@@ -81,7 +81,7 @@ class TodoSQLiteData(context: Context) : DefaultTodoData {
                 put(TodoContract.TodoEntry.COLUMN_NAME_WRITE_TIME, item.writeTime)
             }
 
-            val selection = "${BaseColumns._ID} LIKE ?"
+            val selection = "${BaseColumns._ID} = ?"
             val selectionArgs = arrayOf("${item.id}")
             val updateRows =
                 db?.update(TodoContract.TodoEntry.TABLE_NAME, values, selection, selectionArgs)

@@ -57,7 +57,6 @@ class AddFragment(private val model: DefaultTodoData) : Fragment() {
             } else {
                 val today = Date().time
                 model.addTodo(Todo(false, todoText, dueDate, today))
-//                model.todoList = model.sorting()
                 parentFragmentManager.popBackStack()
             }
         }

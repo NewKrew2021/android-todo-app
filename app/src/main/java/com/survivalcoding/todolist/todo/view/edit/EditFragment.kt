@@ -40,6 +40,13 @@ class EditFragment(private val model: DefaultTodoData) : Fragment() {
 
         var dueDate = Date().time
         val format = SimpleDateFormat(MainActivity.DATE_FORMAT)
+        var itemId = 0
+
+        arguments?.getParcelable<Todo>(MainActivity.BUNDLE_KEY)?.let {
+            binding.todoEditText.setText(it.text)
+            binding.dueDate.date = it.dueDate
+            itemId = it.id
+        }
 
         binding.cancelButton.setOnClickListener {
             parentFragmentManager.popBackStack()
@@ -57,8 +64,8 @@ class EditFragment(private val model: DefaultTodoData) : Fragment() {
                 )
             } else {
                 val today = Date().time
-                model.addTodo(Todo(false, todoText, dueDate, today))
-//                model.todoList = model.sorting()
+                // addTodo가 아닌, updateTodo로 변경
+                model.updateTodo(Todo(false, todoText, dueDate, today, itemId))
                 parentFragmentManager.popBackStack()
             }
         }
