@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.survivalcoding.todolist.data.database.TodoSqliteRepository
+import com.survivalcoding.todolist.data.DefaultTodoRepository
 import com.survivalcoding.todolist.databinding.FragmentEditBinding
 import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.utils.NavigationUtil
 import java.util.*
 
-class EditFragment(private val todoRepository: TodoSqliteRepository) : Fragment() {
+class EditFragment(private val todoRepository: DefaultTodoRepository) : Fragment() {
 
     private var _binding: FragmentEditBinding? = null
     private val binding get() = _binding!!

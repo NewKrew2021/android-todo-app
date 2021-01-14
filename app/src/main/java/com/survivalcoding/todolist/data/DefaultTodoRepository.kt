@@ -8,4 +8,5 @@ interface DefaultTodoRepository {
     fun removeItem(targetItem: TodoItem)
     fun updateItem(item: TodoItem)
     fun getOrderedItems(): List<TodoItem>
+    fun getFilteredItemsBy(keyword: String): List<TodoItem>
 }
