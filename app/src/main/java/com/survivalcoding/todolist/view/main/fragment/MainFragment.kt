@@ -48,8 +48,8 @@ class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
         adapter = TodoAdapter(
             showToastMessageListener = { message: String -> showToastMessage(message) },
             removeClickListener = { todo -> repository.remove(todo) },
-            checkChangeListener = { todo -> repository.update(todo) },
-            updateListener = { updateUI() },
+            itemUpdateListener = { todo -> repository.update(todo) },
+            updateUIListener = { updateUI() },
             editClickListener = { todo ->
                 replaceTransaction<EditFragment>(
                     R.id.fragment_container_view,
@@ -57,7 +57,7 @@ class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
                 )
             },
             getActionMode = { getActionMode() },
-            setActionBarTitle = { todo -> setActionBarTitle(todo) },
+            setActionBarTitle = { setActionBarTitle() },
         )
 
         with(binding) {
@@ -153,8 +153,7 @@ class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
 
     private fun getActionMode(): ActionMode? = actionMode
 
-    private fun setActionBarTitle(todo: Todo) {
-        repository.update(todo)
+    private fun setActionBarTitle() {
         actionMode?.title = getString(
             R.string.fragment_main_action_bar_mode_remove_title,
             repository.getRemovablesCount()

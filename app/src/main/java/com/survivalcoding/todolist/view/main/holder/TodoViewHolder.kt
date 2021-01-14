@@ -17,11 +17,11 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
         todo: Todo,
         showToastMessageListener: (String) -> Unit,
         removeClickListener: (Todo) -> Unit,
-        checkChangeListener: (Todo) -> Unit,
-        updateListener: () -> Unit,
+        itemUpdateListener: (Todo) -> Unit,
+        updateUIListener: () -> Unit,
         editClickListener: (Todo) -> Unit,
         getActionMode: () -> ActionMode?,
-        setActionBarTitle: (Todo) -> Unit,
+        setActionBarTitle: () -> Unit,
     ) {
         with(binding) {
             textViewTitle.text = todo.title
@@ -36,8 +36,8 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
                 updateViews(getActionMode, todo)
                 updateTextPaintFlags(todo.isDone)
 
-                checkChangeListener.invoke(todo)
-                updateListener.invoke()
+                itemUpdateListener.invoke(todo)
+                updateUIListener.invoke()
             }
 
             layoutItem.setOnClickListener {
@@ -54,7 +54,8 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
                             if (todo.isRemovable) R.color.teal_200 else R.color.white
                         )
                     )
-                    setActionBarTitle.invoke(todo)
+                    itemUpdateListener.invoke(todo)
+                    setActionBarTitle.invoke()
                 }
             }
 
@@ -72,7 +73,7 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
 
             buttonDelete.setOnClickListener {
                 removeClickListener.invoke(todo)
-                updateListener.invoke()
+                updateUIListener.invoke()
 
                 showToastMessageListener.invoke(
                     root.context.getString(
