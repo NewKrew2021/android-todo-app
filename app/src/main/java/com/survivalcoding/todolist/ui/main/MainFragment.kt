@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.adapter.TodoListAdapter
 import com.survivalcoding.todolist.data.DefaultTodoRepository
-import com.survivalcoding.todolist.data.database.TodoSqliteRepository
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
 import com.survivalcoding.todolist.utils.NavigationUtil
 

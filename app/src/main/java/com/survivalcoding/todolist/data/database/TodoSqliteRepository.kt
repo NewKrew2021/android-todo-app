@@ -2,6 +2,7 @@ package com.survivalcoding.todolist.data.database
 
 import android.content.ContentValues
 import android.content.Context
+import android.os.AsyncTask
 import android.provider.BaseColumns
 import com.survivalcoding.todolist.data.DefaultTodoRepository
 import com.survivalcoding.todolist.model.TodoItem
@@ -10,11 +11,61 @@ class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
 
     private val dbHelper = TodoDatabaseHelper(context)
 
-    override fun getFilteredItemsBy(keyword: String): List<TodoItem> {
-        return getOrderedItems().filter { it.title.contains(keyword) }
+    // AsyncTask 사용하기
+    override fun addItem(item: TodoItem) {
+        InsertTodoTask(::addItemToDb).execute(item)
     }
 
-    override fun getOrderedItems(): List<TodoItem> {
+    override fun removeItem(targetItem: TodoItem) {
+        RemoveTodoTask(::removeItemFromDb).execute(targetItem)
+    }
+
+    override fun updateItem(item: TodoItem) {
+        UpdateTodoTask(::updateItemOfDb).execute(item)
+    }
+
+    override fun getOrderedItems(): List<TodoItem> =
+        GetOrderedItemsTask(::getOrderedItemsFromDb).execute().get()
+
+    override fun getFilteredItemsBy(keyword: String): List<TodoItem> =
+        GetOrderedItemsTask(::getOrderedItems).execute().get()
+            .filter { it.title.contains(keyword) }
+
+    class InsertTodoTask(private val addItem: (TodoItem) -> Unit) :
+        AsyncTask<TodoItem, Any, Any>() {
+        override fun doInBackground(vararg params: TodoItem?) {
+            params[0]?.let {
+                addItem.invoke(it)
+            }
+        }
+    }
+
+    class RemoveTodoTask(private val removeItem: (TodoItem) -> Unit) :
+        AsyncTask<TodoItem, Any, Any>() {
+        override fun doInBackground(vararg params: TodoItem?) {
+            params[0]?.let {
+                removeItem.invoke(it)
+            }
+        }
+    }
+
+    class UpdateTodoTask(private val updateItem: (TodoItem) -> Unit) :
+        AsyncTask<TodoItem, Any, Any>() {
+        override fun doInBackground(vararg params: TodoItem?) {
+            params[0]?.let {
+                updateItem.invoke(it)
+            }
+        }
+    }
+
+    class GetOrderedItemsTask(private val getOrderedItems: () -> List<TodoItem>) :
+        AsyncTask<Any, Any, List<TodoItem>>() {
+        override fun doInBackground(vararg params: Any?): List<TodoItem> {
+            return getOrderedItems.invoke()
+        }
+    }
+
+    private fun getOrderedItemsFromDb(): List<TodoItem> {
         val db = dbHelper.readableDatabase
 
         val projection =
@@ -56,7 +107,7 @@ class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
         return todoList
     }
 
-    override fun addItem(item: TodoItem) {
+    private fun addItemToDb(item: TodoItem) {
         val db = dbHelper.writableDatabase
 
         val values = ContentValues().apply {
@@ -68,7 +119,7 @@ class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
         db.insert(TodoContract.TodoEntry.TABLE_NAME, null, values)
     }
 
-    override fun removeItem(targetItem: TodoItem) {
+    private fun removeItemFromDb(targetItem: TodoItem) {
         val db = dbHelper.writableDatabase
 
         val selection = "${BaseColumns._ID} = ?"
@@ -77,7 +128,7 @@ class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
         db.delete(TodoContract.TodoEntry.TABLE_NAME, selection, selectionArgs)
     }
 
-    override fun updateItem(item: TodoItem) {
+    private fun updateItemOfDb(item: TodoItem) {
         val db = dbHelper.writableDatabase
 
         val values = ContentValues().apply {
