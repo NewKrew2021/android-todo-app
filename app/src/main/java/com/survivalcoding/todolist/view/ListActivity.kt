@@ -39,11 +39,11 @@ class ListActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-
+        todoSqliteRepository = TodoSqliteRepository(applicationContext)
         imm = getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as InputMethodManager?
 
         adapter =
-            RecyclerAdapter() { adapter: RecyclerAdapter, position: Int ->
+            RecyclerAdapter(todoSqliteRepository) { adapter: RecyclerAdapter, position: Int ->
 
                 EditDialogFragment({ dialogView: View ->
                     dialogSetting(
@@ -58,7 +58,7 @@ class ListActivity : AppCompatActivity() {
             }
         binding.RecyclerView.adapter = adapter
         binding.RecyclerView.layoutManager = LinearLayoutManager(this)
-        todoSqliteRepository = TodoSqliteRepository(applicationContext)
+
         todoSqliteRepository.readDatabase()
 
         adapter.getData(
@@ -153,9 +153,21 @@ class ListActivity : AppCompatActivity() {
                 currentDate,
                 check = false,
                 complete = false,
+                id = adapter.searchData[position].item.id
             )
         )
+        todoSqliteRepository.updateItem(
+            listItem(
+                tmpString,
+                currentDate,
+                check = false,
+                complete = false,
+                id = adapter.searchData[position].item.id
+            )
+        )
+
         adapter.data.removeAt(adapter.searchData[position].index + 1)
+
 
         //adapter.notifyItemRemoved(position+1)
 
@@ -169,14 +181,12 @@ class ListActivity : AppCompatActivity() {
 
         adapter.addItem(binding.editText.text.toString())
 
-        adapter.makeSearchData(binding.searchEditText.text.toString(),)
         if (
             binding.editText.text.toString().contains(binding.searchEditText.text.toString())
         ) {
             adapter.notifyItemInserted(0)
         }
         adapter.notifyItemRangeChanged(0, adapter.data.size)
-
 
         binding.editText.setText("")
         adapter.makeSearchData(binding.searchEditText.text.toString())
@@ -200,9 +210,5 @@ class ListActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        todoSqliteRepository.writeDatabase()
-    }
 }
 //오류 검토 완료

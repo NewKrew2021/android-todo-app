@@ -13,6 +13,8 @@ import java.text.SimpleDateFormat
 class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
 
     val dbHelper = TodoDbHelper(context)
+    var db = dbHelper.writableDatabase
+    var maxId: Int = 0
 
     private val data = mutableListOf<listItem>()
     private val searchData = mutableListOf<searchItem>()
@@ -26,10 +28,47 @@ class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
     }
 
 
+    override fun addItem(listitem: listItem) {
+        val values = ContentValues().apply {
+            put(TodoContract.TodoEntry.COLUMN_NAME_TODO, listitem.toDo)
+            put(TodoContract.TodoEntry.COLUMN_NAME_TIME, listitem.time)
+            put(TodoContract.TodoEntry.COLUMN_NAME_CHECKING, if (listitem.check) 1 else 0)
+            put(TodoContract.TodoEntry.COLUMN_NAME_COMPLETE, if (listitem.complete) 1 else 0)
+        }
+        db?.insert(TodoContract.TodoEntry.TABLE_NAME, null, values)
+    }
+
+    override fun removeItem(id: Int) {
+
+        //db.execSQL("delete from ${TodoContract.TodoEntry.TABLE_NAME} where _id = $index")
+
+        Log.d("로그", "$id")
+        val selection = "${BaseColumns._ID} = ?"
+        val selectionArgs = arrayOf("${id}")
+        val deletedRows = db.delete(TodoContract.TodoEntry.TABLE_NAME, selection, selectionArgs)
+    }
+
+    override fun updateItem(listItem: listItem) {
+
+        val values = ContentValues().apply {
+            put(TodoContract.TodoEntry.COLUMN_NAME_TODO, listItem.toDo)
+            put(TodoContract.TodoEntry.COLUMN_NAME_TIME, listItem.time)
+            put(TodoContract.TodoEntry.COLUMN_NAME_CHECKING, if (listItem.check) 1 else 0)
+            put(TodoContract.TodoEntry.COLUMN_NAME_COMPLETE, if (listItem.complete) 1 else 0)
+        }
+
+        val selection = "${BaseColumns._ID} = ?"
+        val selectionArgs = arrayOf("${listItem.id}")
+        val count = db.update(
+            TodoContract.TodoEntry.TABLE_NAME,
+            values,
+            selection,
+            selectionArgs
+        )
+    }
+
     fun writeDatabase() {
         removeDatabase()
-
-        val db = dbHelper.writableDatabase
 
         for (i in 0..data.size - 1) {
             val values = ContentValues().apply {
@@ -90,9 +129,11 @@ class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
                         todo,
                         time,
                         if (check == 1) true else false,
-                        if (complete == 1) true else false
+                        if (complete == 1) true else false,
+                        id
                     )
                 )
+                if (id > maxId) maxId = id
             }
             close()
         }
@@ -118,3 +159,4 @@ class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
     }
 
 }
+

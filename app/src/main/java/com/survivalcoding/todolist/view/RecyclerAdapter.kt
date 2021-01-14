@@ -11,23 +11,19 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.todolist.R
+import com.survivalcoding.todolist.data.db.TodoSqliteRepository
 import com.survivalcoding.todolist.databinding.ItemBinding
 import com.survivalcoding.todolist.viewModel.listItem
 import com.survivalcoding.todolist.viewModel.searchItem
 import java.text.SimpleDateFormat
 
-class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
+class RecyclerAdapter(
+    val todoSqliteRepository: TodoSqliteRepository,
+    val itemClick: (RecyclerAdapter, Int) -> Unit
+) :
     ListAdapter<searchItem, Holder>(ItemDiffCallback) {
 
-    /*
-    fun dataUpdate() {
-        searchData.clear()
-        for(i in 0..data.size-1){
-            searchData.add(searchItem(data[i],i))
-        }
-        submitList(searchData)
-    }
-     */
+
     var data = mutableListOf<listItem>()
     var searchData = mutableListOf<searchItem>()
 
@@ -80,7 +76,7 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
                 dataList[index].item.check = false
                 dataList[index].item.complete = true
                 data[dataList[index].index].complete = true
-
+                todoSqliteRepository.updateItem(data[dataList[index].index])
                 dataList.add(
                     dataList[index]
                 )
@@ -104,6 +100,7 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
         }
         tmp.sortBy { it }
         for (i in tmp.size - 1 downTo 0) {
+            todoSqliteRepository.removeItem(data[tmp[i]].id)
             data.removeAt(tmp[i])
         }
         makeSearchData(pattern)
@@ -114,6 +111,8 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
         val date = System.currentTimeMillis()
         val currentDate = sdf.format(date)
 
+        todoSqliteRepository.maxId += 1
+
         data.add(
             0,
             listItem(
@@ -121,6 +120,16 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
                 currentDate,
                 check = false,
                 complete = false,
+                id = todoSqliteRepository.maxId
+            )
+        )
+        todoSqliteRepository.addItem(
+            listItem(
+                todo,
+                currentDate,
+                check = false,
+                complete = false,
+                id = todoSqliteRepository.maxId
             )
         )
     }
