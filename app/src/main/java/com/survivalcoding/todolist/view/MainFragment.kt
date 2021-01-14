@@ -12,7 +12,10 @@ import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.adapter.TodoListAdapter
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
 import com.survivalcoding.todolist.extension.afterTextChanged
+import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.repository.DefaultTodoRepository
+import com.survivalcoding.todolist.repository.database.MyCallback
+import java.util.*
 
 
 class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
@@ -73,25 +76,43 @@ class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
                     addToBackStack(null)
                 }
             }
-            searchEdit.afterTextChanged { text ->
-                val searchList = repository.getOrderedItems().filter {
-                    it.title.contains(text)
-                }
-                searchList.sortedWith(
-                        compareBy(
-                                { it.isComplete },
-                                { it.isMark },
-                                { it.date })
-                )
-                todoListAdapter.submitList(searchList)
+            searchEdit.afterTextChanged {
+                searchList(it)
             }
         }
         updateList()
+
+
     }
 
 
+
+
     private fun updateList() {
-        todoListAdapter.submitList(repository.getOrderedItems())
+        repository.getOrderedItems(object : MyCallback{
+            override fun getListCallBack(list: List<TodoItem>) {
+                todoListAdapter.submitList(list)
+            }
+        })
+    }
+
+
+    private fun searchList(text : String){
+        repository.getOrderedItems(object : MyCallback{
+            override fun getListCallBack(list: List<TodoItem>) {
+                val searchList = list.filter {
+                    it.title.contains(text.toLowerCase(Locale.ROOT))
+                }
+
+
+                todoListAdapter.submitList(searchList.sortedWith(
+                        compareBy<TodoItem>
+                        { it.isComplete }.thenByDescending
+                        { it.isMark }.thenBy
+                        { it.date }
+                ))
+            }
+        })
     }
 
 }
