@@ -17,4 +17,12 @@ class AlertDialogFragment(private val message: String) : DialogFragment() {
     companion object {
         const val TAG = R.string.alert_dialog_tag.toString()
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+    }
 }

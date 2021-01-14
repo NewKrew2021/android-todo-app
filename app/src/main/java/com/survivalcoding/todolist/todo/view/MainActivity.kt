@@ -2,6 +2,7 @@ package com.survivalcoding.todolist.todo.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
@@ -11,7 +12,8 @@ import com.survivalcoding.todolist.todo.view.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-    private var model = TodoSQLiteData(this)
+    private val model = TodoSQLiteData(this)
+//    private var model = TodoData()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // fragmentFactory : 데이터를 bundle이 아닌, 생성자로 넘기기 위해 사용한다.
@@ -23,13 +25,13 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
                 setReorderingAllowed(true)
-                add(R.id.fragment_container_view, MainFragment(model))
+                add<MainFragment>(R.id.fragment_container_view)
             }
         }
     }
 
     companion object {
-        const val ROTATION_RESTORE_KEY = "listData"
+        const val BUNDLE_KEY = "listData"
         const val DATE_FORMAT = "yyyy-mm-dd"
         const val FRAGMENT_KEY = "todo"
         const val ASCENDING = 123    // 1, 2이면 다른 값과 중복되지 않을까 해서 임의의 값을 넣었다.
