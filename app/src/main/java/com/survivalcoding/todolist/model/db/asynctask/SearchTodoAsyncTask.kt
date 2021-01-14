@@ -5,6 +5,7 @@ import android.os.AsyncTask
 import android.provider.BaseColumns
 import com.survivalcoding.todolist.model.TodoItem
 import com.survivalcoding.todolist.model.db.TodoContract
+import com.survivalcoding.todolist.util.getTodoItem
 
 class SearchTodoAsyncTask(private val db: SQLiteDatabase) :
     AsyncTask<String, Unit, List<TodoItem>>() {
@@ -29,23 +30,9 @@ class SearchTodoAsyncTask(private val db: SQLiteDatabase) :
             null,
             null
         )
-
-        val todoItems = mutableListOf<TodoItem>()
-        cursor.use {
-            with(it) {
-                while (moveToNext()) {
-                    val id = getInt(getColumnIndex(BaseColumns._ID))
-                    val isChecked =
-                        getInt(getColumnIndex(TodoContract.TodoEntry.COLUMN_NAME_IS_CHECKED))
-                    val todoTitle =
-                        getString(getColumnIndex(TodoContract.TodoEntry.COLUMN_NAME_TITLE))
-                    val timeStamp =
-                        getString(getColumnIndex(TodoContract.TodoEntry.COLUMN_NAME_TIME_STAMP))
-                    todoItems.add(TodoItem(id, isChecked == 1, todoTitle, timeStamp))
-                }
-            }
+        return cursor.use {
+            it.getTodoItem().toList()
+                .sortedWith(compareBy<TodoItem> { item -> item.isChecked }.thenBy { item -> item.todoTitle.length })
         }
-        return todoItems.toList()
-            .sortedWith(compareBy<TodoItem> { it.isChecked }.thenBy { it.todoTitle.length })
     }
 }
