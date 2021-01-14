@@ -17,14 +17,31 @@ import com.survivalcoding.todolist.view.main.adapter.TodoAdapter
 import com.survivalcoding.todolist.view.main.model.Todo
 import java.util.*
 
-class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
+class MainFragment(
+    private val repository: DefaultTodoRepository
+) : Fragment(), RemoveConfirmationDialogFragment.RemoveConfirmationDialogListener {
     private var _binding: FragmentMainBinding? = null
     private val binding
         get() = _binding!!
 
-    private lateinit var adapter: TodoAdapter
-
     private var actionMode: ActionMode? = null
+
+    private val adapter by lazy {
+        TodoAdapter(
+            showToastMessageListener = { message: String -> showToastMessage(message) },
+            removeClickListener = { todo -> repository.remove(todo) },
+            itemUpdateListener = { todo -> repository.update(todo) },
+            updateUIListener = { updateUI() },
+            editClickListener = { todo ->
+                replaceTransaction<EditFragment>(
+                    R.id.fragment_container_view,
+                    bundleOf(MainActivity.TODO_KEY to todo)
+                )
+            },
+            getActionMode = { getActionMode() },
+            setActionBarTitle = { setActionBarTitle() },
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,21 +61,6 @@ class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        adapter = TodoAdapter(
-            showToastMessageListener = { message: String -> showToastMessage(message) },
-            removeClickListener = { todo -> repository.remove(todo) },
-            checkChangeListener = { todo -> repository.update(todo) },
-            updateListener = { updateUI() },
-            editClickListener = { todo ->
-                replaceTransaction<EditFragment>(
-                    R.id.fragment_container_view,
-                    bundleOf(MainActivity.TODO_KEY to todo)
-                )
-            },
-            getActionMode = { getActionMode() },
-            setActionBarTitle = { todo -> setActionBarTitle(todo) },
-        )
 
         with(binding) {
             recyclerView.adapter = adapter
@@ -153,13 +155,21 @@ class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
 
     private fun getActionMode(): ActionMode? = actionMode
 
-    private fun setActionBarTitle(todo: Todo) {
-        repository.update(todo)
+    private fun setActionBarTitle() {
         actionMode?.title = getString(
             R.string.fragment_main_action_bar_mode_remove_title,
             repository.getRemovablesCount()
         )
     }
+
+    // RemoveConfirmationDialog Listener
+    override fun removeAllRemovables() {
+        repository.removeAllRemovable()
+        updateUI()
+        actionMode?.finish()
+    }
+
+    override fun getRemovablesItemCount(): Int = repository.getRemovablesCount()
 
     private val removeModeCallback = object : ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
@@ -180,11 +190,8 @@ class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
                 R.id.menu_remove -> {
                     val itemCount = repository.getRemovablesCount()
                     if (itemCount > 0) {
-                        RemoveConfirmationDialogFragment(itemCount) {
-                            repository.removeAllRemovable()
-                            updateUI()
-                            mode?.finish()
-                        }.show(childFragmentManager, RemoveConfirmationDialogFragment.TAG)
+                        RemoveConfirmationDialogFragment()
+                            .show(childFragmentManager, RemoveConfirmationDialogFragment.TAG)
                     }
                     true
                 }
@@ -197,7 +204,6 @@ class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
             adapter.notifyDataSetChanged()
         }
     }
-
     companion object {
         const val IS_IN_ACTION_MODE_KEY = "IS_IN_ACTION_MODE_KEY"
     }

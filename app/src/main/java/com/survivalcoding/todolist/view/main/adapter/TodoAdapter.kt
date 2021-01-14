@@ -11,11 +11,11 @@ import com.survivalcoding.todolist.view.main.model.Todo
 class TodoAdapter(
     private val showToastMessageListener: (String) -> Unit,
     private val removeClickListener: (Todo) -> Unit,
-    private val checkChangeListener: (Todo) -> Unit,
-    private val updateListener: () -> Unit,
+    private val itemUpdateListener: (Todo) -> Unit,
+    private val updateUIListener: () -> Unit,
     private val editClickListener: (Todo) -> Unit,
     private val getActionMode: () -> ActionMode?,
-    private val setActionBarTitle: (Todo) -> Unit,
+    private val setActionBarTitle: () -> Unit,
 ) : ListAdapter<Todo, TodoViewHolder>(TodoDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
@@ -30,8 +30,8 @@ class TodoAdapter(
             getItem(holder.adapterPosition),
             showToastMessageListener = showToastMessageListener,
             removeClickListener = removeClickListener,
-            checkChangeListener = checkChangeListener,
-            updateListener = updateListener,
+            itemUpdateListener = itemUpdateListener,
+            updateUIListener = updateUIListener,
             editClickListener = editClickListener,
             getActionMode = getActionMode,
             setActionBarTitle = setActionBarTitle,
