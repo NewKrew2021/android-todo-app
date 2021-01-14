@@ -15,7 +15,8 @@ class TodoDbRepository(context: Context) : DefaultTodoRepository {
 
     override fun getOrderedItems(): List<Todo> = SelectAsyncTask(readableDatabase).execute().get()
 
-    override fun getOrderedWithFilteredItems(query: String): List<Todo> = SelectFilteringAsyncTask(readableDatabase).execute(query).get()
+    override fun getOrderedWithFilteredItems(query: String): List<Todo> =
+        SelectFilteringAsyncTask(readableDatabase).execute(query).get()
 
     override fun add(todo: Todo) {
         InsertAsyncTask(writableDatabase).execute(ContentValues().setValues(todo))
@@ -56,13 +57,14 @@ class TodoDbRepository(context: Context) : DefaultTodoRepository {
         }
     }
 
-    class DeleteAllRemovableAsyncTask(private val database: SQLiteDatabase) : AsyncTask<List<Todo>, Unit, Unit>() {
+    class DeleteAllRemovableAsyncTask(private val database: SQLiteDatabase) :
+        AsyncTask<List<Todo>, Unit, Unit>() {
         override fun doInBackground(vararg params: List<Todo>?) {
             params.takeIf { it.isNotEmpty() }?.let {
                 val removables = params[0]?.filter { it.isRemovable }
 
                 removables?.let { items ->
-                    val argsParameter  = Array(items.size) { '?' }.joinToString(",")
+                    val argsParameter = Array(items.size) { '?' }.joinToString(",")
                     val selection = "${BaseColumns._ID} IN ($argsParameter)"
                     val selectionArgs = items.map { it.id.toString() }.toTypedArray()
 
@@ -106,8 +108,8 @@ class TodoDbRepository(context: Context) : DefaultTodoRepository {
         }
     }
 
-    class SelectFilteringAsyncTask(private val database: SQLiteDatabase)
-        : AsyncTask<String, Unit, List<Todo>>() {
+    class SelectFilteringAsyncTask(private val database: SQLiteDatabase) :
+        AsyncTask<String, Unit, List<Todo>>() {
         override fun doInBackground(vararg params: String?): List<Todo> {
             return params.takeIf { it.isNotEmpty() }?.let {
                 val selection = "${TodoContract.TodoEntry.COLUMN_NAME_TITLE} LIKE ?"
@@ -145,8 +147,8 @@ class TodoDbRepository(context: Context) : DefaultTodoRepository {
         }
     }
 
-    class UpdateAsyncTask(private val database: SQLiteDatabase)
-        : AsyncTask<Todo, Unit, Unit>() {
+    class UpdateAsyncTask(private val database: SQLiteDatabase) :
+        AsyncTask<Todo, Unit, Unit>() {
         override fun doInBackground(vararg params: Todo?) {
             params.takeIf { it.isNotEmpty() }?.let {
                 val values = ContentValues().setValues(it[0])
