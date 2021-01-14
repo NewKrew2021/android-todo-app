@@ -22,9 +22,24 @@ class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
     private val binding
         get() = _binding!!
 
-    private lateinit var adapter: TodoAdapter
-
     private var actionMode: ActionMode? = null
+
+    private val adapter by lazy {
+        TodoAdapter(
+            showToastMessageListener = { message: String -> showToastMessage(message) },
+            removeClickListener = { todo -> repository.remove(todo) },
+            itemUpdateListener = { todo -> repository.update(todo) },
+            updateUIListener = { updateUI() },
+            editClickListener = { todo ->
+                replaceTransaction<EditFragment>(
+                    R.id.fragment_container_view,
+                    bundleOf(MainActivity.TODO_KEY to todo)
+                )
+            },
+            getActionMode = { getActionMode() },
+            setActionBarTitle = { setActionBarTitle() },
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,21 +59,6 @@ class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        adapter = TodoAdapter(
-            showToastMessageListener = { message: String -> showToastMessage(message) },
-            removeClickListener = { todo -> repository.remove(todo) },
-            itemUpdateListener = { todo -> repository.update(todo) },
-            updateUIListener = { updateUI() },
-            editClickListener = { todo ->
-                replaceTransaction<EditFragment>(
-                    R.id.fragment_container_view,
-                    bundleOf(MainActivity.TODO_KEY to todo)
-                )
-            },
-            getActionMode = { getActionMode() },
-            setActionBarTitle = { setActionBarTitle() },
-        )
 
         with(binding) {
             recyclerView.adapter = adapter
