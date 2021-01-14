@@ -3,7 +3,7 @@ package com.survivalcoding.todolist.factory
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.survivalcoding.todolist.data.TodoRepository
-import com.survivalcoding.todolist.view.main.MainFragment
+import com.survivalcoding.todolist.view.main.fragment.MainFragment
 
 class TodoFragmentFactory(private val repository: TodoRepository) : FragmentFactory() {
 

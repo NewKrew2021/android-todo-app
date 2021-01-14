@@ -1,4 +1,4 @@
-package com.survivalcoding.todolist.view.main
+package com.survivalcoding.todolist.view.main.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,8 +20,13 @@ class MainFragment(private val repository: TodoRepository) : Fragment() {
     private val adapter by lazy {
         TodoRecyclerViewAdapter(repository,
             deleteClickListener = { todo ->
-                repository.delItem(todo)
-                updateUi()
+                RemoveDialogFragment().apply {
+                    isCancelable = false
+                    submitButtonClickListener = {
+                        repository.delItem(todo)
+                        updateUi()
+                    }
+                }.show(childFragmentManager, REMOVE_DIALOG_TAG)
             },
             editClickListener = { todo -> })
     }
@@ -83,5 +88,6 @@ class MainFragment(private val repository: TodoRepository) : Fragment() {
     companion object {
         private const val DATA_SAVE = "todo"
         private const val ALERT_RENAME = "내용을 입력해주세요."
+        private const val REMOVE_DIALOG_TAG = "edit"
     }
 }

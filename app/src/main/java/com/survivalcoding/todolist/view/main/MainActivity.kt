@@ -8,6 +8,7 @@ import com.survivalcoding.todolist.App
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import com.survivalcoding.todolist.factory.TodoFragmentFactory
+import com.survivalcoding.todolist.view.main.fragment.MainFragment
 
 
 class MainActivity : AppCompatActivity() {

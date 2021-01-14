@@ -11,6 +11,7 @@ import java.util.*
 class TodoDbRepository(context: Context) : TodoRepository {
 
     private val dbHelper = TodoDbHelper(context)
+    private lateinit var deleteTask: DeleteTask
     override fun getItems(): List<TodoData> {
         val db = dbHelper.readableDatabase
 
