@@ -2,113 +2,93 @@ package com.survivalcoding.todolist.data.db
 
 import android.content.ContentValues
 import android.content.Context
+import android.os.AsyncTask
 import android.provider.BaseColumns
+import android.util.Log
 import com.survivalcoding.todolist.data.DefaultTodoRepository
 import com.survivalcoding.todolist.view.RecyclerAdapter
 import com.survivalcoding.todolist.viewModel.listItem
 import com.survivalcoding.todolist.viewModel.searchItem
 import java.text.SimpleDateFormat
 
-class TodoSqliteRepository(context: Context, val adapter: RecyclerAdapter) : DefaultTodoRepository {
+class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
 
     val dbHelper = TodoDbHelper(context)
+    var db = dbHelper.writableDatabase
+    var maxId: Int = 0
 
-    var data = mutableListOf<listItem>()
-    var searchData = mutableListOf<searchItem>()
+    private val data = mutableListOf<listItem>()
+    private val searchData = mutableListOf<searchItem>()
 
-    override fun searching(pattern: String) {
-
-        makeSearchData(pattern)
-        adapter.notifyDataSetChanged()
-        //dataUpdate()
+    fun getDataList(): MutableList<listItem> {
+        return data
     }
 
-    override fun makeSearchData(pattern: String) {
-        searchData.clear()
+    fun getSearchDataList(): MutableList<searchItem> {
+        return searchData
+    }
 
-        for (i in 0..data.size - 1) {
-            if (data[i].toDo.contains(pattern)) {
-                searchData.add(searchItem(data[i], i))
+
+    override fun addItem(listitem: listItem) {
+        val asyncTask = object : AsyncTask<Unit, Unit, Unit>() {
+            override fun doInBackground(vararg params: Unit?) {
+                val values = ContentValues().apply {
+                    put(TodoContract.TodoEntry.COLUMN_NAME_TODO, listitem.toDo)
+                    put(TodoContract.TodoEntry.COLUMN_NAME_TIME, listitem.time)
+                    put(TodoContract.TodoEntry.COLUMN_NAME_CHECKING, if (listitem.check) 1 else 0)
+                    put(
+                        TodoContract.TodoEntry.COLUMN_NAME_COMPLETE,
+                        if (listitem.complete) 1 else 0
+                    )
+                }
+                db?.insert(TodoContract.TodoEntry.TABLE_NAME, null, values)
             }
-        }
+        }.execute()
     }
 
-    //
-    override fun checkedComplete(pattern: String) {
+    override fun removeItem(id: Int) {
 
-        checkingComplete(searchData)
-
-        var last_index = data.size - 1
-        var index = 0
-        for (i in 0..last_index) {
-            if (data[index].complete == true) {
-                data.add(last_index + 1, data[index])
-                data.removeAt(index)
-            } else {
-                index += 1
+        val asyncTask = object : AsyncTask<Unit, Unit, Unit>() {
+            override fun doInBackground(vararg params: Unit?) {
+                Log.d("로그", "$id")
+                val selection = "${BaseColumns._ID} = ?"
+                val selectionArgs = arrayOf("${id}")
+                val deletedRows =
+                    db.delete(TodoContract.TodoEntry.TABLE_NAME, selection, selectionArgs)
             }
-        }
-        makeSearchData(pattern)
+        }.execute()
+        //db.execSQL("delete from ${TodoContract.TodoEntry.TABLE_NAME} where _id = $index")
     }
 
-    override fun checkingComplete(dataList: MutableList<searchItem>) {
-        var tmp_size = dataList.size
-        var index = 0
-        for (i in 0..tmp_size - 1) {
-            if (dataList[index].item.check == true) {
+    override fun updateItem(listItem: listItem) {
 
-                dataList[index].item.check = false
-                dataList[index].item.complete = true
-                data[dataList[index].index].complete = true
+        val asyncTask = object : AsyncTask<Unit, Unit, Unit>() {
+            override fun doInBackground(vararg params: Unit?) {
+                val values = ContentValues().apply {
+                    put(TodoContract.TodoEntry.COLUMN_NAME_TODO, listItem.toDo)
+                    put(TodoContract.TodoEntry.COLUMN_NAME_TIME, listItem.time)
+                    put(TodoContract.TodoEntry.COLUMN_NAME_CHECKING, if (listItem.check) 1 else 0)
+                    put(
+                        TodoContract.TodoEntry.COLUMN_NAME_COMPLETE,
+                        if (listItem.complete) 1 else 0
+                    )
+                }
 
-                dataList.add(
-                    dataList[index]
+                val selection = "${BaseColumns._ID} = ?"
+                val selectionArgs = arrayOf("${listItem.id}")
+                val count = db.update(
+                    TodoContract.TodoEntry.TABLE_NAME,
+                    values,
+                    selection,
+                    selectionArgs
                 )
-                dataList.removeAt(index)
-                adapter.notifyItemRemoved(index)
-
-            } else {
-                index += 1
             }
-        }
-        adapter.notifyItemRangeChanged(0, dataList.size)
+        }.execute()
     }
 
-    override fun checkedRemove(pattern: String) {
-        val tmp = mutableListOf<Int>()
-        for (i in searchData.size - 1 downTo 0) {
-            if (searchData[i].item.check == true) {
-                tmp.add(searchData[i].index)
-                adapter.notifyItemRemoved(i)
-            }
-        }
-        tmp.sortBy { it }
-        for (i in tmp.size - 1 downTo 0) {
-            data.removeAt(tmp[i])
-        }
-        makeSearchData(pattern)
-    }
-
-    override fun addItem(todo: String) {
-        val sdf = SimpleDateFormat("yyyy/MM/dd - hh:mm:ss")
-        val date = System.currentTimeMillis()
-        val currentDate = sdf.format(date)
-
-        data.add(
-            0,
-            listItem(
-                todo,
-                currentDate,
-                check = false,
-                complete = false,
-            )
-        )
-    }
-
+    /*
     fun writeDatabase() {
         removeDatabase()
-
-        val db = dbHelper.writableDatabase
 
         for (i in 0..data.size - 1) {
             val values = ContentValues().apply {
@@ -121,6 +101,8 @@ class TodoSqliteRepository(context: Context, val adapter: RecyclerAdapter) : Def
 
         }
     }
+
+     */
 
     fun readDatabase() {
         val db = dbHelper.readableDatabase
@@ -169,22 +151,29 @@ class TodoSqliteRepository(context: Context, val adapter: RecyclerAdapter) : Def
                         todo,
                         time,
                         if (check == 1) true else false,
-                        if (complete == 1) true else false
+                        if (complete == 1) true else false,
+                        id
                     )
                 )
+                if (id > maxId) maxId = id
             }
             close()
         }
-        data = data.sortedWith(Comparator<listItem> { a, b ->
-            when {
-                a.check == false -> 1
-                a.check == true -> -1
-                else -> 0
-            }
-        }).toMutableList()
 
+        var index: Int = 0
+        var i = 0
+        while (i < data.size) {
+            if (data[index].complete == true) {
+                data.add(data[index])
+                data.removeAt(index)
+            } else {
+                index += 1
+            }
+            i += 1
+        }
     }
 
+    /*
     fun removeDatabase() {
 
         val db = dbHelper.writableDatabase
@@ -192,4 +181,9 @@ class TodoSqliteRepository(context: Context, val adapter: RecyclerAdapter) : Def
         db.execSQL("delete from ${TodoContract.TodoEntry.TABLE_NAME}")
     }
 
+
+     */
+
 }
+
+

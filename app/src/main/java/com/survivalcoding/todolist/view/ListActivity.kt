@@ -14,7 +14,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.todolist.R
-import com.survivalcoding.todolist.data.TodoRepository
+import com.survivalcoding.todolist.data.DefaultTodoRepository
 import com.survivalcoding.todolist.data.db.TodoSqliteRepository
 import com.survivalcoding.todolist.databinding.ActivityListBinding
 import com.survivalcoding.todolist.databinding.Dialog1Binding
@@ -39,14 +39,11 @@ class ListActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-
-
-
-
+        todoSqliteRepository = TodoSqliteRepository(applicationContext)
         imm = getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as InputMethodManager?
 
         adapter =
-            RecyclerAdapter() { adapter: RecyclerAdapter, position: Int ->
+            RecyclerAdapter(todoSqliteRepository) { adapter: RecyclerAdapter, position: Int ->
 
                 EditDialogFragment({ dialogView: View ->
                     dialogSetting(
@@ -59,15 +56,17 @@ class ListActivity : AppCompatActivity() {
                 )
 
             }
-
         binding.RecyclerView.adapter = adapter
         binding.RecyclerView.layoutManager = LinearLayoutManager(this)
-        todoSqliteRepository = TodoSqliteRepository(applicationContext, adapter)
+
         todoSqliteRepository.readDatabase()
 
-        adapter.getSearchData(todoSqliteRepository.searchData)
+        adapter.getData(
+            todoSqliteRepository.getDataList(),
+            todoSqliteRepository.getSearchDataList()
+        )
 
-        todoSqliteRepository.searching("")
+        adapter.searching("")
 
         binding.addButton.setOnClickListener {
             addButtonListener(adapter, binding)
@@ -84,15 +83,15 @@ class ListActivity : AppCompatActivity() {
             true
         }
         binding.removeButton.setOnClickListener {
-            todoSqliteRepository.checkedRemove(binding.searchEditText.text.toString())
+            adapter.checkedRemove(binding.searchEditText.text.toString())
         }
 
         binding.completeButton.setOnClickListener {
 
-            todoSqliteRepository.checkedComplete(binding.searchEditText.text.toString())
+            adapter.checkedComplete(binding.searchEditText.text.toString())
         }
         binding.searchEditText.addTextChangedListener {
-            todoSqliteRepository.searching(binding.searchEditText.text.toString())
+            adapter.searching(binding.searchEditText.text.toString())
         }
     }
 
@@ -147,40 +146,50 @@ class ListActivity : AppCompatActivity() {
         val date = System.currentTimeMillis()
         val currentDate = sdf.format(date)
 
-        todoSqliteRepository.data.add(
+        adapter.data.add(
             0,
             listItem(
                 tmpString,
                 currentDate,
                 check = false,
                 complete = false,
+                id = adapter.searchData[position].item.id
             )
         )
-        todoSqliteRepository.data.removeAt(todoSqliteRepository.searchData[position].index + 1)
+        todoSqliteRepository.updateItem(
+            listItem(
+                tmpString,
+                currentDate,
+                check = false,
+                complete = false,
+                id = adapter.searchData[position].item.id
+            )
+        )
+
+        adapter.data.removeAt(adapter.searchData[position].index + 1)
+
 
         //adapter.notifyItemRemoved(position+1)
 
         //adapter.notifyItemRangeChanged(0, adapter.data.size)
         adapter.notifyItemRemoved(position)
-        todoSqliteRepository.makeSearchData(binding.searchEditText.text.toString())
-        adapter.notifyItemRangeChanged(0, todoSqliteRepository.searchData.size)
+        adapter.makeSearchData(binding.searchEditText.text.toString())
+        adapter.notifyItemRangeChanged(0, adapter.searchData.size)
     }
 
     fun addButtonListener(adapter: RecyclerAdapter, binding: ActivityListBinding) {
 
-        todoSqliteRepository.addItem(binding.editText.text.toString())
+        adapter.addItem(binding.editText.text.toString())
 
-        todoSqliteRepository.makeSearchData(binding.searchEditText.text.toString(),)
         if (
             binding.editText.text.toString().contains(binding.searchEditText.text.toString())
         ) {
             adapter.notifyItemInserted(0)
         }
-        adapter.notifyItemRangeChanged(0, todoSqliteRepository.data.size)
-
+        adapter.notifyItemRangeChanged(0, adapter.data.size)
 
         binding.editText.setText("")
-        todoSqliteRepository.makeSearchData(binding.searchEditText.text.toString())
+        adapter.makeSearchData(binding.searchEditText.text.toString())
         //adapter.dataUpdate()
         hideKeyboard(binding.root)
 
@@ -189,21 +198,17 @@ class ListActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelableArrayList("data", todoSqliteRepository.data as ArrayList<listItem>)
+        outState.putParcelableArrayList("data", adapter.data as ArrayList<listItem>)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         val data = savedInstanceState.getParcelableArrayList<listItem>("data")
         data?.let {
-            todoSqliteRepository.data = data
+            adapter.data = data
             adapter.notifyDataSetChanged()
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        todoSqliteRepository.writeDatabase()
-    }
 }
 //오류 검토 완료

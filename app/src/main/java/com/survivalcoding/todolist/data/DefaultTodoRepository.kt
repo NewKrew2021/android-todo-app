@@ -1,18 +1,15 @@
 package com.survivalcoding.todolist.data
 
+import com.survivalcoding.todolist.viewModel.listItem
 import com.survivalcoding.todolist.viewModel.searchItem
 
 interface DefaultTodoRepository {
 
-    fun searching(pattern: String)
 
-    fun makeSearchData(pattern: String)
+    fun addItem(listitem: listItem)
 
-    fun checkedComplete(pattern: String)
+    fun removeItem(id: Int)
 
-    fun checkingComplete(dataList: MutableList<searchItem>)
+    fun updateItem(listitem: listItem)
 
-    fun checkedRemove(pattern: String)
-
-    fun addItem(todo: String)
 }
