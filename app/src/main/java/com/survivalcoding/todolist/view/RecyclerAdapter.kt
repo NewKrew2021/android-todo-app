@@ -14,6 +14,7 @@ import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.ItemBinding
 import com.survivalcoding.todolist.viewModel.listItem
 import com.survivalcoding.todolist.viewModel.searchItem
+import java.text.SimpleDateFormat
 
 class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
     ListAdapter<searchItem, Holder>(ItemDiffCallback) {
@@ -27,9 +28,101 @@ class RecyclerAdapter(val itemClick: (RecyclerAdapter, Int) -> Unit) :
         submitList(searchData)
     }
      */
+    var data = mutableListOf<listItem>()
     var searchData = mutableListOf<searchItem>()
-    fun getSearchData(data: MutableList<searchItem>) {
-        searchData = data
+
+    fun getData(data: MutableList<listItem>, searchData: MutableList<searchItem>) {
+        this.searchData = searchData
+        this.data = data
+    }
+
+    fun searching(pattern: String) {
+
+        makeSearchData(pattern)
+        notifyDataSetChanged()
+        //adapter.submitList(null)
+        //adapter.submitList(searchData)
+    }
+
+    fun makeSearchData(pattern: String) {
+        searchData.clear()
+
+        for (i in 0..data.size - 1) {
+            if (data[i].toDo.contains(pattern)) {
+                searchData.add(searchItem(data[i], i))
+            }
+        }
+    }
+
+    fun checkedComplete(pattern: String) {
+
+        checkingComplete(searchData)
+
+        var last_index = data.size - 1
+        var index = 0
+        for (i in 0..last_index) {
+            if (data[index].complete == true) {
+                data.add(last_index + 1, data[index])
+                data.removeAt(index)
+            } else {
+                index += 1
+            }
+        }
+        makeSearchData(pattern)
+    }
+
+    fun checkingComplete(dataList: MutableList<searchItem>) {
+        var tmp_size = dataList.size
+        var index = 0
+        for (i in 0..tmp_size - 1) {
+            if (dataList[index].item.check == true) {
+
+                dataList[index].item.check = false
+                dataList[index].item.complete = true
+                data[dataList[index].index].complete = true
+
+                dataList.add(
+                    dataList[index]
+                )
+                dataList.removeAt(index)
+                notifyItemRemoved(index)
+
+            } else {
+                index += 1
+            }
+        }
+        notifyItemRangeChanged(0, dataList.size)
+    }
+
+    fun checkedRemove(pattern: String) {
+        val tmp = mutableListOf<Int>()
+        for (i in searchData.size - 1 downTo 0) {
+            if (searchData[i].item.check == true) {
+                tmp.add(searchData[i].index)
+                notifyItemRemoved(i)
+            }
+        }
+        tmp.sortBy { it }
+        for (i in tmp.size - 1 downTo 0) {
+            data.removeAt(tmp[i])
+        }
+        makeSearchData(pattern)
+    }
+
+    fun addItem(todo: String) {
+        val sdf = SimpleDateFormat("yyyy/MM/dd - hh:mm:ss")
+        val date = System.currentTimeMillis()
+        val currentDate = sdf.format(date)
+
+        data.add(
+            0,
+            listItem(
+                todo,
+                currentDate,
+                check = false,
+                complete = false,
+            )
+        )
     }
 
 
