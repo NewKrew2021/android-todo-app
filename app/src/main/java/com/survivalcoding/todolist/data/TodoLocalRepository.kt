@@ -4,7 +4,7 @@ import com.survivalcoding.todolist.view.main.model.TodoData
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
-class TodoLocalRepository : TodoDefaultRepository {
+class TodoLocalRepository : TodoRepository {
     private var _items = mutableListOf<TodoData>()
     private var pid = AtomicInteger(0)
     override fun getItems(): List<TodoData> {

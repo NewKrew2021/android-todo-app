@@ -6,14 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.survivalcoding.todolist.data.TodoDefaultRepository
+import com.survivalcoding.todolist.data.TodoRepository
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
 import com.survivalcoding.todolist.view.main.adapter.TodoRecyclerViewAdapter
 import com.survivalcoding.todolist.view.main.model.TodoData
 import java.util.*
 
 
-class MainFragment(private val repository: TodoDefaultRepository) : Fragment() {
+class MainFragment(private val repository: TodoRepository) : Fragment() {
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!

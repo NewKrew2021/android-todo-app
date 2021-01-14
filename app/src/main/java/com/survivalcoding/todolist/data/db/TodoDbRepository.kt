@@ -4,11 +4,11 @@ import android.content.ContentValues
 import android.content.Context
 import android.os.AsyncTask
 import android.provider.BaseColumns
-import com.survivalcoding.todolist.data.TodoDefaultRepository
+import com.survivalcoding.todolist.data.TodoRepository
 import com.survivalcoding.todolist.view.main.model.TodoData
 import java.util.*
 
-class TodoSqliteRepository(context: Context) : TodoDefaultRepository {
+class TodoDbRepository(context: Context) : TodoRepository {
 
     private val dbHelper = TodoDbHelper(context)
     override fun getItems(): List<TodoData> {
