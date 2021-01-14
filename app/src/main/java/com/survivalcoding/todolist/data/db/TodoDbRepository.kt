@@ -124,8 +124,8 @@ class TodoDbRepository(context: Context) : DefaultTodoRepository {
                 )
 
                 val items = mutableListOf<Todo>()
-                cursor.use {
-                    with(it) {
+                cursor.use { cursor ->
+                    with(cursor) {
                         while (moveToNext()) {
                             items.add(
                                 Todo(
