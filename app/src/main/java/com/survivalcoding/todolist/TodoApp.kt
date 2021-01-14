@@ -1,8 +1,10 @@
 package com.survivalcoding.todolist
 
 import android.app.Application
-import com.survivalcoding.todolist.repository.TodoRepository
+import com.survivalcoding.todolist.data.database.TodoSqliteRepository
 
 class TodoApp : Application() {
-    val todoRepository = TodoRepository()
+    val todoRepository by lazy {
+        TodoSqliteRepository(applicationContext)
+    }
 }
