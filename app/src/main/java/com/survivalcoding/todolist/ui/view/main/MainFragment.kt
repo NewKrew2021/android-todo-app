@@ -85,6 +85,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             }
         }
 
+
         binding.rvTodolistMain.apply {
             adapter = todoAdapter
             setHasFixedSize(true)
