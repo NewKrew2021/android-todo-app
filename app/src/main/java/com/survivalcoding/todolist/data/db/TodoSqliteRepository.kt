@@ -2,6 +2,7 @@ package com.survivalcoding.todolist.data.db
 
 import android.content.ContentValues
 import android.content.Context
+import android.os.AsyncTask
 import android.provider.BaseColumns
 import com.survivalcoding.todolist.data.TodoDefaultRepository
 import com.survivalcoding.todolist.view.main.model.TodoData
@@ -51,7 +52,6 @@ class TodoSqliteRepository(context: Context) : TodoDefaultRepository {
 
     override fun addItem(data: TodoData) {
         //To-Do 아이템 추가
-        val db = dbHelper.writableDatabase
 
         data.time = Calendar.getInstance().timeInMillis
 
@@ -60,19 +60,41 @@ class TodoSqliteRepository(context: Context) : TodoDefaultRepository {
             put(TodoContract.TodoEntry.COLUMN_NAME_TIME, data.time)
             put(TodoContract.TodoEntry.COLUMN_NAME_IS_DONE, data.isDone)
         }
+        AddTask(dbHelper, values).execute()
 
-        db?.insert(TodoContract.TodoEntry.TABLE_NAME, null, values)
     }
 
     override fun delItem(data: TodoData) {
-        val db = dbHelper.writableDatabase
 
         val selection = "${BaseColumns._ID} = ?"
         val selectionArgs = arrayOf("${data.pid}")
-        db.delete(TodoContract.TodoEntry.TABLE_NAME, selection, selectionArgs)
+        DeleteTask(dbHelper, selection, selectionArgs).execute()
     }
 
     override fun addAllItems(data: List<TodoData>) {
+    }
+
+    class AddTask(private val dbHelper: TodoDbHelper, private val values: ContentValues) :
+        AsyncTask<Unit, Unit, Unit>() {
+        override fun doInBackground(vararg params: Unit?) {
+            val db = dbHelper.writableDatabase
+            db?.insert(TodoContract.TodoEntry.TABLE_NAME, null, values)
+        }
+    }
+
+    class DeleteTask(
+        private val dbHelper: TodoDbHelper,
+        private val selection: String,
+        private val selectionArgs: Array<String>
+    ) : AsyncTask<Unit, Unit, Unit>() {
+        override fun onPreExecute() {
+
+        }
+
+        override fun doInBackground(vararg params: Unit?) {
+            val db = dbHelper.writableDatabase
+            db.delete(TodoContract.TodoEntry.TABLE_NAME, selection, selectionArgs)
+        }
     }
 
 }
