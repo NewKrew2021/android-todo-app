@@ -17,7 +17,9 @@ import com.survivalcoding.todolist.view.main.adapter.TodoAdapter
 import com.survivalcoding.todolist.view.main.model.Todo
 import java.util.*
 
-class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
+class MainFragment(
+    private val repository: DefaultTodoRepository
+) : Fragment(), RemoveConfirmationDialogFragment.RemoveConfirmationDialogListener {
     private var _binding: FragmentMainBinding? = null
     private val binding
         get() = _binding!!
@@ -160,6 +162,15 @@ class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
         )
     }
 
+    // RemoveConfirmationDialog Listener
+    override fun removeAllRemovables() {
+        repository.removeAllRemovable()
+        updateUI()
+        actionMode?.finish()
+    }
+
+    override fun getRemovablesItemCount(): Int = repository.getRemovablesCount()
+
     private val removeModeCallback = object : ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
             mode?.menuInflater?.inflate(R.menu.main_menu_remove, menu)
@@ -179,11 +190,8 @@ class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
                 R.id.menu_remove -> {
                     val itemCount = repository.getRemovablesCount()
                     if (itemCount > 0) {
-                        RemoveConfirmationDialogFragment(itemCount) {
-                            repository.removeAllRemovable()
-                            updateUI()
-                            mode?.finish()
-                        }.show(childFragmentManager, RemoveConfirmationDialogFragment.TAG)
+                        RemoveConfirmationDialogFragment()
+                            .show(childFragmentManager, RemoveConfirmationDialogFragment.TAG)
                     }
                     true
                 }
@@ -196,7 +204,6 @@ class MainFragment(private val repository: DefaultTodoRepository) : Fragment() {
             adapter.notifyDataSetChanged()
         }
     }
-
     companion object {
         const val IS_IN_ACTION_MODE_KEY = "IS_IN_ACTION_MODE_KEY"
     }
