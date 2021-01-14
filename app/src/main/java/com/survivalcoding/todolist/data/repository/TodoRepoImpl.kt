@@ -8,14 +8,14 @@ import com.survivalcoding.todolist.data.db.TodoDbHelper
 import com.survivalcoding.todolist.data.model.TodoItem
 import com.survivalcoding.todolist.extension.selection
 import com.survivalcoding.todolist.extension.selectionArgs
-import com.survivalcoding.todolist.extension.setValues
+import com.survivalcoding.todolist.extension.setTodoValues
 
 
 class TodoRepoImpl(context: Context) : TodoRepo {
 
     private val dbHelper = TodoDbHelper(context)
 
-    override fun getAllTodoItem(): MutableList<TodoItem> {
+    override fun getAllTodoItem(): List<TodoItem> {
         val db = dbHelper.readableDatabase
 
         val projection =
@@ -66,7 +66,7 @@ class TodoRepoImpl(context: Context) : TodoRepo {
             insert(
                 TodoContract.TodoEntry.TABLE_NAME,
                 null,
-                ContentValues().setValues(todoItem)
+                ContentValues().setTodoValues(todoItem)
             )
         }
     }
@@ -75,7 +75,7 @@ class TodoRepoImpl(context: Context) : TodoRepo {
         dbHelper.writableDatabase.run {
             update(
                 TodoContract.TodoEntry.TABLE_NAME,
-                ContentValues().setValues(todoItem),
+                ContentValues().setTodoValues(todoItem),
                 selection(),
                 selectionArgs(todoItem)
             )
