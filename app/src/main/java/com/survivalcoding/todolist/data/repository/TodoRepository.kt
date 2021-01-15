@@ -8,7 +8,7 @@ class TodoRepository : DefaultTodoRepository {
 
     var id = AtomicInteger(0)
 
-    private val _list = mutableListOf<TodoItem>()
+    private var _list = mutableListOf<TodoItem>()
     val list: List<TodoItem> = _list
 
     override fun addItem(item: TodoItem) {
@@ -20,9 +20,12 @@ class TodoRepository : DefaultTodoRepository {
     }
 
     override fun updateItem(item: TodoItem) {
-        _list.forEach {
-            if (it.id == item.id) _list.remove(it)
+        var targetIdx = 0
+        _list.forEachIndexed { index, todoItem ->
+            if(todoItem.id == item.id) targetIdx = index
         }
+
+        _list.removeAt(targetIdx)
         _list.add(item)
     }
 
