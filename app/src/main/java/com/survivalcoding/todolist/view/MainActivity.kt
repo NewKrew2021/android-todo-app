@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
 
         supportFragmentManager.fragmentFactory =
-            MyFragmentFactory(TodoSqliteRepository(applicationContext))
+            MyFragmentFactory(RepositoryFilter().getRepository(applicationContext))
 
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
 
          */
     }
+
 
     /*
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

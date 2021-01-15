@@ -59,7 +59,7 @@ class ListActivity : AppCompatActivity() {
         binding.RecyclerView.adapter = adapter
         binding.RecyclerView.layoutManager = LinearLayoutManager(this)
 
-        todoSqliteRepository.readDatabase()
+         todoSqliteRepository.readDatabase()
 
         adapter.getData(
             todoSqliteRepository.getDataList(),

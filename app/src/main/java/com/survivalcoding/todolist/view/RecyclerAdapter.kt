@@ -135,6 +135,17 @@ class RecyclerAdapter(
                     id = todoRepository.maxId
                 )
             )
+        } else {
+            data.add(
+                0,
+                listItem(
+                    todo,
+                    currentDate,
+                    check = false,
+                    complete = false,
+                    id = 0
+                )
+            )
         }
 
 

@@ -42,17 +42,17 @@ android {
         productFlavors {
 
 
-            app1 {
+            memory {
                 dimension "app"
-                applicationIdSuffix ".app1"
-                versionNameSuffix "-app1"
+                applicationIdSuffix ".memory"
+                versionNameSuffix "-memory"
             }
 
 
-            app2 {
+            sqlite {
                 dimension "app"
-                applicationIdSuffix ".app2"
-                versionNameSuffix "-app2"
+                applicationIdSuffix ".sqlite"
+                versionNameSuffix "-sqlite"
             }
         }
     }

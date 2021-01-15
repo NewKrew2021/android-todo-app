@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">testing22222</string>
+    <string name="app_name">sqliteVersion</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

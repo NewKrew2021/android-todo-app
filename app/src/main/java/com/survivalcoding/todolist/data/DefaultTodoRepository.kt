@@ -5,6 +5,9 @@ import com.survivalcoding.todolist.viewModel.searchItem
 
 interface DefaultTodoRepository {
 
+    fun getDataList(): MutableList<listItem>
+
+    fun getSearchDataList(): MutableList<searchItem>
 
     fun addItem(listitem: listItem)
 

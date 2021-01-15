@@ -72,13 +72,14 @@ class ListFragment(private val todoRepository: DefaultTodoRepository) : Fragment
 
         if (todoRepository is TodoSqliteRepository) {
             todoRepository.readDatabase()
-            adapter.getData(
-
-                todoRepository.getDataList(),
-                todoRepository.getSearchDataList()
-
-            )
         }
+
+        adapter.getData(
+
+            todoRepository.getDataList(),
+            todoRepository.getSearchDataList()
+
+        )
 
         adapter.searching("")
 
@@ -86,15 +87,19 @@ class ListFragment(private val todoRepository: DefaultTodoRepository) : Fragment
             addButtonListener(adapter, binding)
         }
 
+        /*
         binding.editText.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER) addButtonListener(
                     adapter,
                     binding
                 )
+                else if (keyCode == KeyEvent.KEYCODE_BACK)
             }
             true
         }
+
+         */
         binding.removeButton.setOnClickListener {
             adapter.checkedRemove(binding.searchEditText.text.toString())
         }
@@ -124,6 +129,7 @@ class ListFragment(private val todoRepository: DefaultTodoRepository) : Fragment
 
         inflater.inflate(R.menu.main, menu)
     }
+
 
     fun hideKeyboard(v: View) {
         imm =
@@ -188,7 +194,6 @@ class ListFragment(private val todoRepository: DefaultTodoRepository) : Fragment
         adapter.makeSearchData(binding.searchEditText.text.toString())
         //adapter.dataUpdate()
         hideKeyboard(binding.root)
-
 
     }
 
