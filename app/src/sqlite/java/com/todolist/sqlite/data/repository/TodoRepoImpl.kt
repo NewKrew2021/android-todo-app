@@ -48,7 +48,14 @@ class TodoRepoImpl(context: Context) : TodoRepo {
                     getString(getColumnIndexOrThrow(TodoContract.TodoEntry.COLUMN_NAME_COMPLETE)).let {
                         it == "true"
                     }
-                todoList.add(TodoItem(time, contents, complete, id))
+                todoList.add(
+                    TodoItem(
+                        time,
+                        contents,
+                        complete,
+                        id
+                    )
+                )
             }
             close()
         }
