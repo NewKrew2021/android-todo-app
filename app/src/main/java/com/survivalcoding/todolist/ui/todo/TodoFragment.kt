@@ -32,6 +32,7 @@ class TodoFragment(private val todoRepository: DefaultTodoRepository) : Fragment
 
             binding.apply {
                 title.text = it.title
+                content.text = it.content
             }
             todoItem = it
         }

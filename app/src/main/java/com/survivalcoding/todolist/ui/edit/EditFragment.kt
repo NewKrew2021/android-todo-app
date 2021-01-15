@@ -34,6 +34,7 @@ class EditFragment(private val todoRepository: DefaultTodoRepository) : Fragment
 
             binding.apply {
                 title.setText(it.title)
+                content.setText(it.content)
             }
             todoItem = it
         }
@@ -49,9 +50,10 @@ class EditFragment(private val todoRepository: DefaultTodoRepository) : Fragment
 
         val title = binding.title.text.toString()
         val timeStamp = Calendar.getInstance().timeInMillis
+        val content = binding.content.text.toString()
 
         if (title.isNotBlank()) {
-            todoRepository.addItem(TodoItem(title, false, timeStamp))
+            todoRepository.addItem(TodoItem(title, false, timeStamp, content))
             NavigationUtil.openMainFragment(parentFragmentManager)
         }
     }
@@ -62,6 +64,7 @@ class EditFragment(private val todoRepository: DefaultTodoRepository) : Fragment
             todoRepository.updateItem(it.apply {
                 title = binding.title.text.toString()
                 timeStamp = Calendar.getInstance().timeInMillis
+                content = binding.content.text.toString()
             })
         }
         NavigationUtil.openMainFragment(parentFragmentManager)
