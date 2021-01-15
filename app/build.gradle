@@ -34,6 +34,22 @@ android {
     buildFeatures {
         viewBinding true
     }
+    // flavor 적용
+    flavorDimensions "repository"
+    productFlavors {
+        memory {
+            dimension "repository"
+            applicationIdSuffix ".memory"
+            versionNameSuffix "-memory"
+            versionCode android.defaultConfig.versionCode
+        }
+        databaseSqlite {
+            dimension "repository"
+            applicationIdSuffix ".database.sqlite"
+            versionNameSuffix "-database-sqlite"
+            versionCode android.defaultConfig.versionCode
+        }
+    }
 }
 
 dependencies {
