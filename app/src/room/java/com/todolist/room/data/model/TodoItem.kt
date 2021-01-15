@@ -11,6 +11,6 @@ import kotlinx.android.parcel.Parcelize
 data class TodoItem(
     @ColumnInfo(name = "time") var time: Long,
     @ColumnInfo(name = "contents") var contents: String?,
-    @ColumnInfo(name = "complete") var complete: Boolean = false,
+    @ColumnInfo(name = "complete") var complete: Int = 0,
     @PrimaryKey(autoGenerate = true) var id: Int = 0,
 ) : Parcelable

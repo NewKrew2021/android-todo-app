@@ -70,9 +70,11 @@ class TodoAdapter :
     }
 
     private fun removeTodoItem(position: Int) {
-        todoList.removeAt(position)
+        val removeItem = filterList[position]
+        filterList.remove(removeItem)
+        todoList.remove(removeItem)
         notifyItemRemoved(position)
-        notifyItemRangeChanged(position, todoList.size)
+        notifyItemRangeChanged(position, filterList.size)
     }
 
     override fun getFilter(): Filter = object : Filter() {
@@ -108,7 +110,7 @@ class TodoAdapter :
         RecyclerView.ViewHolder(binding.root) {
         fun bindView(todoItem: TodoItem) {
             binding.apply {
-                cbCompleteTodo.isChecked = todoItem.complete
+                cbCompleteTodo.isChecked = todoItem.complete == 1
                 tvTimeTodo.text = convertToDate(todoItem.time)
                 tvContentsTodo.text = todoItem.contents
             }
@@ -120,7 +122,7 @@ class TodoAdapter :
             afterSort: () -> Unit
         ) {
             binding.cbCompleteTodo.setOnClickListener {
-                if (binding.cbCompleteTodo.isChecked) todoItem.complete = !todoItem.complete
+                if (binding.cbCompleteTodo.isChecked) todoItem.complete = 1
                 listener.invoke(todoItem)
                 afterSort.invoke()
             }

@@ -70,9 +70,11 @@ class TodoAdapter :
     }
 
     private fun removeTodoItem(position: Int) {
-        todoList.removeAt(position)
+        val removeItem = filterList[position]
+        filterList.remove(removeItem)
+        todoList.remove(removeItem)
         notifyItemRemoved(position)
-        notifyItemRangeChanged(position, todoList.size)
+        notifyItemRangeChanged(position, filterList.size)
     }
 
     override fun getFilter(): Filter = object : Filter() {
