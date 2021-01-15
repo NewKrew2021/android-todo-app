@@ -6,6 +6,7 @@ import android.os.AsyncTask
 import android.provider.BaseColumns
 import com.survivalcoding.todolist.data.DefaultTodoRepository
 import com.survivalcoding.todolist.model.TodoItem
+import java.util.*
 
 class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
 
@@ -32,7 +33,9 @@ class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
     }
 
     override fun getFilteredItemsBy(keyword: String): List<TodoItem> =
-        tempList.filter { it.title.contains(keyword) }
+        tempList.filter {
+            it.title.toLowerCase(Locale.ROOT).contains(keyword.toLowerCase(Locale.ROOT))
+        }
 
     class InsertTodoTask(private val addItem: (TodoItem) -> Unit) :
         AsyncTask<TodoItem, Any, Any>() {

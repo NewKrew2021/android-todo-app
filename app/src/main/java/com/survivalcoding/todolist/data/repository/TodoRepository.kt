@@ -2,6 +2,7 @@ package com.survivalcoding.todolist.data.repository
 
 import com.survivalcoding.todolist.data.DefaultTodoRepository
 import com.survivalcoding.todolist.model.TodoItem
+import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
 class TodoRepository : DefaultTodoRepository {
@@ -22,7 +23,7 @@ class TodoRepository : DefaultTodoRepository {
     override fun updateItem(item: TodoItem) {
         var targetIdx = 0
         _list.forEachIndexed { index, todoItem ->
-            if(todoItem.id == item.id) targetIdx = index
+            if (todoItem.id == item.id) targetIdx = index
         }
 
         _list.removeAt(targetIdx)
@@ -34,7 +35,13 @@ class TodoRepository : DefaultTodoRepository {
     }
 
     override fun getFilteredItemsBy(keyword: String): List<TodoItem> {
-        return if (keyword.isNotBlank()) _list.filter { it.title.contains(keyword) }
+        return if (keyword.isNotBlank()) _list.filter {
+            it.title.toLowerCase(Locale.ROOT).contains(
+                keyword.toLowerCase(
+                    Locale.ROOT
+                )
+            )
+        }
             .map { it } else list
     }
 }
