@@ -11,6 +11,8 @@ class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
 
     private val dbHelper = TodoDatabaseHelper(context)
 
+    var tempList = listOf<TodoItem>()
+
     // AsyncTask 사용하기
     override fun addItem(item: TodoItem) {
         InsertTodoTask(::addItemToDb).execute(item)
@@ -24,12 +26,13 @@ class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
         UpdateTodoTask(::updateItemOfDb).execute(item)
     }
 
-    override fun getOrderedItems(): List<TodoItem> =
-        GetOrderedItemsTask(::getOrderedItemsFromDb).execute().get()
+    override fun getOrderedItems(): List<TodoItem> {
+        tempList = GetOrderedItemsTask(::getOrderedItemsFromDb).execute().get()
+        return tempList
+    }
 
     override fun getFilteredItemsBy(keyword: String): List<TodoItem> =
-        GetOrderedItemsTask(::getOrderedItems).execute().get()
-            .filter { it.title.contains(keyword) }
+        tempList.filter { it.title.contains(keyword) }
 
     class InsertTodoTask(private val addItem: (TodoItem) -> Unit) :
         AsyncTask<TodoItem, Any, Any>() {
