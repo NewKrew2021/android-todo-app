@@ -10,30 +10,28 @@ import com.survivalcoding.todolist.view.main.model.Todo
 
 class TodoDbRepository(context: Context) : DefaultTodoRepository {
     private val dbHelper = TodoDbHelper(context)
-    private val readableDatabase by lazy { dbHelper.readableDatabase }
-    private val writableDatabase by lazy { dbHelper.writableDatabase }
 
-    override fun getOrderedItems(): List<Todo> = SelectAsyncTask(readableDatabase).execute().get()
+    override fun getOrderedItems(): List<Todo> = SelectAsyncTask(dbHelper.readableDatabase).execute().get()
 
     override fun getOrderedWithFilteredItems(query: String): List<Todo> =
-        SelectFilteringAsyncTask(readableDatabase).execute(query).get()
+        SelectFilteringAsyncTask(dbHelper.readableDatabase).execute(query).get()
 
     override fun add(todo: Todo) {
-        InsertAsyncTask(writableDatabase).execute(ContentValues().setValues(todo))
+        InsertAsyncTask(dbHelper.writableDatabase).execute(ContentValues().setValues(todo))
     }
 
     override fun remove(todo: Todo) {
-        DeleteAsyncTask(writableDatabase).execute(todo)
+        DeleteAsyncTask(dbHelper.writableDatabase).execute(todo)
     }
 
     override fun removeAllRemovable() {
-        DeleteAllRemovableAsyncTask(writableDatabase).execute(getOrderedItems())
+        DeleteAllRemovableAsyncTask(dbHelper.writableDatabase).execute(getOrderedItems())
     }
 
     override fun getRemovablesCount(): Int = getOrderedItems().count { it.isRemovable }
 
     override fun update(todo: Todo) {
-        UpdateAsyncTask(writableDatabase).execute(todo)
+        UpdateAsyncTask(dbHelper.writableDatabase).execute(todo)
     }
 
     class InsertAsyncTask(private val database: SQLiteDatabase) :
