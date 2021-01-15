@@ -35,6 +35,22 @@ android {
         viewBinding true
         dataBinding true
     }
+
+    flavorDimensions "db"
+    productFlavors {
+        memory {
+            dimension "db"
+            applicationIdSuffix ".memory"
+            versionNameSuffix "-memory"
+            manifestPlaceholders = [appLabel:"Todo(memory)"]
+        }
+        sqlite {
+            dimension "db"
+            applicationIdSuffix ".sqlite"
+            versionNameSuffix "-sqlite"
+            manifestPlaceholders = [appLabel:"Todo(sqlite)"]
+        }
+    }
 }
 
 dependencies {
