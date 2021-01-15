@@ -42,6 +42,7 @@ class ListFragment(private val todoRepository: DefaultTodoRepository) : Fragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        retainInstance = true
     }
 
     override fun onCreateView(
@@ -175,8 +176,10 @@ class ListFragment(private val todoRepository: DefaultTodoRepository) : Fragment
 
         //adapter.notifyItemRangeChanged(0, adapter.data.size)
         adapter.notifyItemRemoved(position)
+        adapter.notifyItemInserted(0)
         adapter.makeSearchData(binding.searchEditText.text.toString())
         adapter.notifyItemRangeChanged(0, adapter.searchData.size)
+
     }
 
     fun addButtonListener(adapter: RecyclerAdapter, binding: FragmentListBinding) {

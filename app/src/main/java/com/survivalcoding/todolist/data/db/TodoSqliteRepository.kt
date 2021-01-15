@@ -106,6 +106,7 @@ class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
 
     fun readDatabase() {
         val db = dbHelper.readableDatabase
+        data.clear()
 
 // Define a projection that specifies which columns from the database
 // you will actually use after this query.
