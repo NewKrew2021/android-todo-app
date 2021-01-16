@@ -25,11 +25,6 @@ class TodoLocalRepository : TodoRepository {
         _items.remove(data)
     }
 
-    override fun addAllItems(data: List<TodoData>) {
-        _items.clear()
-        _items.addAll(data)
-    }
-
     override fun editItem(data: TodoData, changeTodo: String) {
         val newData = data.copy()
         delItem(data)

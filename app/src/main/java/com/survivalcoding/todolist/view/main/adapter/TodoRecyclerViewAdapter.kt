@@ -36,6 +36,11 @@ class TodoRecyclerViewAdapter(
         }
 
         binding.buttonSubmit.setOnClickListener {
+            binding.editTodo.visibility = View.GONE
+            binding.textTodo.visibility = View.VISIBLE
+            binding.textDate.visibility = View.VISIBLE
+            binding.buttonSubmit.visibility = View.GONE
+            binding.buttonEdit.visibility = View.VISIBLE
             editClickListener.invoke(
                 getItem(holder.adapterPosition),
                 binding.editTodo.text.toString()
