@@ -35,7 +35,11 @@ class TodoData(private val data: MutableList<Todo> = mutableListOf()) : DefaultT
     }
 
     // sortingBase : 정렬 기준(제목..), orderMethod : 오름/내림차순 정렬
-    override fun sorting(sortingBase: SortingBase, orderMethod: OrderMethod, updateUI: (MutableList<Todo>) -> Unit) {
+    override fun sorting(
+        sortingBase: SortingBase,
+        orderMethod: OrderMethod,
+        updateUI: (MutableList<Todo>) -> Unit
+    ) {
         when (sortingBase.value + orderMethod.value) {
             MainActivity.SORT_BY_TITLE + MainActivity.ASCENDING -> data.sortBy { it.text }
             MainActivity.SORT_BY_TITLE + MainActivity.DESCENDING -> data.sortByDescending { it.text }

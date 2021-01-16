@@ -19,6 +19,11 @@ class EditFragment(private val model: DefaultTodoData) : Fragment() {
 
     private val binding get() = _binding!!
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,7 +63,7 @@ class EditFragment(private val model: DefaultTodoData) : Fragment() {
         binding.addTodo.setOnClickListener {
             val todoText = binding.todoEditText.text.toString()
             if (todoText.trim().isEmpty()) {
-                AlertDialogFragment(getString(R.string.alert_dialog_confirm)).show(
+                AlertDialogFragment(getString(R.string.alert_text)).show(
                     parentFragmentManager,
                     AlertDialogFragment.TAG
                 )

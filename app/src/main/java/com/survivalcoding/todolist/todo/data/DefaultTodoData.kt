@@ -8,5 +8,9 @@ interface DefaultTodoData {
     fun addTodo(item: Todo)
     fun deleteTodo(item: Todo)
     fun updateTodo(item: Todo)
-    fun sorting(sortingBase: SortingBase, orderMethod: OrderMethod, updateUI: (MutableList<Todo>) -> Unit)
+    fun sorting(
+        sortingBase: SortingBase,
+        orderMethod: OrderMethod,
+        updateUI: (MutableList<Todo>) -> Unit
+    )
 }
