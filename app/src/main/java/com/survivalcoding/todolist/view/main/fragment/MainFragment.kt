@@ -72,7 +72,7 @@ class MainFragment(
             )
 
             buttonAdd.setOnClickListener {
-                if (editTextTitle.text.trim().isNotEmpty()) {
+                if (editTextTitle.text.isNotBlank()) {
                     repository.add(
                         Todo(
                             editTextTitle.text.toString(),
@@ -90,9 +90,7 @@ class MainFragment(
                 searchView.isIconified = false
             }
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    return true
-                }
+                override fun onQueryTextSubmit(query: String?): Boolean = true
 
                 override fun onQueryTextChange(newText: String?): Boolean {
                     newText?.let { updateUI() }
@@ -128,9 +126,7 @@ class MainFragment(
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
 
-        savedInstanceState?.let {
-            onActionModeStateRestored(savedInstanceState)
-        }
+        savedInstanceState?.let { onActionModeStateRestored(savedInstanceState) }
     }
 
     private fun onActionModeStateRestored(savedInstanceState: Bundle) {
