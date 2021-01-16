@@ -84,7 +84,7 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
         val actionMode = getActionMode.invoke()
 
         updateButtonsVisibility(actionMode, todo)
-        updateTextViews(todo)
+        updateTextViews(actionMode, todo)
         updateCheckBoxEnable(actionMode)
         updateLayoutView(actionMode, todo)
     }
@@ -103,14 +103,19 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
         }
     }
 
-    private fun updateTextViews(todo: Todo) {
+    private fun updateTextViews(actionMode: ActionMode?, todo: Todo) {
         with(binding) {
             textViewTitle.paintFlags =
                 if (todo.isDone) (textViewTitle.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG)
                 else (textViewTitle.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()) // Paint.STRIKE_THRU_TEXT_FLAG(0x10) 만 제거하기 위한 코드
 
-            textViewTitle.setTextColor(if (todo.isRemovable) Color.WHITE else Color.BLACK)
-            textViewTimes.setTextColor(if (todo.isRemovable) Color.WHITE else Color.BLACK)
+            if (actionMode == null) {
+                textViewTitle.setTextColor(Color.BLACK)
+                textViewTimes.setTextColor(Color.BLACK)
+            } else {
+                textViewTitle.setTextColor(if (todo.isRemovable) Color.WHITE else Color.BLACK)
+                textViewTimes.setTextColor(if (todo.isRemovable) Color.WHITE else Color.BLACK)
+            }
         }
     }
 
