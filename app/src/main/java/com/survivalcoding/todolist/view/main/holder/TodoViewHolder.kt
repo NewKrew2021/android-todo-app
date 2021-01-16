@@ -1,5 +1,6 @@
 package com.survivalcoding.todolist.view.main.holder
 
+import android.graphics.Color
 import android.graphics.Paint
 import android.util.TypedValue
 import android.view.ActionMode
@@ -83,7 +84,7 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
         val actionMode = getActionMode.invoke()
 
         updateButtonsVisibility(actionMode, todo)
-        updateTextPaintFlags(todo)
+        updateTextViews(todo)
         updateCheckBoxEnable(actionMode)
         updateLayoutView(actionMode, todo)
     }
@@ -102,11 +103,14 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
         }
     }
 
-    private fun updateTextPaintFlags(todo: Todo) {
+    private fun updateTextViews(todo: Todo) {
         with(binding) {
             textViewTitle.paintFlags =
                 if (todo.isDone) (textViewTitle.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG)
                 else (textViewTitle.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()) // Paint.STRIKE_THRU_TEXT_FLAG(0x10) 만 제거하기 위한 코드
+
+            textViewTitle.setTextColor(if (todo.isRemovable) Color.WHITE else Color.BLACK)
+            textViewTimes.setTextColor(if (todo.isRemovable) Color.WHITE else Color.BLACK)
         }
     }
 
@@ -127,7 +131,7 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
             if (actionMode == null) {
                 layoutItem.setBackgroundResource(typedValue.resourceId)
             } else {
-                layoutItem.setBackgroundResource(if (todo.isRemovable) R.color.teal_200 else typedValue.resourceId)
+                layoutItem.setBackgroundResource(if (todo.isRemovable) R.drawable.gradation_todo_removable else typedValue.resourceId)
             }
         }
     }
