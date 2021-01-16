@@ -65,7 +65,7 @@ class MakeTodoFragment(private val repository: DefaultTodoRepository,private val
                 dateView.text = String.format(
                         "%d-%02d-%02d",
                         calendar.get(Calendar.YEAR),
-                        calendar.get(Calendar.MONTH).plus(1),
+                        calendar.get(Calendar.MONTH) + 1,
                         calendar.get(Calendar.DAY_OF_MONTH)
                 )
                 addTodoButton.text = "수정"
