@@ -8,6 +8,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:name=".TodoApp"
         android:theme="@style/Theme.TodoList">
         <activity android:name=".todo.view.MainActivity">
             <intent-filter>

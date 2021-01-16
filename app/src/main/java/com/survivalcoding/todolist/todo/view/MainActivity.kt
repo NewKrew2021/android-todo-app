@@ -5,15 +5,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import com.survivalcoding.todolist.R
+import com.survivalcoding.todolist.TodoApp
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
-import com.survivalcoding.todolist.todo.data.database.TodoSQLiteData
 import com.survivalcoding.todolist.todo.factory.MainFragmentFactory
 import com.survivalcoding.todolist.todo.view.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-    private val model = TodoSQLiteData(this)
-//    private var model = TodoData()
+
+    private val model by lazy { (application as TodoApp).todoDataModel }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // fragmentFactory : 데이터를 bundle이 아닌, 생성자로 넘기기 위해 사용한다.
