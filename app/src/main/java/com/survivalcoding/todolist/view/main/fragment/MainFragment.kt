@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.data.DefaultTodoRepository
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
-import com.survivalcoding.todolist.extension.replaceTransaction
+import com.survivalcoding.todolist.extension.replaceTransactionWithAnimation
 import com.survivalcoding.todolist.view.main.MainActivity
 import com.survivalcoding.todolist.view.main.adapter.TodoAdapter
 import com.survivalcoding.todolist.view.main.model.Todo
@@ -33,7 +33,7 @@ class MainFragment(
             itemUpdateListener = { todo -> repository.update(todo) },
             updateUIListener = { updateUI() },
             editClickListener = { todo ->
-                replaceTransaction<EditFragment>(
+                replaceTransactionWithAnimation<EditFragment>(
                     R.id.fragment_container_view,
                     bundleOf(MainActivity.TODO_KEY to todo)
                 )
