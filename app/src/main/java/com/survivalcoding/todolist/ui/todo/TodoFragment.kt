@@ -6,8 +6,11 @@ import androidx.fragment.app.Fragment
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.data.DefaultTodoRepository
 import com.survivalcoding.todolist.databinding.FragmentTodoBinding
+import com.survivalcoding.todolist.extension.openFragmentWith
+import com.survivalcoding.todolist.extension.popThis
+import com.survivalcoding.todolist.extension.showToast
 import com.survivalcoding.todolist.model.TodoItem
-import com.survivalcoding.todolist.utils.NavigationUtil
+import com.survivalcoding.todolist.ui.edit.EditFragment
 
 class TodoFragment(private val todoRepository: DefaultTodoRepository) : Fragment() {
 
@@ -38,7 +41,10 @@ class TodoFragment(private val todoRepository: DefaultTodoRepository) : Fragment
         }
 
         binding.editButton.setOnClickListener {
-            NavigationUtil.openEditFragment(parentFragmentManager, todoItem)
+            todoItem?.let { item ->
+                openFragmentWith<EditFragment>(item)
+                showToast("내용을 바꿔보세요.")
+            }
         }
 
         setHasOptionsMenu(true)
@@ -53,8 +59,9 @@ class TodoFragment(private val todoRepository: DefaultTodoRepository) : Fragment
         return when (item.itemId) {
             R.id.remove_button -> {
                 todoItem?.let {
+                    showToast("${it.title}이(가) 삭제되었습니다.")
                     todoRepository.removeItem(it)
-                    NavigationUtil.popThisFragment(parentFragmentManager)
+                    popThis()
                 }
                 true
             }

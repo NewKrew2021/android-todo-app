@@ -8,7 +8,9 @@ import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.adapter.TodoListAdapter
 import com.survivalcoding.todolist.data.DefaultTodoRepository
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
-import com.survivalcoding.todolist.utils.NavigationUtil
+import com.survivalcoding.todolist.extension.openEditFragmentToAdd
+import com.survivalcoding.todolist.extension.openFragmentWith
+import com.survivalcoding.todolist.ui.todo.TodoFragment
 
 class MainFragment(private val todoRepository: DefaultTodoRepository) : Fragment() {
 
@@ -37,10 +39,7 @@ class MainFragment(private val todoRepository: DefaultTodoRepository) : Fragment
             updateUi = { updateUi() },
             updateItem = { todoItem -> todoRepository.updateItem(todoItem) },
             openTodoItem = { todoItem ->
-                NavigationUtil.openTodoFragment(
-                    parentFragmentManager,
-                    todoItem
-                )
+                openFragmentWith<TodoFragment>(todoItem)
             }
         )
 
@@ -65,7 +64,7 @@ class MainFragment(private val todoRepository: DefaultTodoRepository) : Fragment
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.add_button -> {
-                NavigationUtil.openEditFragment(parentFragmentManager)
+                openEditFragmentToAdd()
                 true
             }
             else -> super.onOptionsItemSelected(item)
