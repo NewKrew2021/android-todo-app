@@ -47,7 +47,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@null"
-            android:hint="@string/todo_hint"
+            android:hint="Add to do"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLines="1"

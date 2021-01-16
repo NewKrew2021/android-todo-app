@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.data.TodoRepository
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
 import com.survivalcoding.todolist.view.main.adapter.TodoRecyclerViewAdapter
@@ -43,7 +44,7 @@ class MainFragment(private val repository: TodoRepository) : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
-        requireActivity().title = "Todo List"
+        requireActivity().title = getString(R.string.app_name)
         return binding.root
     }
 
