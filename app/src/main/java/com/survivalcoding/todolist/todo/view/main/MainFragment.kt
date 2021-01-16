@@ -2,6 +2,7 @@ package com.survivalcoding.todolist.todo.view.main
 
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
@@ -88,6 +89,21 @@ class MainFragment(private var model: DefaultTodoData) : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_option, menu)
+
+        val searchView = menu?.findItem(R.id.search_button)?.actionView as SearchView
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // Do nothing
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                TODO("Not yet implemented")
+                return true
+            }
+
+        })
         MenuCompat.setGroupDividerEnabled(menu, true)
     }
 
