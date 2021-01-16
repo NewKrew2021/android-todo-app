@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val BUNDLE_KEY = "listData"
         const val DATE_FORMAT = "yyyy-mm-dd"
+        const val TIME_FORMAT = "YYYY-MM-DD HH:mm:ss"
         const val FRAGMENT_KEY = "todo"
         const val ASCENDING = 123    // 1, 2이면 다른 값과 중복되지 않을까 해서 임의의 값을 넣었다.
         const val DESCENDING = 321
