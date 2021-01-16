@@ -11,7 +11,6 @@ import java.util.*
 class TodoDbRepository(context: Context) : TodoRepository {
 
     private val dbHelper = TodoDbHelper(context)
-    private lateinit var deleteTask: DeleteTask
     override fun getItems(): List<TodoData> {
         val db = dbHelper.readableDatabase
 
@@ -73,6 +72,12 @@ class TodoDbRepository(context: Context) : TodoRepository {
     }
 
     override fun addAllItems(data: List<TodoData>) {
+    }
+
+    override fun editItem(data: TodoData, changeTodo: String) {
+    }
+
+    override fun doneItem(data: TodoData) {
     }
 
     class AddTask(private val dbHelper: TodoDbHelper, private val values: ContentValues) :
