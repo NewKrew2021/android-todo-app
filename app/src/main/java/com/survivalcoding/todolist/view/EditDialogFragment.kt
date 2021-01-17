@@ -24,6 +24,7 @@ class EditDialogFragment() : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
+        retainInstance = true
         // Get the layout inflater
         val inflater = requireActivity().layoutInflater;
         val viewDialog = inflater.inflate(R.layout.dialog1, null)

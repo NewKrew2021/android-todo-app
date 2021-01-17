@@ -6,12 +6,19 @@ import android.os.Bundle
 import android.view.Gravity
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.add
+import androidx.fragment.app.commit
+import com.survivalcoding.todolist.R
+import com.survivalcoding.todolist.data.db.TodoSqliteRepository
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
+import com.survivalcoding.todolist.factory.MyFragmentFactory
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -19,13 +26,28 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        supportFragmentManager.fragmentFactory =
+            MyFragmentFactory(RepositoryFilter().getRepository(applicationContext))
+
+        if (savedInstanceState == null) {
+            supportFragmentManager.commit {
+                setReorderingAllowed(true)
+                add<ListFragment>(R.id.fragment_container_view)
+            }
+        }
+
+        /*
         binding.startButton.setOnClickListener {
 
             var intent = Intent(this, ListActivity::class.java)
             startActivityForResult(intent, 101)
         }
+
+         */
     }
 
+
+    /*
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
@@ -39,5 +61,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+     */
 }
 

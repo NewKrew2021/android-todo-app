@@ -20,11 +20,11 @@ class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
     private val data = mutableListOf<listItem>()
     private val searchData = mutableListOf<searchItem>()
 
-    fun getDataList(): MutableList<listItem> {
+    override fun getDataList(): MutableList<listItem> {
         return data
     }
 
-    fun getSearchDataList(): MutableList<searchItem> {
+    override fun getSearchDataList(): MutableList<searchItem> {
         return searchData
     }
 
@@ -106,6 +106,7 @@ class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
 
     fun readDatabase() {
         val db = dbHelper.readableDatabase
+        data.clear()
 
 // Define a projection that specifies which columns from the database
 // you will actually use after this query.
