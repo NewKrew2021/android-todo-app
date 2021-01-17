@@ -8,5 +8,6 @@ object TodoContract {
         const val COLUMN_NAME_TITLE = "title"
         const val COLUMN_NAME_TIMESTAMP = "timestamp"
         const val COLUMN_NAME_IS_CHECKED = "is_checked"
+        const val COLUMN_NAME_CONTENT = "content"
     }
 }

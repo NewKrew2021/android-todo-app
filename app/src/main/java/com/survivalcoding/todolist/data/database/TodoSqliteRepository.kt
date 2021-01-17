@@ -6,10 +6,13 @@ import android.os.AsyncTask
 import android.provider.BaseColumns
 import com.survivalcoding.todolist.data.DefaultTodoRepository
 import com.survivalcoding.todolist.model.TodoItem
+import java.util.*
 
 class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
 
     private val dbHelper = TodoDatabaseHelper(context)
+
+    var tempList = listOf<TodoItem>()
 
     // AsyncTask 사용하기
     override fun addItem(item: TodoItem) {
@@ -24,12 +27,15 @@ class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
         UpdateTodoTask(::updateItemOfDb).execute(item)
     }
 
-    override fun getOrderedItems(): List<TodoItem> =
-        GetOrderedItemsTask(::getOrderedItemsFromDb).execute().get()
+    override fun getOrderedItems(): List<TodoItem> {
+        tempList = GetOrderedItemsTask(::getOrderedItemsFromDb).execute().get()
+        return tempList
+    }
 
     override fun getFilteredItemsBy(keyword: String): List<TodoItem> =
-        GetOrderedItemsTask(::getOrderedItems).execute().get()
-            .filter { it.title.contains(keyword) }
+        tempList.filter {
+            it.title.toLowerCase(Locale.ROOT).contains(keyword.toLowerCase(Locale.ROOT))
+        }
 
     class InsertTodoTask(private val addItem: (TodoItem) -> Unit) :
         AsyncTask<TodoItem, Any, Any>() {
@@ -74,6 +80,7 @@ class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
                 TodoContract.TodoEntry.COLUMN_NAME_TITLE,
                 TodoContract.TodoEntry.COLUMN_NAME_TIMESTAMP,
                 TodoContract.TodoEntry.COLUMN_NAME_IS_CHECKED,
+                TodoContract.TodoEntry.COLUMN_NAME_CONTENT,
             )
 
         val sortOrder =
@@ -99,7 +106,9 @@ class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
                     getInt(getColumnIndexOrThrow(TodoContract.TodoEntry.COLUMN_NAME_IS_CHECKED))
                 val timeStamp =
                     getLong(getColumnIndexOrThrow(TodoContract.TodoEntry.COLUMN_NAME_TIMESTAMP))
-                todoList.add(TodoItem(title, isChecked == 1, timeStamp, id))
+                val content =
+                    getString(getColumnIndexOrThrow(TodoContract.TodoEntry.COLUMN_NAME_CONTENT))
+                todoList.add(TodoItem(title, isChecked == 1, timeStamp, content, id))
             }
             close()
         }
@@ -114,6 +123,7 @@ class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
             put(TodoContract.TodoEntry.COLUMN_NAME_TITLE, item.title)
             put(TodoContract.TodoEntry.COLUMN_NAME_TIMESTAMP, item.timeStamp)
             put(TodoContract.TodoEntry.COLUMN_NAME_IS_CHECKED, item.isChecked)
+            put(TodoContract.TodoEntry.COLUMN_NAME_CONTENT, item.content)
         }
 
         db.insert(TodoContract.TodoEntry.TABLE_NAME, null, values)
@@ -135,6 +145,7 @@ class TodoSqliteRepository(context: Context) : DefaultTodoRepository {
             put(TodoContract.TodoEntry.COLUMN_NAME_TITLE, item.title)
             put(TodoContract.TodoEntry.COLUMN_NAME_TIMESTAMP, item.timeStamp)
             put(TodoContract.TodoEntry.COLUMN_NAME_IS_CHECKED, item.isChecked)
+            put(TodoContract.TodoEntry.COLUMN_NAME_CONTENT, item.content)
         }
 
         val selection = "${BaseColumns._ID} = ?"

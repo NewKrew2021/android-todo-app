@@ -2,10 +2,12 @@ package com.survivalcoding.todolist.ui.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
+import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.TodoApp
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
 import com.survivalcoding.todolist.factory.MainFragmentFactory
-import com.survivalcoding.todolist.utils.NavigationUtil
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,12 +23,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         if (savedInstanceState == null) {
-            NavigationUtil.openMainFragment(supportFragmentManager)
+            supportFragmentManager.commit {
+                replace<MainFragment>(CONTAINER_VIEW_ID)
+                setReorderingAllowed(true)
+            }
         }
     }
 
     companion object {
-        const val SAVED_LIST_KEY = "SAVED_LIST_KEY"
+        const val CONTAINER_VIEW_ID = R.id.fragment_container
     }
 
 }

@@ -7,5 +7,6 @@ data class TodoItem(
     var title: String,
     var isChecked: Boolean,
     var timeStamp: Long,
+    var content: String,
     var id: Int = 0,
 ) : Parcelable

@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.survivalcoding.todolist.data.DefaultTodoRepository
 import com.survivalcoding.todolist.databinding.FragmentEditBinding
+import com.survivalcoding.todolist.extension.openMainFragment
+import com.survivalcoding.todolist.extension.showToast
 import com.survivalcoding.todolist.model.TodoItem
-import com.survivalcoding.todolist.utils.NavigationUtil
 import java.util.*
 
 class EditFragment(private val todoRepository: DefaultTodoRepository) : Fragment() {
@@ -34,6 +35,7 @@ class EditFragment(private val todoRepository: DefaultTodoRepository) : Fragment
 
             binding.apply {
                 title.setText(it.title)
+                content.setText(it.content)
             }
             todoItem = it
         }
@@ -49,10 +51,12 @@ class EditFragment(private val todoRepository: DefaultTodoRepository) : Fragment
 
         val title = binding.title.text.toString()
         val timeStamp = Calendar.getInstance().timeInMillis
+        val content = binding.content.text.toString()
 
         if (title.isNotBlank()) {
-            todoRepository.addItem(TodoItem(title, false, timeStamp))
-            NavigationUtil.openMainFragment(parentFragmentManager)
+            todoRepository.addItem(TodoItem(title, false, timeStamp, content))
+            showToast("${title}이(가) 추가되었습니다.")
+            openMainFragment()
         }
     }
 
@@ -62,9 +66,11 @@ class EditFragment(private val todoRepository: DefaultTodoRepository) : Fragment
             todoRepository.updateItem(it.apply {
                 title = binding.title.text.toString()
                 timeStamp = Calendar.getInstance().timeInMillis
+                content = binding.content.text.toString()
             })
+            showToast("수정이 완료되었습니다.")
         }
-        NavigationUtil.openMainFragment(parentFragmentManager)
+        openMainFragment()
     }
 
     override fun onDestroyView() {

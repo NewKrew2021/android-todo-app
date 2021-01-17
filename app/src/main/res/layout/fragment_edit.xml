@@ -26,6 +26,7 @@
         android:layout_margin="@dimen/margin_small"
         android:layout_marginBottom="@dimen/title_height"
         android:background="@drawable/view_round"
+        android:gravity="top"
         app:layout_constraintBottom_toTopOf="@id/add_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
