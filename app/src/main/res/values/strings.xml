@@ -7,6 +7,8 @@
 
     <!-- main_menu -->
     <string name="main_menu_mode_remove_title">삭제 모드</string>
+
+    <!-- main_menu_remove -->
     <string name="main_menu_remove_title">삭제</string>
 
     <!-- RemoveConfirmationDialog -->

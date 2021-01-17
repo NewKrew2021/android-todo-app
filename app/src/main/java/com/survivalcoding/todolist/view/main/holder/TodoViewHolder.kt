@@ -1,9 +1,10 @@
 package com.survivalcoding.todolist.view.main.holder
 
+import android.graphics.Color
 import android.graphics.Paint
+import android.util.TypedValue
 import android.view.ActionMode
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.databinding.ItemTodoListBinding
@@ -29,12 +30,10 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
             checkBox.isChecked = todo.isDone
 
             updateViews(getActionMode, todo)
-            updateTextPaintFlags(todo.isDone)
 
             checkBox.setOnClickListener {
                 todo.isDone = checkBox.isChecked
                 updateViews(getActionMode, todo)
-                updateTextPaintFlags(todo.isDone)
 
                 itemUpdateListener.invoke(todo)
                 updateUIListener.invoke()
@@ -48,12 +47,8 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
                     }
                 } else {
                     todo.isRemovable = !todo.isRemovable
-                    layoutItem.setBackgroundColor(
-                        ContextCompat.getColor(
-                            binding.root.context,
-                            if (todo.isRemovable) R.color.teal_200 else R.color.white
-                        )
-                    )
+                    updateViews(getActionMode, todo)
+
                     itemUpdateListener.invoke(todo)
                     setActionBarTitle.invoke()
                 }
@@ -88,39 +83,61 @@ class TodoViewHolder(private val binding: ItemTodoListBinding) :
     private fun updateViews(getActionMode: () -> ActionMode?, todo: Todo) {
         val actionMode = getActionMode.invoke()
 
+        updateButtonsVisibility(actionMode, todo)
+        updateTextViews(actionMode, todo)
+        updateCheckBoxEnable(actionMode)
+        updateLayoutView(actionMode, todo)
+    }
+
+    private fun updateButtonsVisibility(actionMode: ActionMode?, todo: Todo) {
         with(binding) {
             if (actionMode == null) {
                 buttonMenus.visibility = if (todo.isOption) View.INVISIBLE else View.VISIBLE
-                buttonEdit.visibility =
-                    if (todo.isOption && !todo.isDone) View.VISIBLE else View.INVISIBLE
+                buttonEdit.visibility = if (todo.isEditable()) View.VISIBLE else View.INVISIBLE
                 buttonDelete.visibility = if (todo.isOption) View.VISIBLE else View.INVISIBLE
-                checkBox.isEnabled = true
-                layoutItem.setBackgroundColor(
-                    ContextCompat.getColor(
-                        binding.root.context,
-                        R.color.white
-                    )
-                )
             } else {
                 buttonMenus.visibility = View.INVISIBLE
                 buttonEdit.visibility = View.INVISIBLE
                 buttonDelete.visibility = View.INVISIBLE
-                checkBox.isEnabled = false
-                layoutItem.setBackgroundColor(
-                    ContextCompat.getColor(
-                        binding.root.context,
-                        if (todo.isRemovable) R.color.teal_200 else R.color.white
-                    )
-                )
             }
         }
     }
 
-    private fun updateTextPaintFlags(isDone: Boolean) {
+    private fun updateTextViews(actionMode: ActionMode?, todo: Todo) {
         with(binding) {
             textViewTitle.paintFlags =
-                if (isDone) (textViewTitle.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG)
+                if (todo.isDone) (textViewTitle.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG)
                 else (textViewTitle.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()) // Paint.STRIKE_THRU_TEXT_FLAG(0x10) 만 제거하기 위한 코드
+
+            if (actionMode == null) {
+                textViewTitle.setTextColor(Color.BLACK)
+                textViewTimes.setTextColor(Color.BLACK)
+            } else {
+                textViewTitle.setTextColor(if (todo.isRemovable) Color.WHITE else Color.BLACK)
+                textViewTimes.setTextColor(if (todo.isRemovable) Color.WHITE else Color.BLACK)
+            }
+        }
+    }
+
+    private fun updateCheckBoxEnable(actionMode: ActionMode?) {
+        binding.checkBox.isEnabled = actionMode != null
+    }
+
+    private fun updateLayoutView(actionMode: ActionMode?, todo: Todo) {
+        with(binding) {
+            val typedValue = TypedValue().apply {
+                root.context.theme.resolveAttribute(
+                    android.R.attr.selectableItemBackground,
+                    this,
+                    true
+                )
+            }
+
+            if (actionMode == null) {
+                layoutItem.setBackgroundResource(typedValue.resourceId)
+            } else {
+                layoutItem.setBackgroundResource(if (todo.isRemovable) R.drawable.gradation_todo_removable else typedValue.resourceId)
+            }
         }
     }
 }

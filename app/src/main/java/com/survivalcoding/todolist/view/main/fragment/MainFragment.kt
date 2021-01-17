@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.todolist.R
 import com.survivalcoding.todolist.data.DefaultTodoRepository
 import com.survivalcoding.todolist.databinding.FragmentMainBinding
-import com.survivalcoding.todolist.extension.replaceTransaction
+import com.survivalcoding.todolist.extension.replaceTransactionWithAnimation
 import com.survivalcoding.todolist.view.main.MainActivity
 import com.survivalcoding.todolist.view.main.adapter.TodoAdapter
 import com.survivalcoding.todolist.view.main.model.Todo
@@ -33,7 +33,7 @@ class MainFragment(
             itemUpdateListener = { todo -> repository.update(todo) },
             updateUIListener = { updateUI() },
             editClickListener = { todo ->
-                replaceTransaction<EditFragment>(
+                replaceTransactionWithAnimation<EditFragment>(
                     R.id.fragment_container_view,
                     bundleOf(MainActivity.TODO_KEY to todo)
                 )
@@ -72,7 +72,7 @@ class MainFragment(
             )
 
             buttonAdd.setOnClickListener {
-                if (editTextTitle.text.trim().isNotEmpty()) {
+                if (editTextTitle.text.isNotBlank()) {
                     repository.add(
                         Todo(
                             editTextTitle.text.toString(),
@@ -90,9 +90,7 @@ class MainFragment(
                 searchView.isIconified = false
             }
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    return true
-                }
+                override fun onQueryTextSubmit(query: String?): Boolean = true
 
                 override fun onQueryTextChange(newText: String?): Boolean {
                     newText?.let { updateUI() }
@@ -128,9 +126,7 @@ class MainFragment(
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
 
-        savedInstanceState?.let {
-            onActionModeStateRestored(savedInstanceState)
-        }
+        savedInstanceState?.let { onActionModeStateRestored(savedInstanceState) }
     }
 
     private fun onActionModeStateRestored(savedInstanceState: Bundle) {
