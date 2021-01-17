@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="false"
     tools:context=".view.main.fragment.MainFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -46,7 +47,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@null"
-            android:hint="@string/todo_hint"
+            android:hint="Add to do"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLines="1"

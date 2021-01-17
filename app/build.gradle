@@ -34,6 +34,21 @@ android {
     buildFeatures {
         viewBinding true
     }
+    flavorDimensions "db"
+    productFlavors {
+        memory {
+            dimension "db"
+            applicationIdSuffix ".memory"
+            versionCode 1
+            versionNameSuffix "-memory"
+        }
+        sql {
+            dimension "db"
+            applicationIdSuffix ".sql"
+            versionCode 1
+            versionNameSuffix "-sql"
+        }
+    }
 }
 
 dependencies {

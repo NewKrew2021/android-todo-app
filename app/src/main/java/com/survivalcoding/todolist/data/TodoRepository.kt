@@ -9,5 +9,7 @@ interface TodoRepository {
 
     fun delItem(data: TodoData)
 
-    fun addAllItems(data: List<TodoData>)
+    fun editItem(data: TodoData, changeTodo: String)
+
+    fun doneItem(data: TodoData)
 }
