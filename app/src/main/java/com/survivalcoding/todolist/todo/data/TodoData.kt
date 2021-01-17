@@ -4,6 +4,7 @@ import com.survivalcoding.todolist.todo.view.MainActivity
 import com.survivalcoding.todolist.todo.view.OrderMethod
 import com.survivalcoding.todolist.todo.view.SortingBase
 import com.survivalcoding.todolist.todo.view.model.Todo
+import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
 // TodoList에 해당하는 데이터가 존재하는 클래스
@@ -38,7 +39,7 @@ class TodoData(private val data: MutableList<Todo> = mutableListOf()) : DefaultT
     override fun sorting(
         sortingBase: SortingBase,
         orderMethod: OrderMethod,
-        updateUI: (MutableList<Todo>) -> Unit
+        updateUI: (List<Todo>) -> Unit
     ) {
         when (sortingBase.value + orderMethod.value) {
             MainActivity.SORT_BY_TITLE + MainActivity.ASCENDING -> data.sortBy { it.text }
@@ -48,5 +49,10 @@ class TodoData(private val data: MutableList<Todo> = mutableListOf()) : DefaultT
         }
         updateUI.invoke(data)
 //        return data
+    }
+
+    override fun search(title: String, updateUI:(List<Todo>) -> Unit) {
+        val result = data.filter { it.text.toLowerCase(Locale.ROOT).contains(title.toLowerCase(Locale.ROOT)) }
+        updateUI.invoke(result)
     }
 }

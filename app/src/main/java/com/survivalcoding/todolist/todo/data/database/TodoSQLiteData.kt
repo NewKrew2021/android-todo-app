@@ -28,11 +28,16 @@ class TodoSQLiteData(context: Context) : DefaultTodoData {
         DatabaseUpdateThread(db).execute(item)
     }
 
+    override fun search(title: String, updateUI: (List<Todo>) -> Unit) {
+        val db = dbHelper.readableDatabase
+        DatabaseSearchThread(db, title, updateUI).execute()
+    }
+
     // 여기서 값을 리턴할 수 없다면, submitList메소드를 MainFragment에서 받아와서 onPostExecute에서 submitList메소드를 실행하자.
     override fun sorting(
         sortingBase: SortingBase,
         orderMethod: OrderMethod,
-        updateUI: (MutableList<Todo>) -> Unit
+        updateUI: (List<Todo>) -> Unit
     ) {
         val db = dbHelper.readableDatabase
         DatabaseSortThread(db, sortingBase, orderMethod, updateUI).execute()
@@ -92,11 +97,11 @@ class TodoSQLiteData(context: Context) : DefaultTodoData {
         private val db: SQLiteDatabase,
         private val sortingBase: SortingBase,
         private val orderMethod: OrderMethod,
-        private val updateUI: (MutableList<Todo>) -> Unit
+        private val updateUI: (List<Todo>) -> Unit
     ) :
-        AsyncTask<Unit, Unit, MutableList<Todo>>() {
+        AsyncTask<Unit, Unit, List<Todo>>() {
 
-        override fun doInBackground(vararg params: Unit?): MutableList<Todo> {
+        override fun doInBackground(vararg params: Unit?): List<Todo> {
             val projection = arrayOf(
                 BaseColumns._ID,
                 TodoContract.TodoEntry.COLUMN_NAME_IS_DONE,
@@ -125,25 +130,70 @@ class TodoSQLiteData(context: Context) : DefaultTodoData {
             )
 
             val itemList = mutableListOf<Todo>()
-            with(cursor) {
-                while (moveToNext()) {
-                    val id = getInt(getColumnIndexOrThrow(BaseColumns._ID))
-                    val text =
-                        getString(getColumnIndexOrThrow(TodoContract.TodoEntry.COLUMN_NAME_TITLE))
-                    val isDone =
-                        getInt(getColumnIndexOrThrow(TodoContract.TodoEntry.COLUMN_NAME_IS_DONE))
-                    val dueDate =
-                        getLong(getColumnIndexOrThrow(TodoContract.TodoEntry.COLUMN_NAME_DUE_DATE))
-                    val writeTime =
-                        getLong(getColumnIndexOrThrow(TodoContract.TodoEntry.COLUMN_NAME_WRITE_TIME))
-                    itemList.add(Todo(isDone == 1, text, dueDate, writeTime, id))
+            cursor.use {
+                with(it) {
+                    while (moveToNext()) {
+                        val id = getInt(getColumnIndexOrThrow(BaseColumns._ID))
+                        val text =
+                            getString(getColumnIndexOrThrow(TodoContract.TodoEntry.COLUMN_NAME_TITLE))
+                        val isDone =
+                            getInt(getColumnIndexOrThrow(TodoContract.TodoEntry.COLUMN_NAME_IS_DONE))
+                        val dueDate =
+                            getLong(getColumnIndexOrThrow(TodoContract.TodoEntry.COLUMN_NAME_DUE_DATE))
+                        val writeTime =
+                            getLong(getColumnIndexOrThrow(TodoContract.TodoEntry.COLUMN_NAME_WRITE_TIME))
+                        itemList.add(Todo(isDone == 1, text, dueDate, writeTime, id))
+                    }
                 }
-                close()
             }
-            return itemList
+            return itemList.toList()
         }
 
-        override fun onPostExecute(result: MutableList<Todo>) {
+        override fun onPostExecute(result: List<Todo>) {
+            super.onPostExecute(result)
+            updateUI.invoke(result)
+        }
+    }
+
+    class DatabaseSearchThread(
+        private val db: SQLiteDatabase,
+        private val searchText: String,
+        private val updateUI: (List<Todo>) -> Unit
+    ) : AsyncTask<Unit, Unit, List<Todo>>() {
+        override fun doInBackground(vararg params: Unit?): List<Todo> {
+            val where = "${TodoContract.TodoEntry.COLUMN_NAME_TITLE} LIKE ?"
+            val whereArgs = arrayOf("%${searchText}%")
+            val cursor = db.query(
+                TodoContract.TodoEntry.TABLE_NAME,
+                null,
+                where,
+                whereArgs,
+                null,
+                null,
+                null
+            )
+
+            val itemList = mutableListOf<Todo>()
+            cursor.use {
+                with(it) {
+                    while (moveToNext()) {
+                        val id = getInt(getColumnIndexOrThrow(BaseColumns._ID))
+                        val text =
+                            getString(getColumnIndexOrThrow(TodoContract.TodoEntry.COLUMN_NAME_TITLE))
+                        val isDone =
+                            getInt(getColumnIndexOrThrow(TodoContract.TodoEntry.COLUMN_NAME_IS_DONE))
+                        val dueDate =
+                            getLong(getColumnIndexOrThrow(TodoContract.TodoEntry.COLUMN_NAME_DUE_DATE))
+                        val writeTime =
+                            getLong(getColumnIndexOrThrow(TodoContract.TodoEntry.COLUMN_NAME_WRITE_TIME))
+                        itemList.add(Todo(isDone == 1, text, dueDate, writeTime, id))
+                    }
+                }
+            }
+            return itemList.toList()
+        }
+
+        override fun onPostExecute(result: List<Todo>) {
             super.onPostExecute(result)
             updateUI.invoke(result)
         }

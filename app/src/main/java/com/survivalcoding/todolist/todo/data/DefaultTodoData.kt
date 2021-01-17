@@ -11,6 +11,8 @@ interface DefaultTodoData {
     fun sorting(
         sortingBase: SortingBase,
         orderMethod: OrderMethod,
-        updateUI: (MutableList<Todo>) -> Unit
+        updateUI: (List<Todo>) -> Unit
     )
+
+    fun search(title: String, updateUI: (List<Todo>) -> Unit)
 }

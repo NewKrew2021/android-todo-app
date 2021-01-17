@@ -92,14 +92,17 @@ class MainFragment(private var model: DefaultTodoData) : Fragment() {
 
         val searchView = menu?.findItem(R.id.search_button)?.actionView as SearchView
 
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                // Do nothing
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                TODO("Not yet implemented")
+                if (newText.isNullOrEmpty()) {
+                    model.sorting(sortingBase, orderMethod) { todoAdapter.submitList(it) }
+                } else {
+                    model.search(newText) { todoAdapter.submitList(it) }
+                }
                 return true
             }
 
@@ -141,7 +144,7 @@ class MainFragment(private var model: DefaultTodoData) : Fragment() {
     }
 
     private fun updateUI() {
-        model.sorting(sortingBase, orderMethod, { todoAdapter.submitList(it) })
+        model.sorting(sortingBase, orderMethod) { todoAdapter.submitList(it) }
     }
 
     private fun textOnClick(item: Todo) {
