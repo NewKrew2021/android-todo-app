@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">SQLite</string>
+    <string name="addDescription">Item add</string>
+    <string name="searchEditTextHint">Search a to do…</string>
+    <string name="bookMarkDescription">Bookmark</string>
+    <string name="searchDescription">Search Todo</string>
+    <string name="title">할 일</string>
+    <string name="date">날짜</string>
+    <string name="titleEditTextHint">할 일을 입력하세요.</string>
+    <string name="dateText">yyyy - mm - dd</string>
+    <string name="addTodo">할 일 추가</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
