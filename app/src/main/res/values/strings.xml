@@ -5,13 +5,15 @@
     <string name="todo_add_due_date_info">언제까지 해야할 일인가요?</string>
     <string name="add_button">추가</string>
     <string name="cancel_button">취소</string>
+    <string name="add_todo">+ Add Todo</string>
 
-    <!--    Sorting-->
+    <!--    Menu-->
     <string name="menu_sort_by_write_date">글 작성 순</string>
     <string name="menu_sort_by_d_day">남은 날짜순</string>
     <string name="menu_sort_by_title">가나다순</string>
     <string name="menu_ascending">오름차순</string>
     <string name="menu_descending">내림차순</string>
+    <string name="menu_search_title">search</string>
 
     <!--    Add Todo-->
     <string name="add_todo_actionbar_title">Add Todo</string>

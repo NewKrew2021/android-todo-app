@@ -56,31 +56,20 @@ class MainFragment(private var model: DefaultTodoData) : Fragment() {
             todoList.adapter = todoAdapter
             addTodoButton.setOnClickListener {
                 parentFragmentManager.commit {
-                    setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out)
+                    setCustomAnimations(
+                        R.anim.slide_in,
+                        R.anim.fade_out,
+                        R.anim.fade_in,
+                        R.anim.slide_out
+                    )
                     setReorderingAllowed(true)
                     replace<AddFragment>(R.id.fragment_container_view)
                     addToBackStack(null)
                 }
             }
         }
-        updateUI()  // 이거덕분에 자동정렬되고있다.
+        updateUI()
     }
-
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        super.onSaveInstanceState(outState)
-//        outState.putParcelableArrayList(
-//            MainActivity.BUNDLE_KEY,
-//            model.todoList as ArrayList<Todo>
-//        )
-//    }
-//
-//    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-//        super.onViewStateRestored(savedInstanceState)
-//        val list =
-//            savedInstanceState?.getParcelableArrayList<Todo>(MainActivity.ROTATION_RESTORE_KEY)
-//        list?.let { model.todoList = it }
-//        updateUI()
-//    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -153,9 +142,7 @@ class MainFragment(private var model: DefaultTodoData) : Fragment() {
             val data = bundleOf(MainActivity.BUNDLE_KEY to item)
             setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out)
             setReorderingAllowed(true)
-            // 왜 아래처럼 안되나 했는데 import를 안했네...
             replace<EditFragment>(R.id.fragment_container_view, args = data)
-//            replace(R.id.fragment_container_view, EditFragment(model).javaClass, data)
             addToBackStack(null)
         }
     }

@@ -33,7 +33,6 @@ class TodoSQLiteData(context: Context) : DefaultTodoData {
         DatabaseSearchThread(db, title, updateUI).execute()
     }
 
-    // 여기서 값을 리턴할 수 없다면, submitList메소드를 MainFragment에서 받아와서 onPostExecute에서 submitList메소드를 실행하자.
     override fun sorting(
         sortingBase: SortingBase,
         orderMethod: OrderMethod,
@@ -43,8 +42,6 @@ class TodoSQLiteData(context: Context) : DefaultTodoData {
         DatabaseSortThread(db, sortingBase, orderMethod, updateUI).execute()
     }
 
-    // 4개의 클래스로 처리하는 것이 좋은가..?
-    // 아니면 하나의 클래스의 doInBackground에서 when문으로 처리하는것이 좋을까?
     class DatabaseAddThread(private val db: SQLiteDatabase) : AsyncTask<Todo, Unit, Long>() {
         override fun doInBackground(vararg params: Todo): Long {
             val item = params[0]
@@ -58,10 +55,6 @@ class TodoSQLiteData(context: Context) : DefaultTodoData {
             }
 
             return db?.insert(TodoContract.TodoEntry.TABLE_NAME, null, values)
-        }
-
-        override fun onPostExecute(result: Long?) {
-            super.onPostExecute(result)
         }
     }
 
@@ -120,13 +113,7 @@ class TodoSQLiteData(context: Context) : DefaultTodoData {
             val sortOrder = "$sort$order"
 
             val cursor = db.query(
-                TodoContract.TodoEntry.TABLE_NAME,   // The table to query
-                projection,             // The array of columns to return (pass null to get all)
-                null,              // The columns for the WHERE clause
-                null,          // The values for the WHERE clause
-                null,                   // don't group the rows
-                null,                   // don't filter by row groups
-                sortOrder               // The sort order
+                TodoContract.TodoEntry.TABLE_NAME, projection, null, null, null, null, sortOrder
             )
 
             val itemList = mutableListOf<Todo>()

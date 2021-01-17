@@ -11,7 +11,6 @@ import com.survivalcoding.todolist.todo.view.model.Todo
 import java.text.SimpleDateFormat
 import java.util.*
 
-// model을 제거하는 코드 리팩토링
 class TodoAdapter(
     private val deleteOnClick: (Todo) -> Unit,
     private val textOnClick: (Todo) -> Unit,
@@ -47,7 +46,7 @@ class TodoAdapter(
             isDoneButton.setOnClickListener {
                 todo.isDone = !todo.isDone
                 drawCancelLine(this, todo.isDone)
-                isDoneUpdate.invoke(todo)   // model의 데이터를 변경시킨다.
+                isDoneUpdate.invoke(todo)
                 update.invoke(Unit)
             }
             todoTextLayout.setOnClickListener {

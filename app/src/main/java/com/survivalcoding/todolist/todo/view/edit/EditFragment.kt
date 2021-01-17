@@ -16,7 +16,6 @@ import java.util.*
 
 class EditFragment(private val model: DefaultTodoData) : Fragment() {
     private var _binding: FragmentAddBinding? = null
-
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,7 +68,6 @@ class EditFragment(private val model: DefaultTodoData) : Fragment() {
                 )
             } else {
                 val today = Date().time
-                // addTodo가 아닌, updateTodo로 변경
                 model.updateTodo(Todo(false, todoText, dueDate, today, itemId))
                 parentFragmentManager.popBackStack()
             }

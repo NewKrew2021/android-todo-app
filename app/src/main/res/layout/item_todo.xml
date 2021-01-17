@@ -55,9 +55,9 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="D-3"
             android:textColor="@color/design_default_color_primary_variant"
-            android:textSize="16dp" />
+            android:textSize="16dp"
+            tools:text="D-3" />
 
 
         <ImageButton
@@ -65,7 +65,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#00ffffff"
+            android:background="@color/zero_transparent"
             android:padding="16dp"
             android:scaleType="centerInside"
             android:src="@drawable/delete_todo_icon" />

@@ -35,8 +35,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center|left"
             android:paddingLeft="16dp"
-            android:text="+ Add Todo"
-            android:textColor="#48AFE6"
+            android:text="@string/add_todo"
+            android:textColor="@color/add_todo"
             android:textSize="24dp" />
     </androidx.cardview.widget.CardView>
 

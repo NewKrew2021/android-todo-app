@@ -16,7 +16,6 @@ class MainActivity : AppCompatActivity() {
     private val model by lazy { (application as TodoApp).todoDataModel }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // fragmentFactory : 데이터를 bundle이 아닌, 생성자로 넘기기 위해 사용한다.
         supportFragmentManager.fragmentFactory = MainFragmentFactory(model)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -34,8 +33,7 @@ class MainActivity : AppCompatActivity() {
         const val BUNDLE_KEY = "listData"
         const val DATE_FORMAT = "yyyy-mm-dd"
         const val TIME_FORMAT = "YYYY-MM-DD HH:mm:ss"
-        const val FRAGMENT_KEY = "todo"
-        const val ASCENDING = 123    // 1, 2이면 다른 값과 중복되지 않을까 해서 임의의 값을 넣었다.
+        const val ASCENDING = 123    //x 1, 2이면 다른 값과 중복되지 않을까 해서 임의의 값을 넣었다.
         const val DESCENDING = 321
         const val SORT_BY_TITLE = 1000     // 제목순 정렬
         const val SORT_BY_D_DAY = 2000     // 남은 D-day순으로 정렬
