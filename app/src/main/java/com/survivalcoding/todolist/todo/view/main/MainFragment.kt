@@ -56,6 +56,7 @@ class MainFragment(private var model: DefaultTodoData) : Fragment() {
             todoList.adapter = todoAdapter
             addTodoButton.setOnClickListener {
                 parentFragmentManager.commit {
+                    setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out)
                     setReorderingAllowed(true)
                     replace<AddFragment>(R.id.fragment_container_view)
                     addToBackStack(null)
@@ -150,7 +151,7 @@ class MainFragment(private var model: DefaultTodoData) : Fragment() {
     private fun textOnClick(item: Todo) {
         parentFragmentManager.commit {
             val data = bundleOf(MainActivity.BUNDLE_KEY to item)
-
+            setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out)
             setReorderingAllowed(true)
             // 왜 아래처럼 안되나 했는데 import를 안했네...
             replace<EditFragment>(R.id.fragment_container_view, args = data)
