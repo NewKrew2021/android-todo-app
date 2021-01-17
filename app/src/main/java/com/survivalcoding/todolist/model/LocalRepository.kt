@@ -4,7 +4,7 @@ import com.survivalcoding.todolist.util.getCurrentTime
 import com.survivalcoding.todolist.view.TodoFragment
 import java.util.*
 
-class LocalRepository : TodoRepository{
+class LocalRepository : TodoRepository {
     private val _todoList = mutableListOf<TodoItem>()
     var itemId = 0
     val todoList: List<TodoItem>

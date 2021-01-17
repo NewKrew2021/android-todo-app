@@ -34,6 +34,22 @@ android {
     buildFeatures {
         viewBinding true
     }
+    flavorDimensions "storage"
+    productFlavors {
+        database {
+            dimension "storage"
+            applicationIdSuffix ".database"
+            versionNameSuffix "-database"
+            versionCode 10000 + android.defaultConfig.versionCode
+
+        }
+        local {
+            dimension "storage"
+            applicationIdSuffix ".local"
+            versionNameSuffix "-local"
+            versionCode 20000 + android.defaultConfig.versionCode
+        }
+    }
 }
 
 dependencies {

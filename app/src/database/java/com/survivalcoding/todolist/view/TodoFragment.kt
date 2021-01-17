@@ -42,27 +42,6 @@ class TodoFragment(private val repository: TodoRepository) : Fragment() {
         updateTodoList()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        // DB에 저장하면서 필요없어짐. 삭제 예정
-//        outState.putParcelableArrayList(
-//            SAVE_INSTANCE_TODO_ITEM_KEY,
-//            viewModel.todoList as ArrayList<TodoItem>
-//        )
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        savedInstanceState?.getParcelableArrayList<TodoItem>(SAVE_INSTANCE_TODO_ITEM_KEY)
-            ?.let {
-                repository.clearTodoList()
-                it.forEach { todo ->
-                    repository.addTodo(todo)
-                }
-                updateTodoList()
-            }
-    }
-
     private fun updateTodoList() {
         val sortOptions = resources.getStringArray(R.array.sort_options)
         // 시간 순으로 정렬
