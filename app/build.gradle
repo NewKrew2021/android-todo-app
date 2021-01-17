@@ -34,6 +34,22 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    flavorDimensions "StorageType"
+    productFlavors {
+        local {
+            dimension "StorageType"
+            applicationIdSuffix ".local"
+            versionCode 1000 + android.defaultConfig.versionCode
+            versionNameSuffix "-local"
+        }
+        sqlite {
+            dimension "StorageType"
+            applicationIdSuffix ".sqlite"
+            versionCode 2000 + android.defaultConfig.versionCode
+            versionNameSuffix "-sqlite"
+        }
+    }
 }
 
 dependencies {

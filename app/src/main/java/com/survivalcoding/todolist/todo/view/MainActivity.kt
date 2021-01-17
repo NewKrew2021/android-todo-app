@@ -5,18 +5,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import com.survivalcoding.todolist.R
+import com.survivalcoding.todolist.TodoApp
 import com.survivalcoding.todolist.databinding.ActivityMainBinding
-import com.survivalcoding.todolist.todo.data.database.TodoSQLiteData
 import com.survivalcoding.todolist.todo.factory.MainFragmentFactory
 import com.survivalcoding.todolist.todo.view.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-    private val model = TodoSQLiteData(this)
-//    private var model = TodoData()
+
+    private val model by lazy { (application as TodoApp).todoDataModel }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // fragmentFactory : 데이터를 bundle이 아닌, 생성자로 넘기기 위해 사용한다.
         supportFragmentManager.fragmentFactory = MainFragmentFactory(model)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -33,8 +32,8 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val BUNDLE_KEY = "listData"
         const val DATE_FORMAT = "yyyy-mm-dd"
-        const val FRAGMENT_KEY = "todo"
-        const val ASCENDING = 123    // 1, 2이면 다른 값과 중복되지 않을까 해서 임의의 값을 넣었다.
+        const val TIME_FORMAT = "YYYY-MM-DD HH:mm:ss"
+        const val ASCENDING = 123    //x 1, 2이면 다른 값과 중복되지 않을까 해서 임의의 값을 넣었다.
         const val DESCENDING = 321
         const val SORT_BY_TITLE = 1000     // 제목순 정렬
         const val SORT_BY_D_DAY = 2000     // 남은 D-day순으로 정렬

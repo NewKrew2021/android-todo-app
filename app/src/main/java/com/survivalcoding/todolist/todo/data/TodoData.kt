@@ -4,10 +4,9 @@ import com.survivalcoding.todolist.todo.view.MainActivity
 import com.survivalcoding.todolist.todo.view.OrderMethod
 import com.survivalcoding.todolist.todo.view.SortingBase
 import com.survivalcoding.todolist.todo.view.model.Todo
+import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
-// TodoList에 해당하는 데이터가 존재하는 클래스
-// 데이터의 삽입, 삭제, 수정, 정렬을 위한 메소드가 존재한다.
 class TodoData(private val data: MutableList<Todo> = mutableListOf()) : DefaultTodoData {
     private val id = AtomicInteger(0)
 
@@ -23,7 +22,7 @@ class TodoData(private val data: MutableList<Todo> = mutableListOf()) : DefaultT
     override fun updateTodo(item: Todo) {    // 데이터 수정, todo완료시에 사용
         val updatedData = data.map {
             if (it.id == item.id) {
-                item    // 수정하려는 item이면 해당 item을 넣는다.
+                item
             } else {
                 it
             }
@@ -35,7 +34,11 @@ class TodoData(private val data: MutableList<Todo> = mutableListOf()) : DefaultT
     }
 
     // sortingBase : 정렬 기준(제목..), orderMethod : 오름/내림차순 정렬
-    override fun sorting(sortingBase: SortingBase, orderMethod: OrderMethod, updateUI: (MutableList<Todo>) -> Unit) {
+    override fun sorting(
+        sortingBase: SortingBase,
+        orderMethod: OrderMethod,
+        updateUI: (List<Todo>) -> Unit
+    ) {
         when (sortingBase.value + orderMethod.value) {
             MainActivity.SORT_BY_TITLE + MainActivity.ASCENDING -> data.sortBy { it.text }
             MainActivity.SORT_BY_TITLE + MainActivity.DESCENDING -> data.sortByDescending { it.text }
@@ -43,6 +46,12 @@ class TodoData(private val data: MutableList<Todo> = mutableListOf()) : DefaultT
             MainActivity.SORT_BY_D_DAY + MainActivity.DESCENDING -> data.sortByDescending { it.dueDate }
         }
         updateUI.invoke(data)
-//        return data
+    }
+
+    override fun search(title: String, updateUI: (List<Todo>) -> Unit) {
+        val result = data.filter {
+            it.text.toLowerCase(Locale.ROOT).contains(title.toLowerCase(Locale.ROOT))
+        }
+        updateUI.invoke(result)
     }
 }

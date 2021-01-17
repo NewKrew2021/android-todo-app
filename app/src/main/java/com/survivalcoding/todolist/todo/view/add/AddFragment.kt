@@ -16,8 +16,12 @@ import java.util.*
 
 class AddFragment(private val model: DefaultTodoData) : Fragment() {
     private var _binding: FragmentAddBinding? = null
-
     private val binding get() = _binding!!
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

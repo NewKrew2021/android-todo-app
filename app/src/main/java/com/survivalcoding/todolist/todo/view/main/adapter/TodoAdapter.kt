@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.ListAdapter
 import com.survivalcoding.todolist.databinding.ItemTodoBinding
 import com.survivalcoding.todolist.todo.view.MainActivity
 import com.survivalcoding.todolist.todo.view.model.Todo
+import java.text.SimpleDateFormat
 import java.util.*
 
-// model을 제거하는 코드 리팩토링
 class TodoAdapter(
     private val deleteOnClick: (Todo) -> Unit,
     private val textOnClick: (Todo) -> Unit,
@@ -29,6 +29,7 @@ class TodoAdapter(
 
     override fun onBindViewHolder(holder: TodoAdapterViewHolder, position: Int) {
         val todo = getItem(holder.adapterPosition)
+        val dateFormat = SimpleDateFormat(MainActivity.TIME_FORMAT, Locale.getDefault())
 
         itemTodoBinding.apply {
             todoText.text = todo.text
@@ -36,6 +37,7 @@ class TodoAdapter(
             isDoneButton.isChecked = todo.isDone
             val dueDate = (todo.dueDate - currentTime) / MainActivity.ONE_DAY_MILLISECONDS
             dueDateText.text = "D - $dueDate"
+            todoWriteDate.text = dateFormat.format(todo.writeTime)
 
             deleteTodoButton.setOnClickListener {
                 deleteOnClick.invoke(todo)
@@ -44,10 +46,10 @@ class TodoAdapter(
             isDoneButton.setOnClickListener {
                 todo.isDone = !todo.isDone
                 drawCancelLine(this, todo.isDone)
-                isDoneUpdate.invoke(todo)   // model의 데이터를 변경시킨다.
+                isDoneUpdate.invoke(todo)
                 update.invoke(Unit)
             }
-            todoText.setOnClickListener {
+            todoTextLayout.setOnClickListener {
                 textOnClick.invoke(todo)
             }
         }

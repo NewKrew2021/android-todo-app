@@ -2,6 +2,7 @@ package com.survivalcoding.todolist.todo.view.main
 
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
@@ -55,30 +56,20 @@ class MainFragment(private var model: DefaultTodoData) : Fragment() {
             todoList.adapter = todoAdapter
             addTodoButton.setOnClickListener {
                 parentFragmentManager.commit {
+                    setCustomAnimations(
+                        R.anim.slide_in,
+                        R.anim.fade_out,
+                        R.anim.fade_in,
+                        R.anim.slide_out
+                    )
                     setReorderingAllowed(true)
                     replace<AddFragment>(R.id.fragment_container_view)
                     addToBackStack(null)
                 }
             }
         }
-        updateUI()  // 이거덕분에 자동정렬되고있다.
+        updateUI()
     }
-
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        super.onSaveInstanceState(outState)
-//        outState.putParcelableArrayList(
-//            MainActivity.BUNDLE_KEY,
-//            model.todoList as ArrayList<Todo>
-//        )
-//    }
-//
-//    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-//        super.onViewStateRestored(savedInstanceState)
-//        val list =
-//            savedInstanceState?.getParcelableArrayList<Todo>(MainActivity.ROTATION_RESTORE_KEY)
-//        list?.let { model.todoList = it }
-//        updateUI()
-//    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -88,6 +79,24 @@ class MainFragment(private var model: DefaultTodoData) : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_option, menu)
+
+        val searchView = menu?.findItem(R.id.search_button)?.actionView as SearchView
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText.isNullOrEmpty()) {
+                    model.sorting(sortingBase, orderMethod) { todoAdapter.submitList(it) }
+                } else {
+                    model.search(newText) { todoAdapter.submitList(it) }
+                }
+                return true
+            }
+
+        })
         MenuCompat.setGroupDividerEnabled(menu, true)
     }
 
@@ -125,17 +134,15 @@ class MainFragment(private var model: DefaultTodoData) : Fragment() {
     }
 
     private fun updateUI() {
-        model.sorting(sortingBase, orderMethod, { todoAdapter.submitList(it) })
+        model.sorting(sortingBase, orderMethod) { todoAdapter.submitList(it) }
     }
 
     private fun textOnClick(item: Todo) {
         parentFragmentManager.commit {
             val data = bundleOf(MainActivity.BUNDLE_KEY to item)
-
+            setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out)
             setReorderingAllowed(true)
-            // 왜 아래처럼 안되나 했는데 import를 안했네...
             replace<EditFragment>(R.id.fragment_container_view, args = data)
-//            replace(R.id.fragment_container_view, EditFragment(model).javaClass, data)
             addToBackStack(null)
         }
     }

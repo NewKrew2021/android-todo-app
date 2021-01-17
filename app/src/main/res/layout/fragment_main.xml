@@ -12,9 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@id/addTodoButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/addTodoButton"
         tools:listitem="@layout/item_todo" />
 
     <androidx.cardview.widget.CardView
@@ -26,17 +26,17 @@
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         app:cardCornerRadius="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|left"
             android:paddingLeft="16dp"
-            android:text="+ Add Todo"
-            android:textColor="#48AFE6"
+            android:text="@string/add_todo"
+            android:textColor="@color/add_todo"
             android:textSize="24dp" />
     </androidx.cardview.widget.CardView>
 
